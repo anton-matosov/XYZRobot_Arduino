@@ -24,7 +24,6 @@ XYZrobot1280.build.core=XYZrobot1280
 XYZrobot1280.build.variant=XYZrobot1280
 
 # USB identifiers for Port List menu
-# TODO: find correct IDs
-# XYZrobot1280.vid.0=0x1B4F
-# XYZrobot1280.pid.0=0x9206
+XYZrobot1280.pid.0=0x6001
+XYZrobot1280.vid.0=0x0403
 ######################################################################
