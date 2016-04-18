@@ -40,7 +40,7 @@
 
 /** a structure to hold transitions **/
 typedef struct{
-    unsigned int * pose;    // addr of pose to transition to 
+    const uint16_t * pose;    // addr of pose to transition to 
     int time;               // time for transition
 } transition_t; 
 
