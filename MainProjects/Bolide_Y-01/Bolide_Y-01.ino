@@ -54,10 +54,10 @@ _0:
    
    BUTTON_task();
    if(last_key_update){
-    if(last_key == key_mask_sw1) Action(34);
-    else if(last_key == key_mask_sw2) Action(33);
-    else if(last_key == key_mask_sw3) Action(32);
-    else if(last_key == key_mask_sw4) Action(35);
+    if(last_key == key_mask_sw1) Action(RB_1);
+    else if(last_key == key_mask_sw2) Action(RB_2);
+    else if(last_key == key_mask_sw3) Action(RB_3);
+    else if(last_key == key_mask_sw4) Action(RB_4);
     last_key_update = false;
    }  
 
@@ -103,13 +103,13 @@ _1:
    else if(!(packet[5] & 0x0010)&&!(packet[5] & 0x0020)&&!(packet[5] & 0x0040)){    
        if((packet[1]>155&&packet[2]>155&&packet[1]>packet[2])|(packet[1]>155&&packet[2]<95&&(packet[1]-155)>(95-packet[2]))|(packet[1]>155&&packet[2]>=95&&packet[2]<=155)){ 
          //LeftJoystick_Rightside
-         if (Falling_task()==5) Action(6);//WalkRightward  
+         if (Falling_task()==5) Action(RCU_LJR);//WalkRightward  
          else Getup_task(Falling_task());
          cb() ;
        }
        else if((packet[1]<95&&packet[2]>155&&(95-packet[1])>(packet[2]-155))|(packet[1]<95&&packet[2]<155&&(95-packet[1])>(95-packet[2]))|(packet[1]<95&&packet[2]>=95&&packet[2]<=155)){
          //LeftJoystick_Leftside
-         if (Falling_task()==5) Action(5);//WalkLeftward  
+         if (Falling_task()==5) Action(RCU_LJL);//WalkLeftward  
          else Getup_task(Falling_task());
          cb() ;
        }
@@ -123,73 +123,73 @@ _1:
              noTone(BUZZER_PIN);}
         }   
         else{     
-         Action(3);}} //WalkForward
+         Action(RCU_LJU);}} //WalkForward
          else Getup_task(Falling_task()); 
          cb() ;
        }
        else if((packet[1]>155&&packet[2]<95&&(packet[1]-155)<(95-packet[2]))|(packet[1]<95&&packet[2]<95&&(95-packet[1])<(155-packet[2]))|(packet[2]<95&&packet[1]>=95&&packet[1]<=155)){
          //LeftJoystick_Downside
-         if (Falling_task()==5) Action(4);//WalkBackward 
+         if (Falling_task()==5) Action(RCU_LJD);//WalkBackward 
          else Getup_task(Falling_task());
          cb();
        }
        else if((packet[3]>155&packet[4]>155&&packet[3]>packet[4])|(packet[3]>155&&packet[4]<95&&(packet[3]-155)>(95-packet[4]))|(packet[3]>155&&packet[4]>=95&&packet[4]<=155)){
          //RightJoystick_Rightside
-         if (Falling_task()==5) Action(8);//TurnRight 
+         if (Falling_task()==5) Action(RCU_RJR);//TurnRight 
          else Getup_task(Falling_task());
          cb() ;
        }
        else if((packet[3]<95&&packet[4]>155&&(95-packet[3])>(packet[4]-155))|(packet[3]<95&&packet[4]<95&&(95-packet[3])>(95-packet[4]))|(packet[3]<95&&packet[4]>=95&&packet[4]<=155)){
          //RightJoystick_Leftside
-         if (Falling_task()==5) Action(7); //TurnLeft 
+         if (Falling_task()==5) Action(RCU_RJL); //TurnLeft 
          else Getup_task(Falling_task());
          cb() ;
        }
        else if((packet[3]>155&&packet[4]>155&&packet[3]<packet[4])|(packet[3]<95&&packet[4]>155&&(95-packet[3])<(packet[4]-155))|(packet[4]>155&&packet[3]>=95&&packet[3]<=155)){
          //RightJoystick_Upside        
-         if (Falling_task()==5)  Action(89); 
+         if (Falling_task()==5)  Action(RCU_RJU); 
          else Getup_task(Falling_task());
          cb() ; 
        }
        else if((packet[3]>155&&packet[4]<95&&(packet[3]-155)<(95-packet[4]))|(packet[3]<155&&packet[4]<95&&(95-packet[3])<(95-packet[4]))|(packet[4]<95&&packet[3]>=95&&packet[3]<=155)){
          //RightJoystick_Downside 
-         if (Falling_task()==5)  Action(88); 
+         if (Falling_task()==5)  Action(RCU_RJD); 
          else Getup_task(Falling_task());
          cb() ;
        }
        else if(packet[6] & 0x0001){
          //LeftButton_Upside-Front
-         if (Falling_task()==5)  Action(30); 
+         if (Falling_task()==5)  Action(RCU_L1); 
          else Getup_task(Falling_task());
          cb() ;
        }
        else if(packet[6] & 0x0002){
          //LeftButton_Upside-Back
-         if (Falling_task()==5)  Action(25); 
+         if (Falling_task()==5)  Action(RCU_L2); 
          else Getup_task(Falling_task());
          cb() ;
        }     
        else if(packet[6] & 0x0004){
          //LeftButton_Downside
-         if (Falling_task()==5)  Action(60); 
+         if (Falling_task()==5)  Action(RCU_L3); 
          else Getup_task(Falling_task());
          cb() ;
        }
        else if(packet[5] & 0x0001){
          //RightButton_Upside-Front
-         if (Falling_task()==5)  Action(28); 
+         if (Falling_task()==5)  Action(RCU_R1); 
          else Getup_task(Falling_task());
          cb() ;
        }
        else if(packet[5] & 0x0002){
          //RightButton_Upside-Back        
-         if (Falling_task()==5)  Action(29); 
+         if (Falling_task()==5)  Action(RCU_R2); 
          else Getup_task(Falling_task());
          cb() ;
        }     
        else if(packet[5] & 0x0004){
          //RightButton_Downside
-         if (Falling_task()==5)  Action(103); 
+         if (Falling_task()==5)  Action(RCU_R3); 
          else Getup_task(Falling_task());
          cb() ;
        }
@@ -520,7 +520,7 @@ void MusicPlaying_wav_volume(int volume){
       Serial3.write('V');  
       Serial3.write(volume);// volume : 0x01 ~ 0x7F 
       Serial3.print("000");
-}   
+}
 //-----------------------------------------------------------
 // Sample Motion Function
 void Action(int N){
@@ -638,6 +638,142 @@ void Action(int N){
   else if(N == 112) XYZrobot.playSeq(Fight22);
   else if(N == 113) XYZrobot.playSeq(Fight23);
   else if(N == 114) XYZrobot.playSeq(Fight24);
+  else if(N == 115) XYZrobot.playSeq(New115);
+  else if(N == 116) XYZrobot.playSeq(New116);
+  else if(N == 117) XYZrobot.playSeq(New117); 
+  else if(N == 118) XYZrobot.playSeq(New118);
+  else if(N == 119) XYZrobot.playSeq(New119);
+  else if(N == 120) XYZrobot.playSeq(New120);
+  else if(N == 121) XYZrobot.playSeq(New121);
+  else if(N == 122) XYZrobot.playSeq(New122); 
+  else if(N == 123) XYZrobot.playSeq(New123);
+  else if(N == 124) XYZrobot.playSeq(New124);
+  else if(N == 125) XYZrobot.playSeq(New125);
+  else if(N == 126) XYZrobot.playSeq(New126);
+  else if(N == 127) XYZrobot.playSeq(New127); 
+  else if(N == 128) XYZrobot.playSeq(New128);
+  else if(N == 129) XYZrobot.playSeq(New129);
+  else if(N == 130) XYZrobot.playSeq(New130);
+  else if(N == 131) XYZrobot.playSeq(New131);
+  else if(N == 132) XYZrobot.playSeq(New132); 
+  else if(N == 133) XYZrobot.playSeq(New133);
+  else if(N == 134) XYZrobot.playSeq(New134);
+  else if(N == 135) XYZrobot.playSeq(New135);
+  else if(N == 136) XYZrobot.playSeq(New136);
+  else if(N == 137) XYZrobot.playSeq(New137); 
+  else if(N == 138) XYZrobot.playSeq(New138);
+  else if(N == 139) XYZrobot.playSeq(New139);
+  else if(N == 140) XYZrobot.playSeq(New140);
+  else if(N == 141) XYZrobot.playSeq(New141);
+  else if(N == 142) XYZrobot.playSeq(New142); 
+  else if(N == 143) XYZrobot.playSeq(New143);
+  else if(N == 144) XYZrobot.playSeq(New144);
+  else if(N == 145) XYZrobot.playSeq(New145);
+  else if(N == 146) XYZrobot.playSeq(New146);
+  else if(N == 147) XYZrobot.playSeq(New147); 
+  else if(N == 148) XYZrobot.playSeq(New148);
+  else if(N == 149) XYZrobot.playSeq(New149);
+  else if(N == 150) XYZrobot.playSeq(New150);
+  else if(N == 151) XYZrobot.playSeq(New151);
+  else if(N == 152) XYZrobot.playSeq(New152); 
+  else if(N == 153) XYZrobot.playSeq(New153);
+  else if(N == 154) XYZrobot.playSeq(New154);
+  else if(N == 155) XYZrobot.playSeq(New155);
+  else if(N == 156) XYZrobot.playSeq(New156);
+  else if(N == 157) XYZrobot.playSeq(New157); 
+  else if(N == 158) XYZrobot.playSeq(New158);
+  else if(N == 159) XYZrobot.playSeq(New159);
+  else if(N == 160) XYZrobot.playSeq(New160);
+  else if(N == 161) XYZrobot.playSeq(New161);
+  else if(N == 162) XYZrobot.playSeq(New162); 
+  else if(N == 163) XYZrobot.playSeq(New163);
+  else if(N == 164) XYZrobot.playSeq(New164);
+  else if(N == 165) XYZrobot.playSeq(New165);
+  else if(N == 166) XYZrobot.playSeq(New166);
+  else if(N == 167) XYZrobot.playSeq(New167); 
+  else if(N == 168) XYZrobot.playSeq(New168);
+  else if(N == 169) XYZrobot.playSeq(New169);
+  else if(N == 170) XYZrobot.playSeq(New170);
+  else if(N == 171) XYZrobot.playSeq(New171);
+  else if(N == 172) XYZrobot.playSeq(New172); 
+  else if(N == 173) XYZrobot.playSeq(New173);
+  else if(N == 174) XYZrobot.playSeq(New174);
+  else if(N == 175) XYZrobot.playSeq(New175);
+  else if(N == 176) XYZrobot.playSeq(New176);
+  else if(N == 177) XYZrobot.playSeq(New177); 
+  else if(N == 178) XYZrobot.playSeq(New178);
+  else if(N == 179) XYZrobot.playSeq(New179);
+  else if(N == 180) XYZrobot.playSeq(New180);
+  else if(N == 181) XYZrobot.playSeq(New181);
+  else if(N == 182) XYZrobot.playSeq(New182); 
+  else if(N == 183) XYZrobot.playSeq(New183);
+  else if(N == 184) XYZrobot.playSeq(New184);
+  else if(N == 185) XYZrobot.playSeq(New185);
+  else if(N == 186) XYZrobot.playSeq(New186);
+  else if(N == 187) XYZrobot.playSeq(New187); 
+  else if(N == 188) XYZrobot.playSeq(New188);
+  else if(N == 189) XYZrobot.playSeq(New189);
+  else if(N == 190) XYZrobot.playSeq(New190);
+  else if(N == 191) XYZrobot.playSeq(New191);
+  else if(N == 192) XYZrobot.playSeq(New192); 
+  else if(N == 193) XYZrobot.playSeq(New193);
+  else if(N == 194) XYZrobot.playSeq(New194);
+  else if(N == 195) XYZrobot.playSeq(New195);
+  else if(N == 196) XYZrobot.playSeq(New196);
+  else if(N == 197) XYZrobot.playSeq(New197); 
+  else if(N == 198) XYZrobot.playSeq(New198);
+  else if(N == 199) XYZrobot.playSeq(New199);
+  else if(N == 200) XYZrobot.playSeq(New200);
+  else if(N == 201) XYZrobot.playSeq(New201);
+  else if(N == 202) XYZrobot.playSeq(New202); 
+  else if(N == 203) XYZrobot.playSeq(New203);
+  else if(N == 204) XYZrobot.playSeq(New204);
+  else if(N == 205) XYZrobot.playSeq(New205);
+  else if(N == 206) XYZrobot.playSeq(New206);
+  else if(N == 207) XYZrobot.playSeq(New207); 
+  else if(N == 208) XYZrobot.playSeq(New208);
+  else if(N == 209) XYZrobot.playSeq(New209);
+  else if(N == 210) XYZrobot.playSeq(New210);
+  else if(N == 211) XYZrobot.playSeq(New211);
+  else if(N == 212) XYZrobot.playSeq(New212); 
+  else if(N == 213) XYZrobot.playSeq(New213);
+  else if(N == 214) XYZrobot.playSeq(New214);
+  else if(N == 215) XYZrobot.playSeq(New215);
+  else if(N == 216) XYZrobot.playSeq(New216);
+  else if(N == 217) XYZrobot.playSeq(New217); 
+  else if(N == 218) XYZrobot.playSeq(New218);
+  else if(N == 219) XYZrobot.playSeq(New219);
+  else if(N == 220) XYZrobot.playSeq(New220);
+  else if(N == 221) XYZrobot.playSeq(New221);
+  else if(N == 222) XYZrobot.playSeq(New222); 
+  else if(N == 223) XYZrobot.playSeq(New223);
+  else if(N == 224) XYZrobot.playSeq(New224);
+  else if(N == 225) XYZrobot.playSeq(New225);
+  else if(N == 226) XYZrobot.playSeq(New226);
+  else if(N == 227) XYZrobot.playSeq(New227); 
+  else if(N == 228) XYZrobot.playSeq(New228);
+  else if(N == 229) XYZrobot.playSeq(New229);
+  else if(N == 230) XYZrobot.playSeq(New230);
+  else if(N == 231) XYZrobot.playSeq(New231);
+  else if(N == 232) XYZrobot.playSeq(New232); 
+  else if(N == 233) XYZrobot.playSeq(New233);
+  else if(N == 234) XYZrobot.playSeq(New234);
+  else if(N == 235) XYZrobot.playSeq(New235);
+  else if(N == 236) XYZrobot.playSeq(New236);
+  else if(N == 237) XYZrobot.playSeq(New237); 
+  else if(N == 238) XYZrobot.playSeq(New238);
+  else if(N == 239) XYZrobot.playSeq(New239);
+  else if(N == 240) XYZrobot.playSeq(New240);
+  else if(N == 241) XYZrobot.playSeq(New241);
+  else if(N == 242) XYZrobot.playSeq(New242); 
+  else if(N == 243) XYZrobot.playSeq(New243);
+  else if(N == 244) XYZrobot.playSeq(New244);
+  else if(N == 245) XYZrobot.playSeq(New245);
+  else if(N == 246) XYZrobot.playSeq(New246);
+  else if(N == 247) XYZrobot.playSeq(New247); 
+  else if(N == 248) XYZrobot.playSeq(New248);
+  else if(N == 249) XYZrobot.playSeq(New249);
+  else if(N == 250) XYZrobot.playSeq(New250);
 
   while((XYZrobot.playing) && !(Torque_Release_task())){
     XYZrobot.play();
@@ -675,8 +811,9 @@ boolean Torque_Release_task(void){
 }
 //-----------------------------------------------------------
 // CleanAllBuffer Function
-void cb( void){
-  while( ( Serial2.read() ) != -1 ) ;}
+void cb( void) {
+  while( ( Serial2.read() ) != -1 ) ;
+}
 
 void clear_buffer(void){
   static int cb = 0x00;
