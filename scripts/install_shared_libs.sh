@@ -23,7 +23,7 @@ function abspath() {
 rootDir="$(abspath $(dirname $0)/..)"
 
 mkdir -p "$HOME/Documents/Arduino/hardware"
-ln -sf "$rootDir/XYZSharedProjects/hardware/XYZrobot" "$HOME/Documents/Arduino/hardware/XYZrobot"
+ln -sf "$rootDir/XYZSharedProjects/hardware/XYZrobot/1.6" "$HOME/Documents/Arduino/hardware/XYZrobot"
 
 mkdir -p "$HOME/Documents/Arduino/libraries"
 ln -sf "$rootDir/XYZSharedProjects/libraries/BOLIDE_Player" "$HOME/Documents/Arduino/libraries/BOLIDE_Player"
