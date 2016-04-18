@@ -2,6 +2,7 @@
 #include <BOLIDE_Player.h>
 #include <A1-16.h>
 #include "BOLIDE.h"
+#include "USER_MOTION.h"
 #include <EEPROM.h>
 #include <Wire.h>
 
