@@ -91,27 +91,27 @@ _1:
   
    if(packet[5] & 0x0010){        //Release Button
          A1_16_TorqueOff(254);
-         cb() ;
+         clearReadBufferOfSerial2() ;
        }
    else if(packet[5] & 0x0020){   //Bluetooth Button  
-         cb() ;
+         clearReadBufferOfSerial2() ;
        }      
    else if(packet[5] & 0x0040){   //Power Button 
          Action(2); 
-         cb() ;
+         clearReadBufferOfSerial2() ;
        }  
    else if(!(packet[5] & 0x0010)&&!(packet[5] & 0x0020)&&!(packet[5] & 0x0040)){    
        if((packet[1]>155&&packet[2]>155&&packet[1]>packet[2])|(packet[1]>155&&packet[2]<95&&(packet[1]-155)>(95-packet[2]))|(packet[1]>155&&packet[2]>=95&&packet[2]<=155)){ 
          //LeftJoystick_Rightside
          if (Falling_task()==5) Action(RCU_LJR);//WalkRightward  
          else Getup_task(Falling_task());
-         cb() ;
+         clearReadBufferOfSerial2() ;
        }
        else if((packet[1]<95&&packet[2]>155&&(95-packet[1])>(packet[2]-155))|(packet[1]<95&&packet[2]<155&&(95-packet[1])>(95-packet[2]))|(packet[1]<95&&packet[2]>=95&&packet[2]<=155)){
          //LeftJoystick_Leftside
          if (Falling_task()==5) Action(RCU_LJL);//WalkLeftward  
          else Getup_task(Falling_task());
-         cb() ;
+         clearReadBufferOfSerial2() ;
        }
        else if((packet[1]>155&&packet[2]>155&&packet[1]<packet[2])|(packet[1]<95&&packet[2]>155&&(95-packet[1])<(packet[2]-155))|(packet[2]>155&&packet[1]>=95&&packet[1]<=155)){
          //LeftJoystick_Upside
@@ -125,73 +125,73 @@ _1:
         else{     
          Action(RCU_LJU);}} //WalkForward
          else Getup_task(Falling_task()); 
-         cb() ;
+         clearReadBufferOfSerial2() ;
        }
        else if((packet[1]>155&&packet[2]<95&&(packet[1]-155)<(95-packet[2]))|(packet[1]<95&&packet[2]<95&&(95-packet[1])<(155-packet[2]))|(packet[2]<95&&packet[1]>=95&&packet[1]<=155)){
          //LeftJoystick_Downside
          if (Falling_task()==5) Action(RCU_LJD);//WalkBackward 
          else Getup_task(Falling_task());
-         cb();
+         clearReadBufferOfSerial2();
        }
        else if((packet[3]>155&packet[4]>155&&packet[3]>packet[4])|(packet[3]>155&&packet[4]<95&&(packet[3]-155)>(95-packet[4]))|(packet[3]>155&&packet[4]>=95&&packet[4]<=155)){
          //RightJoystick_Rightside
          if (Falling_task()==5) Action(RCU_RJR);//TurnRight 
          else Getup_task(Falling_task());
-         cb() ;
+         clearReadBufferOfSerial2() ;
        }
        else if((packet[3]<95&&packet[4]>155&&(95-packet[3])>(packet[4]-155))|(packet[3]<95&&packet[4]<95&&(95-packet[3])>(95-packet[4]))|(packet[3]<95&&packet[4]>=95&&packet[4]<=155)){
          //RightJoystick_Leftside
          if (Falling_task()==5) Action(RCU_RJL); //TurnLeft 
          else Getup_task(Falling_task());
-         cb() ;
+         clearReadBufferOfSerial2() ;
        }
        else if((packet[3]>155&&packet[4]>155&&packet[3]<packet[4])|(packet[3]<95&&packet[4]>155&&(95-packet[3])<(packet[4]-155))|(packet[4]>155&&packet[3]>=95&&packet[3]<=155)){
          //RightJoystick_Upside        
          if (Falling_task()==5)  Action(RCU_RJU); 
          else Getup_task(Falling_task());
-         cb() ; 
+         clearReadBufferOfSerial2() ; 
        }
        else if((packet[3]>155&&packet[4]<95&&(packet[3]-155)<(95-packet[4]))|(packet[3]<155&&packet[4]<95&&(95-packet[3])<(95-packet[4]))|(packet[4]<95&&packet[3]>=95&&packet[3]<=155)){
          //RightJoystick_Downside 
          if (Falling_task()==5)  Action(RCU_RJD); 
          else Getup_task(Falling_task());
-         cb() ;
+         clearReadBufferOfSerial2() ;
        }
        else if(packet[6] & 0x0001){
          //LeftButton_Upside-Front
          if (Falling_task()==5)  Action(RCU_L1); 
          else Getup_task(Falling_task());
-         cb() ;
+         clearReadBufferOfSerial2() ;
        }
        else if(packet[6] & 0x0002){
          //LeftButton_Upside-Back
          if (Falling_task()==5)  Action(RCU_L2); 
          else Getup_task(Falling_task());
-         cb() ;
+         clearReadBufferOfSerial2() ;
        }     
        else if(packet[6] & 0x0004){
          //LeftButton_Downside
          if (Falling_task()==5)  Action(RCU_L3); 
          else Getup_task(Falling_task());
-         cb() ;
+         clearReadBufferOfSerial2() ;
        }
        else if(packet[5] & 0x0001){
          //RightButton_Upside-Front
          if (Falling_task()==5)  Action(RCU_R1); 
          else Getup_task(Falling_task());
-         cb() ;
+         clearReadBufferOfSerial2() ;
        }
        else if(packet[5] & 0x0002){
          //RightButton_Upside-Back        
          if (Falling_task()==5)  Action(RCU_R2); 
          else Getup_task(Falling_task());
-         cb() ;
+         clearReadBufferOfSerial2() ;
        }     
        else if(packet[5] & 0x0004){
          //RightButton_Downside
          if (Falling_task()==5)  Action(RCU_R3); 
          else Getup_task(Falling_task());
-         cb() ;
+         clearReadBufferOfSerial2() ;
        }
    }
    LED_task_off();
@@ -204,7 +204,7 @@ _1:
    
    if(packet[3] == 2){
     Action(2);
-    cb(); 
+    clearReadBufferOfSerial2(); 
    }
    else{    
     if (Falling_task()==5){
@@ -217,17 +217,17 @@ _1:
         }   
         else{     
          Action(packet[3]);} 
-         cb() ;
+         clearReadBufferOfSerial2() ;
        }
      else {  
      Action(packet[3]);}
     }
     else Getup_task(Falling_task());    
-    cb();
+    clearReadBufferOfSerial2();
     LED_task_off();
   }
  }
- cb();
+ clearReadBufferOfSerial2();
 }
 
 //=========================== Function ================================
@@ -788,13 +788,13 @@ boolean Torque_Release_task(void){
   static int temp_packet[7] = {0};
   static char _i = 0;
   if(Serial2.available() >= 7){
-    if((temp_packet[0] = Serial2.read()) == 0) ; else {clear_buffer(); return false;}
-    if((temp_packet[1] = Serial2.read()) == 0) {clear_buffer(); return false;}
-    if((temp_packet[2] = Serial2.read()) == 0) {clear_buffer(); return false;}
-    if((temp_packet[3] = Serial2.read()) == 0) {clear_buffer(); return false;}
-    if((temp_packet[4] = Serial2.read()) == 0) {clear_buffer(); return false;}
-    if((temp_packet[5] = Serial2.read()) == 0) {clear_buffer(); return false;}
-    if((temp_packet[6] = Serial2.read()) == 0) {clear_buffer(); return false;}
+    if((temp_packet[0] = Serial2.read()) == 0) ; else {popReadBufferOfSerial2UnitlNextNull(); return false;}
+    if((temp_packet[1] = Serial2.read()) == 0) {popReadBufferOfSerial2UnitlNextNull(); return false;}
+    if((temp_packet[2] = Serial2.read()) == 0) {popReadBufferOfSerial2UnitlNextNull(); return false;}
+    if((temp_packet[3] = Serial2.read()) == 0) {popReadBufferOfSerial2UnitlNextNull(); return false;}
+    if((temp_packet[4] = Serial2.read()) == 0) {popReadBufferOfSerial2UnitlNextNull(); return false;}
+    if((temp_packet[5] = Serial2.read()) == 0) {popReadBufferOfSerial2UnitlNextNull(); return false;}
+    if((temp_packet[6] = Serial2.read()) == 0) {popReadBufferOfSerial2UnitlNextNull(); return false;}
     Serial2.write((temp_packet[6]&0x00F0)>>4);
     for(_i = 0;_i < 7 ;_i++) packet[_i] = temp_packet[_i];
     if(((temp_packet[5]&0x0010)>>3)) {
@@ -805,17 +805,19 @@ boolean Torque_Release_task(void){
       torque_release = false;
       return false;
     }
-    cb();
+    clearReadBufferOfSerial2();
   }
   return false;
 }
 //-----------------------------------------------------------
 // CleanAllBuffer Function
-void cb( void) {
-  while( ( Serial2.read() ) != -1 ) ;
+void clearReadBufferOfSerial2() {
+  while( ( Serial2.read() ) != -1 )
+  {
+  }
 }
 
-void clear_buffer(void){
+void popReadBufferOfSerial2UnitlNextNull(void){
   static int cb = 0x00;
   while(Serial2.available() > 0){
     if(Serial2.peek() == 0) return;
