@@ -14,7 +14,7 @@ XYZrobot1280.bootloader.tool=arduino:avrdude
 XYZrobot1280.bootloader.low_fuses=0xFF
 XYZrobot1280.bootloader.high_fuses=0xDA
 XYZrobot1280.bootloader.extended_fuses=0xFC
-XYZrobot1280.bootloader.file=atmega1280/ATmegaBOOT_168_atmega1280.hex
+XYZrobot1280.bootloader.file=atmega1280/ATmegaBOOT_168_XYZ_atmega1280.hex
 XYZrobot1280.bootloader.unlock_bits=0xFF
 XYZrobot1280.bootloader.lock_bits=0x0CF
 
