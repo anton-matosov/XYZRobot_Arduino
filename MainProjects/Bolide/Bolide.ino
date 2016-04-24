@@ -268,19 +268,28 @@ void loop() {
                                             noTone(BUZZER_PIN);
                                         }
                                     }
-                                    else Action(packet[3]);
+                                    else {
+                                        Action(packet[3]);
+                                    }
                                 }
-                                else Action(packet[3]);
+                                else {
+                                    Action(packet[3]);
+                                }
                             }
-                            else Getup_Task(Falling_Task());
+                            else {
+                                Getup_Task(Falling_Task());
+                            }
                         }
-                        else Action(packet[3]);
+                        else {
+                            Action(packet[3]);
+                        }
                     }
                     LED_Task(0);
                     BT_update = false;
                 }
             }
         }
+#if DOING_SOME_MAGIC_CONTROLLER
         else {
             if (joystick_status[0] <= 155 & joystick_status[0] >= 95 & joystick_status[1] <= 155 &
                 joystick_status[1] >= 95 & joystick_status[2] <= 155 & joystick_status[2] >= 95 &
@@ -403,6 +412,7 @@ void loop() {
                 }
             }
         }
+#endif // DOING_SOME_MAGIC_CONTROLLER
     }
 }
 
