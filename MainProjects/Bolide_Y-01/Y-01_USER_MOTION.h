@@ -2,7 +2,7 @@
 #define Y_01_USER_MOTION_H
 
 #include <avr/pgmspace.h>
-#include <cstdint>
+//#include <cstdint>
 #include "BOLIDE_Player.h"
 
 #define Adjustment_index true
