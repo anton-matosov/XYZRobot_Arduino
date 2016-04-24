@@ -16,12 +16,12 @@
 #define motor_pos_msb              0x04
 #define motor_pos_lsb              0x05
 
-#define CMD_version_read	   0x00
+#define CMD_version_read           0x00
 #define CMD_init_motor             0x01
 #define CMD_set_motor              0x02
 #define CMD_capture_motor          0x03
 #define CMD_relax_motor            0x04
-#define CMD_SN_read		   0x05
+#define CMD_SN_read                0x05
 
 #define CMD_SEQ_load_PoseCnt       0x10
 #define CMD_SEQ_load_Pose          0x11
@@ -48,14 +48,14 @@
 #define packet_timeout             0x01
 #define packet_error               0x02
 
-#define model_Bolide		   0x42
-#define type_Y01		   0x01
-#define type_Crawler		   0x02
-#define type_Others		   0xFF
-#define application_default	   0x44
-#define main_version_number	   0x01
+#define model_Bolide               0x42
+#define type_Y01                   0x01
+#define type_Crawler               0x02
+#define type_Others                0xFF
+#define application_default        0x44
+#define main_version_number        0x01
 #define secondary_version_number   0x02
-#define revision_number		   0x06
+#define revision_number            0x06
 
 #endif
 
