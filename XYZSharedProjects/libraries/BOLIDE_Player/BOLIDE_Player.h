@@ -39,24 +39,23 @@
 #define A1_16_SHIFT             3
 
 /** a structure to hold transitions **/
-typedef struct{
-    const uint16_t * pose;    // addr of pose to transition to 
+typedef struct {
+    const uint16_t *pose;    // addr of pose to transition to
     int time;               // time for transition
-} transition_t; 
+} transition_t;
 
 /** Bioloid Controller Class for mega324p/644p clients. **/
-class BOLIDE_Player
-{
-  public:
+class BOLIDE_Player {
+public:
     /* For compatibility with legacy code */
     //BOLIDE_Player(long baud);               
-    
-    /* New-style constructor/setup */ 
+
+    /* New-style constructor/setup */
     //BOLIDE_Player() {};
-    void setup(long baud, int servo_cnt);		// baud usually 115200
+    void setup(long baud, int servo_cnt);        // baud usually 115200
 
     /* Pose Manipulation */
-    void loadPose( const unsigned int * addr ); // load a named pose from FLASH  
+    void loadPose(const unsigned int *addr); // load a named pose from FLASH
     void readPose();                            // read a pose in from the servos  
     void writePose();                           // write a pose out to the servos
     int getCurPose(int id);                     // get a servo value in the current pose
@@ -64,7 +63,7 @@ class BOLIDE_Player
     void setNextPose(int id, int pos);          // set a servo value in the next pose
     void setId(int index, int id);              // set the id of a particular storage index
     int getId(int index);                       // get the id of a particular storage index
-    
+
     /* Pose Engine */
     void interpolateSetup(int time);            // calculate speeds for smooth transition
     void interpolateStep();                     // move forward one step in current interpolation  
@@ -82,7 +81,7 @@ class BOLIDE_Player
      */
 
     /* Sequence Engine */
-    void playSeq( const transition_t * addr );  // load a sequence and play it from FLASH
+    void playSeq(const transition_t *addr);  // load a sequence and play it from FLASH
     void play();                                // keep moving forward in time
     unsigned char playing;                      // are we playing a sequence? 0=No, 1=Yes
 
@@ -92,19 +91,20 @@ class BOLIDE_Player
      *      bioloid.play();
      *  }
      */
-    
-  private:  
-    unsigned int * pose_;                       // the current pose, updated by Step(), set out by Sync()
-    unsigned int * nextpose_;                   // the destination pose, where we put on load
-    int * speed_;                               // speeds for interpolation 
-    unsigned char * id_;                        // servo id for this index
+
+private:
+    unsigned int *pose_;                       // the current pose, updated by Step(), set out by Sync()
+    unsigned int *nextpose_;                   // the destination pose, where we put on load
+    int *speed_;                               // speeds for interpolation
+    unsigned char *id_;                        // servo id for this index
 
     unsigned long lastframe_;                   // time last frame was sent out
-	unsigned int total_frame ; 					// Wei-Shun You edits: total frame between two pose
-	unsigned int frame_counter ; 				// Wei-Shun You edits: record how many frames runs
-    
-    transition_t * sequence;                    // sequence we are running
+    unsigned int total_frame;                    // Wei-Shun You edits: total frame between two pose
+    unsigned int frame_counter;                // Wei-Shun You edits: record how many frames runs
+
+    transition_t *sequence;                    // sequence we are running
     int transitions;                            // how many transitions we have left to load
-   
+
 };
+
 #endif
