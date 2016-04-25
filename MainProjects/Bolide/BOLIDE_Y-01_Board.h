@@ -89,7 +89,10 @@ const PROGMEM uint16_t log_light_40[41] = {1,
                                38, 45, 54, 64, 76, 90, 108, 128, 152, 181,
                                215, 256, 304, 362, 430, 512, 608, 723, 860, 1023};
 //=== Music Frequency ===
-const PROGMEM uint16_t start_music_frq[7] = {262, 262, 392, 392, 440, 440, 392};
+const PROGMEM uint16_t start_music_frq[] = {262, 262, 392, 392, 440, 440, 392};
+const PROGMEM uint8_t gStartupMusicLength = sizeof(start_music_frq)/sizeof(start_music_frq[0]);
+const PROGMEM uint8_t gStartupMusicShortLength = 2;
+
 const PROGMEM uint16_t obstacle_alarm_frq[3] = {262, 550, 392};
 
 #endif
