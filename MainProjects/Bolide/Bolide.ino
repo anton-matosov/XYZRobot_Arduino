@@ -29,6 +29,8 @@ static int pose_index[max_pose_index];
 sp_trans_t sequence[max_seq_index];// sequence
 
 
+static const int kJoyOffsetPos = 155;
+static const int kJoyOffsetNeg = 95;
 #define WALK_FORWARD_ACTION_ID 1
 
 void playCanNotGoTone();
@@ -169,59 +171,59 @@ void loop()
                     {
                         performMoveAction(RCU_R3);
                     }
-                    else if ((packet[1] > 155 & packet[2] > 155 & packet[1] > packet[2]) |
-                             (packet[1] > 155 & packet[2] < 95 & (packet[1] - 155) > (95 - packet[2])) |
-                             (packet[1] > 155 & packet[2] >= 95 & packet[2] <= 155))
+                    else if ((packet[1] > kJoyOffsetPos && packet[2] > kJoyOffsetPos  && packet[1] > packet[2]) ||
+                             (packet[1] > kJoyOffsetPos && packet[2] < kJoyOffsetNeg  && (packet[1] - kJoyOffsetPos) > (kJoyOffsetNeg - packet[2])) ||
+                             (packet[1] > kJoyOffsetPos && packet[2] >= kJoyOffsetNeg &&  packet[2] <= kJoyOffsetPos))
                     {
                         //LeftJoystick_Rightside
                         performMoveAction(RCU_LJR);
                     }
-                    else if ((packet[1] < 95 & packet[2] > 155 & (95 - packet[1]) > (packet[2] - 155)) |
-                             (packet[1] < 95 & packet[2] < 155 & (95 - packet[1]) > (95 - packet[2])) |
-                             (packet[1] < 95 & packet[2] >= 95 & packet[2] <= 155))
+                    else if ((packet[1] < kJoyOffsetNeg && packet[2] > kJoyOffsetPos  && (kJoyOffsetNeg - packet[1]) > (packet[2] - kJoyOffsetPos)) ||
+                             (packet[1] < kJoyOffsetNeg && packet[2] < kJoyOffsetPos  && (kJoyOffsetNeg - packet[1]) > (kJoyOffsetNeg - packet[2])) ||
+                             (packet[1] < kJoyOffsetNeg && packet[2] >= kJoyOffsetNeg &&  packet[2] <= kJoyOffsetPos))
                     {
                         //LeftJoystick_Leftside
                         performMoveAction(RCU_LJL);
                     }
-                    else if ((packet[1] > 155 & packet[2] > 155 & packet[1] < packet[2]) |
-                             (packet[1] < 95 & packet[2] > 155 & (95 - packet[1]) < (packet[2] - 155)) |
-                             (packet[2] > 155 & packet[1] >= 95 & packet[1] <= 155))
+                    else if ((packet[1] > kJoyOffsetPos && packet[2] > kJoyOffsetPos  && packet[1] < packet[2]) ||
+                             (packet[1] < kJoyOffsetNeg && packet[2] > kJoyOffsetPos  && (kJoyOffsetNeg - packet[1]) < (packet[2] - kJoyOffsetPos)) ||
+                             (packet[2] > kJoyOffsetPos && packet[1] >= kJoyOffsetNeg &&  packet[1] <= kJoyOffsetPos))
                     {
                         //LeftJoystick_Upside
                         performMoveAction(RCU_LJU);
                     }
-                    else if ((packet[1] > 155 & packet[2] < 95 & (packet[1] - 155) < (95 - packet[2])) |
-                             (packet[1] < 95 & packet[2] < 95 & (95 - packet[1]) < (155 - packet[2])) |
-                             (packet[2] < 95 & packet[1] >= 95 & packet[1] <= 155))
+                    else if ((packet[1] > kJoyOffsetPos && packet[2] < kJoyOffsetNeg  && (packet[1] - kJoyOffsetPos) < (kJoyOffsetNeg - packet[2])) ||
+                             (packet[1] < kJoyOffsetNeg && packet[2] < kJoyOffsetNeg  && (kJoyOffsetNeg - packet[1]) < (kJoyOffsetPos - packet[2])) ||
+                             (packet[2] < kJoyOffsetNeg && packet[1] >= kJoyOffsetNeg &&  packet[1] <= kJoyOffsetPos))
                     {
                         //LeftJoystick_Downside
                         performMoveAction(RCU_LJD);
                     }
 
-                    else if ((packet[3] > 155 & packet[4] > 155 & packet[3] > packet[4]) |
-                             (packet[3] > 155 & packet[4] < 95 & (packet[3] - 155) > (95 - packet[4])) |
-                             (packet[3] > 155 & packet[4] >= 95 & packet[4] <= 155))
+                    else if ((packet[3] > kJoyOffsetPos && packet[4] > kJoyOffsetPos  && packet[3] > packet[4]) ||
+                             (packet[3] > kJoyOffsetPos && packet[4] < kJoyOffsetNeg  && (packet[3] - kJoyOffsetPos) > (kJoyOffsetNeg - packet[4])) ||
+                             (packet[3] > kJoyOffsetPos && packet[4] >= kJoyOffsetNeg &&  packet[4] <= kJoyOffsetPos))
                     {
                         //RightJoystick_Rightside
                         performMoveAction(RCU_RJR);
                     }
-                    else if ((packet[3] < 95 & packet[4] > 155 & (95 - packet[3]) > (packet[4] - 155)) |
-                             (packet[3] < 95 & packet[4] < 95 & (95 - packet[3]) > (95 - packet[4])) |
-                             (packet[3] < 95 & packet[4] >= 95 & packet[4] <= 155))
+                    else if ((packet[3] < kJoyOffsetNeg & packet[4] > kJoyOffsetPos & (kJoyOffsetNeg - packet[3]) > (packet[4] - kJoyOffsetPos)) |
+                             (packet[3] < kJoyOffsetNeg & packet[4] < kJoyOffsetNeg & (kJoyOffsetNeg - packet[3]) > (kJoyOffsetNeg - packet[4])) |
+                             (packet[3] < kJoyOffsetNeg & packet[4] >= kJoyOffsetNeg & packet[4] <= kJoyOffsetPos))
                     {
                         //RightJoystick_Leftside
                         performMoveAction(RCU_RJL);
                     }
-                    else if ((packet[3] > 155 & packet[4] > 155 & packet[3] < packet[4]) |
-                             (packet[3] < 95 & packet[4] > 155 & (95 - packet[3]) < (packet[4] - 155)) |
-                             (packet[4] > 155 & packet[3] >= 95 & packet[3] <= 155))
+                    else if ((packet[3] > kJoyOffsetPos & packet[4] > kJoyOffsetPos & packet[3] < packet[4]) |
+                             (packet[3] < kJoyOffsetNeg & packet[4] > kJoyOffsetPos & (kJoyOffsetNeg - packet[3]) < (packet[4] - kJoyOffsetPos)) |
+                             (packet[4] > kJoyOffsetPos & packet[3] >= kJoyOffsetNeg & packet[3] <= kJoyOffsetPos))
                     {
                         //RightJoystick_Upside
                         performMoveAction(RCU_RJU);
                     }
-                    else if ((packet[3] > 155 & packet[4] < 95 & (packet[3] - 155) < (95 - packet[4])) |
-                             (packet[3] < 155 & packet[4] < 95 & (95 - packet[3]) < (95 - packet[4])) |
-                             (packet[4] < 95 & packet[3] >= 95 & packet[3] <= 155))
+                    else if ((packet[3] > kJoyOffsetPos & packet[4] < kJoyOffsetNeg & (packet[3] - kJoyOffsetPos) < (kJoyOffsetNeg - packet[4])) |
+                             (packet[3] < kJoyOffsetPos & packet[4] < kJoyOffsetNeg & (kJoyOffsetNeg - packet[3]) < (kJoyOffsetNeg - packet[4])) |
+                             (packet[4] < kJoyOffsetNeg & packet[3] >= kJoyOffsetNeg & packet[3] <= kJoyOffsetPos))
                     {
                         //RightJoystick_Downside
                         performMoveAction(RCU_RJD);
@@ -272,9 +274,9 @@ void loop()
         }
         else
         {
-            if (joystick_status[0] <= 155 & joystick_status[0] >= 95 & joystick_status[1] <= 155 &
-                joystick_status[1] >= 95 & joystick_status[2] <= 155 & joystick_status[2] >= 95 &
-                joystick_status[3] <= 155 & joystick_status[3] >= 95)
+            if (joystick_status[0] <= kJoyOffsetPos & joystick_status[0] >= kJoyOffsetNeg & joystick_status[1] <= kJoyOffsetPos &
+                joystick_status[1] >= kJoyOffsetNeg & joystick_status[2] <= kJoyOffsetPos & joystick_status[2] >= kJoyOffsetNeg &
+                joystick_status[3] <= kJoyOffsetPos & joystick_status[3] >= kJoyOffsetNeg)
             {
                 // Button task
                 BUTTON_Task();
@@ -282,80 +284,80 @@ void loop()
             else
             {
 #if DOING_SOME_MAGIC_CONTROLLER
-                if ((joystick_status[0] > 155 & joystick_status[1] > 155 & joystick_status[0] > joystick_status[1]) |
-                    (joystick_status[0] > 155 & joystick_status[1] < 95 &
-                     (joystick_status[0] - 155) > (95 - joystick_status[1])) |
-                    (joystick_status[0] > 155 & joystick_status[1] >= 95 & joystick_status[1] <= 155))
+                if ((joystick_status[0] > kJoyOffsetPos & joystick_status[1] > kJoyOffsetPos & joystick_status[0] > joystick_status[1]) |
+                    (joystick_status[0] > kJoyOffsetPos & joystick_status[1] < kJoyOffsetNeg &
+                     (joystick_status[0] - kJoyOffsetPos) > (kJoyOffsetNeg - joystick_status[1])) |
+                    (joystick_status[0] > kJoyOffsetPos & joystick_status[1] >= kJoyOffsetNeg & joystick_status[1] <= kJoyOffsetPos))
                 {
                     //LeftJoystick_Rightside
                     performMoveAction(RCU_LJR);
                 }
 
-                else if ((joystick_status[0] < 95 & joystick_status[1] > 155 &
-                          (95 - joystick_status[0]) > (joystick_status[1] - 155)) |
-                         (joystick_status[0] < 95 & joystick_status[1] < 155 &
-                          (95 - joystick_status[0]) > (95 - joystick_status[1])) |
-                         (joystick_status[0] < 95 & joystick_status[1] >= 95 & joystick_status[1] <= 155))
+                else if ((joystick_status[0] < kJoyOffsetNeg & joystick_status[1] > kJoyOffsetPos &
+                          (kJoyOffsetNeg - joystick_status[0]) > (joystick_status[1] - kJoyOffsetPos)) |
+                         (joystick_status[0] < kJoyOffsetNeg & joystick_status[1] < kJoyOffsetPos &
+                          (kJoyOffsetNeg - joystick_status[0]) > (kJoyOffsetNeg - joystick_status[1])) |
+                         (joystick_status[0] < kJoyOffsetNeg & joystick_status[1] >= kJoyOffsetNeg & joystick_status[1] <= kJoyOffsetPos))
                 {
                     //LeftJoystick_Leftside
                     performMoveAction(RCU_LJL);
                 }
 
-                else if ((joystick_status[0] > 155 & joystick_status[1] > 155 &
+                else if ((joystick_status[0] > kJoyOffsetPos & joystick_status[1] > kJoyOffsetPos &
                           joystick_status[0] < joystick_status[1]) |
-                         (joystick_status[0] < 95 & joystick_status[1] > 155 &
-                          (95 - joystick_status[0]) < (joystick_status[1] - 155)) |
-                         (joystick_status[1] > 155 & joystick_status[0] >= 95 & joystick_status[0] <= 155))
+                         (joystick_status[0] < kJoyOffsetNeg & joystick_status[1] > kJoyOffsetPos &
+                          (kJoyOffsetNeg - joystick_status[0]) < (joystick_status[1] - kJoyOffsetPos)) |
+                         (joystick_status[1] > kJoyOffsetPos & joystick_status[0] >= kJoyOffsetNeg & joystick_status[0] <= kJoyOffsetPos))
                 {
                     //LeftJoystick_Upside
                     performMoveAction(RCU_LJU);
                 }
 
-                else if ((joystick_status[0] > 155 & joystick_status[1] < 95 &
-                          (joystick_status[0] - 155) < (95 - joystick_status[1])) |
-                         (joystick_status[0] < 95 & joystick_status[1] < 95 &
-                          (95 - joystick_status[0]) < (155 - joystick_status[1])) |
-                         (joystick_status[1] < 95 & joystick_status[0] >= 95 & joystick_status[0] <= 155))
+                else if ((joystick_status[0] > kJoyOffsetPos & joystick_status[1] < kJoyOffsetNeg &
+                          (joystick_status[0] - kJoyOffsetPos) < (kJoyOffsetNeg - joystick_status[1])) |
+                         (joystick_status[0] < kJoyOffsetNeg & joystick_status[1] < kJoyOffsetNeg &
+                          (kJoyOffsetNeg - joystick_status[0]) < (kJoyOffsetPos - joystick_status[1])) |
+                         (joystick_status[1] < kJoyOffsetNeg & joystick_status[0] >= kJoyOffsetNeg & joystick_status[0] <= kJoyOffsetPos))
                 {
                     //LeftJoystick_Downside
                     performMoveAction(RCU_LJD);
                 }
 
-                else if ((joystick_status[2] > 155 & joystick_status[3] > 155 &
+                else if ((joystick_status[2] > kJoyOffsetPos & joystick_status[3] > kJoyOffsetPos &
                           joystick_status[2] > joystick_status[3]) |
-                         (joystick_status[2] > 155 & joystick_status[3] < 95 &
-                          (joystick_status[2] - 155) > (95 - joystick_status[3])) |
-                         (joystick_status[2] > 155 & joystick_status[3] >= 95 & joystick_status[3] <= 155))
+                         (joystick_status[2] > kJoyOffsetPos & joystick_status[3] < kJoyOffsetNeg &
+                          (joystick_status[2] - kJoyOffsetPos) > (kJoyOffsetNeg - joystick_status[3])) |
+                         (joystick_status[2] > kJoyOffsetPos & joystick_status[3] >= kJoyOffsetNeg & joystick_status[3] <= kJoyOffsetPos))
                 {
                     //RightJoystick_Rightside
                     performMoveAction(RCU_RJR);
                 }
 
-                else if ((joystick_status[2] < 95 & joystick_status[3] > 155 &
-                          (95 - joystick_status[2]) > (joystick_status[3] - 155)) |
-                         (joystick_status[2] < 95 & joystick_status[3] < 95 &
-                          (95 - joystick_status[2]) > (95 - joystick_status[3])) |
-                         (joystick_status[2] < 95 & joystick_status[3] >= 95 & joystick_status[3] <= 155))
+                else if ((joystick_status[2] < kJoyOffsetNeg & joystick_status[3] > kJoyOffsetPos &
+                          (kJoyOffsetNeg - joystick_status[2]) > (joystick_status[3] - kJoyOffsetPos)) |
+                         (joystick_status[2] < kJoyOffsetNeg & joystick_status[3] < kJoyOffsetNeg &
+                          (kJoyOffsetNeg - joystick_status[2]) > (kJoyOffsetNeg - joystick_status[3])) |
+                         (joystick_status[2] < kJoyOffsetNeg & joystick_status[3] >= kJoyOffsetNeg & joystick_status[3] <= kJoyOffsetPos))
                 {
                     //RightJoystick_Leftside
                     performMoveAction(RCU_RJL);
                 }
 
-                else if ((joystick_status[2] > 155 & joystick_status[3] > 155 &
+                else if ((joystick_status[2] > kJoyOffsetPos & joystick_status[3] > kJoyOffsetPos &
                           joystick_status[2] < joystick_status[3]) |
-                         (joystick_status[2] < 95 & joystick_status[3] > 155 &
-                          (95 - joystick_status[2]) < (joystick_status[3] - 155)) |
-                         (joystick_status[3] > 155 & joystick_status[2] >= 95 & joystick_status[2] <= 155))
+                         (joystick_status[2] < kJoyOffsetNeg & joystick_status[3] > kJoyOffsetPos &
+                          (kJoyOffsetNeg - joystick_status[2]) < (joystick_status[3] - kJoyOffsetPos)) |
+                         (joystick_status[3] > kJoyOffsetPos & joystick_status[2] >= kJoyOffsetNeg & joystick_status[2] <= kJoyOffsetPos))
                 {
                     //RightJoystick_Upside
                     performMoveAction(RCU_RJU);
                 }
 
-                else if ((joystick_status[2] > 155 & joystick_status[3] < 95 &
-                          (joystick_status[2] - 155) < (95 - joystick_status[3])) |
-                         (joystick_status[2] < 155 & joystick_status[3] < 95 &
-                          (95 - joystick_status[2]) < (95 - joystick_status[3])) |
-                         (joystick_status[3] < 95 & joystick_status[2] >= 95 & joystick_status[2] <= 155))
+                else if ((joystick_status[2] > kJoyOffsetPos & joystick_status[3] < kJoyOffsetNeg &
+                          (joystick_status[2] - kJoyOffsetPos) < (kJoyOffsetNeg - joystick_status[3])) |
+                         (joystick_status[2] < kJoyOffsetPos & joystick_status[3] < kJoyOffsetNeg &
+                          (kJoyOffsetNeg - joystick_status[2]) < (kJoyOffsetNeg - joystick_status[3])) |
+                         (joystick_status[3] < kJoyOffsetNeg & joystick_status[2] >= kJoyOffsetNeg & joystick_status[2] <= kJoyOffsetPos))
                 {
                     //RightJoystick_Downside
                     performMoveAction(RCU_RJD);
