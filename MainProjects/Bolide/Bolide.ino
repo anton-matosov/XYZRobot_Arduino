@@ -312,9 +312,11 @@ bool joystickRight(const int *joystick)
     const int horizontal = joystick[0];
     const int vertical = joystick[1];
 
-    return (horizontal > kJoyOffsetPos && vertical > kJoyOffsetPos && horizontal > vertical) ||
-           (horizontal > kJoyOffsetPos && vertical < kJoyOffsetNeg && (horizontal - kJoyOffsetPos) > (kJoyOffsetNeg - vertical)) ||
-           (horizontal > kJoyOffsetPos && vertical >= kJoyOffsetNeg && vertical <= kJoyOffsetPos);
+    const bool shiftedRight = horizontal > kJoyOffsetPos;
+
+    return (shiftedRight && vertical > kJoyOffsetPos && horizontal > vertical) ||
+           (shiftedRight && vertical < kJoyOffsetNeg && (horizontal - kJoyOffsetPos) > (kJoyOffsetNeg - vertical)) ||
+           (shiftedRight && vertical >= kJoyOffsetNeg && vertical <= kJoyOffsetPos);
 }
 
 bool joystickLeft(const int *joystick)
@@ -322,9 +324,11 @@ bool joystickLeft(const int *joystick)
     const int horizontal = joystick[0];
     const int vertical = joystick[1];
 
-    return (horizontal < kJoyOffsetNeg && vertical > kJoyOffsetPos && (kJoyOffsetNeg - horizontal) > (vertical - kJoyOffsetPos)) ||
-           (horizontal < kJoyOffsetNeg && vertical < kJoyOffsetPos && (kJoyOffsetNeg - horizontal) > (kJoyOffsetNeg - vertical)) ||
-           (horizontal < kJoyOffsetNeg && vertical >= kJoyOffsetNeg && vertical <= kJoyOffsetPos);
+    const bool shiftedLeft = horizontal < kJoyOffsetNeg;
+
+    return (shiftedLeft && vertical > kJoyOffsetPos && (kJoyOffsetNeg - horizontal) > (vertical - kJoyOffsetPos)) ||
+           (shiftedLeft && vertical < kJoyOffsetPos && (kJoyOffsetNeg - horizontal) > (kJoyOffsetNeg - vertical)) ||
+           (shiftedLeft && vertical >= kJoyOffsetNeg && vertical <= kJoyOffsetPos);
 }
 
 bool joystickUp(const int *joystick)
@@ -332,9 +336,11 @@ bool joystickUp(const int *joystick)
     const int horizontal = joystick[0];
     const int vertical = joystick[1];
 
-    return (horizontal > kJoyOffsetPos && vertical > kJoyOffsetPos && horizontal < vertical) ||
-           (horizontal < kJoyOffsetNeg && vertical > kJoyOffsetPos && (kJoyOffsetNeg - horizontal) < (vertical - kJoyOffsetPos)) ||
-           (vertical > kJoyOffsetPos && horizontal >= kJoyOffsetNeg && horizontal <= kJoyOffsetPos);
+    const bool shiftedUp = vertical > kJoyOffsetPos;
+
+    return (shiftedUp && horizontal > kJoyOffsetPos && horizontal < vertical) ||
+           (shiftedUp && horizontal < kJoyOffsetNeg && (kJoyOffsetNeg - horizontal) < (vertical - kJoyOffsetPos)) ||
+           (shiftedUp && horizontal >= kJoyOffsetNeg && horizontal <= kJoyOffsetPos);
 }
 
 bool joystickDown(const int *joystick)
@@ -342,9 +348,11 @@ bool joystickDown(const int *joystick)
     const int horizontal = joystick[0];
     const int vertical = joystick[1];
 
-    return (horizontal > kJoyOffsetPos && vertical < kJoyOffsetNeg && (horizontal - kJoyOffsetPos) < (kJoyOffsetNeg - vertical)) ||
-           (horizontal < kJoyOffsetNeg && vertical < kJoyOffsetNeg && (kJoyOffsetNeg - horizontal) < (kJoyOffsetPos - vertical)) ||
-           (vertical < kJoyOffsetNeg && horizontal >= kJoyOffsetNeg && horizontal <= kJoyOffsetPos);
+    const bool shiftedDown = vertical < kJoyOffsetNeg;
+
+    return (shiftedDown && horizontal > kJoyOffsetPos && (horizontal - kJoyOffsetPos) < (kJoyOffsetNeg - vertical)) ||
+           (shiftedDown && horizontal < kJoyOffsetNeg && (kJoyOffsetNeg - horizontal) < (kJoyOffsetPos - vertical)) ||
+           (shiftedDown && horizontal >= kJoyOffsetNeg && horizontal <= kJoyOffsetPos);
 }
 
 void performMoveAction(int actionId)
