@@ -4,7 +4,7 @@ set(PROJECT_NAME Bolide)
 project(${PROJECT_NAME})
 
 set(ARDUINO_DEFAULT_BOARD XYZrobot1280)
-set(ARDUINO_DEFAULT_SERIAL /dev/cu.usbserial-A104D3XB)
+set(ARDUINO_DEFAULT_PORT /dev/cu.usbserial-A104D3XB)
 
 message("ArduinoSDK: ${ARDUINO_SDK_VERSION}")
 
