@@ -82,10 +82,10 @@ void BUTTON_Task(void);
 void LED_Task(char mode);
 void Power_Detection_Task(void);
 
-bool joistickRight(int vertical, int horizontal);
-bool joistickLeft(int vertical, int horizontal);
-bool joistickUp(int vertical, int horizontal);
-bool joistickDown(int vertical, int horizontal);
+bool joistickRight(const int joystick[2]);
+bool joistickLeft(const int joystick[2]);
+bool joistickUp(const int joystick[2]);
+bool joistickDown(const int joystick[2]);
 
 bool irSensorDetectedObstacle();
 
@@ -133,14 +133,14 @@ void loop()
             BT_Packet_Task();
             if (BT_update)
             {
-                leftJoystick[0] = packet[1];
-                leftJoystick[1] = packet[2];
-                rightJoistick[0] = packet[3];
-                rightJoistick[1] = packet[4];
-
                 //==== RCU Command ====
                 if (packet[1] != 255 & packet[2] != 1)
                 {
+                    leftJoystick[0] = packet[1];
+                    leftJoystick[1] = packet[2];
+                    rightJoistick[0] = packet[3];
+                    rightJoistick[1] = packet[4];
+
                     LED_Task(1);
 
                     if (packet[5] & RCU_mask_release) //Release Button
@@ -182,35 +182,35 @@ void loop()
                     {
                         performMoveAction(RCU_R3);
                     }
-                    else if (joistickRight(leftJoystick[0], leftJoystick[1]))
+                    else if (joistickRight(leftJoystick))
                     {
                         performMoveAction(RCU_LJR);
                     }
-                    else if (joistickLeft(leftJoystick[0], leftJoystick[1]))
+                    else if (joistickLeft(leftJoystick))
                     {
                         performMoveAction(RCU_LJL);
                     }
-                    else if (joistickUp(leftJoystick[0], leftJoystick[1]))
+                    else if (joistickUp(leftJoystick))
                     {
                         performMoveAction(RCU_LJU);
                     }
-                    else if (joistickDown(leftJoystick[0], leftJoystick[1]))
+                    else if (joistickDown(leftJoystick))
                     {
                         performMoveAction(RCU_LJD);
                     }
-                    else if (joistickRight(rightJoistick[0], rightJoistick[1]))
+                    else if (joistickRight(rightJoistick))
                     {
                         performMoveAction(RCU_RJR);
                     }
-                    else if (joistickLeft(rightJoistick[0], rightJoistick[1]))
+                    else if (joistickLeft(rightJoistick))
                     {
                         performMoveAction(RCU_RJL);
                     }
-                    else if (joistickUp(rightJoistick[0], rightJoistick[1]))
+                    else if (joistickUp(rightJoistick))
                     {
                         performMoveAction(RCU_RJU);
                     }
-                    else if (joistickDown(rightJoistick[0], rightJoistick[1]))
+                    else if (joistickDown(rightJoistick))
                     {
                         performMoveAction(RCU_RJD);
                     }
@@ -270,35 +270,35 @@ void loop()
             else
             {
 #if DOING_SOME_MAGIC_CONTROLLER
-                if (joistickRight(leftJoystick[0], leftJoystick[1]))
+                if (joistickRight(leftJoystick))
                 {
                     performMoveAction(RCU_LJR);
                 }
-                else if (joistickLeft(leftJoystick[0], leftJoystick[1]))
+                else if (joistickLeft(leftJoystick))
                 {
                     performMoveAction(RCU_LJL);
                 }
-                else if (joistickUp(leftJoystick[0], leftJoystick[1]))
+                else if (joistickUp(leftJoystick))
                 {
                     performMoveAction(RCU_LJU);
                 }
-                else if (joistickDown(leftJoystick[0], leftJoystick[1]))
+                else if (joistickDown(leftJoystick))
                 {
                     performMoveAction(RCU_LJD);
                 }
-                else if (joistickRight(rightJoistick[0], rightJoistick[1]))
+                else if (joistickRight(rightJoistick))
                 {
                     performMoveAction(RCU_RJR);
                 }
-                else if (joistickLeft(rightJoistick[0], rightJoistick[1]))
+                else if (joistickLeft(rightJoistick))
                 {
                     performMoveAction(RCU_RJL);
                 }
-                else if (joistickUp(rightJoistick[0], rightJoistick[1]))
+                else if (joistickUp(rightJoistick))
                 {
                     performMoveAction(RCU_RJU);
                 }
-                else if (joistickDown(rightJoistick[0], rightJoistick[1]))
+                else if (joistickDown(rightJoistick))
                 {
                     performMoveAction(RCU_RJD);
                 }
@@ -308,30 +308,42 @@ void loop()
     }
 }
 
-bool joistickRight(int vertical, int horizontal)
+bool joistickRight(const int joystick[2])
 {
+    const int vertical = joystick[0];
+    const int horizontal = joystick[1];
+
     return (vertical > kJoyOffsetPos && horizontal > kJoyOffsetPos && vertical > horizontal) ||
            (vertical > kJoyOffsetPos && horizontal < kJoyOffsetNeg && (vertical - kJoyOffsetPos) > (kJoyOffsetNeg - horizontal)) ||
            (vertical > kJoyOffsetPos && horizontal >= kJoyOffsetNeg && horizontal <= kJoyOffsetPos);
 }
 
-bool joistickLeft(int vertical, int horizontal)
+bool joistickLeft(const int joystick[2])
 {
+    const int vertical = joystick[0];
+    const int horizontal = joystick[1];
+
     return (vertical < kJoyOffsetNeg && horizontal > kJoyOffsetPos && (kJoyOffsetNeg - vertical) > (
         horizontal - kJoyOffsetPos)) ||
            (vertical < kJoyOffsetNeg && horizontal < kJoyOffsetPos && (kJoyOffsetNeg - vertical) > (kJoyOffsetNeg - horizontal)) ||
            (vertical < kJoyOffsetNeg && horizontal >= kJoyOffsetNeg && horizontal <= kJoyOffsetPos);
 }
 
-bool joistickUp(int vertical, int horizontal)
+bool joistickUp(const int joystick[2])
 {
+    const int vertical = joystick[0];
+    const int horizontal = joystick[1];
+
     return (vertical > kJoyOffsetPos && horizontal > kJoyOffsetPos && vertical < horizontal) ||
            (vertical < kJoyOffsetNeg && horizontal > kJoyOffsetPos && (kJoyOffsetNeg - vertical) < (horizontal - kJoyOffsetPos)) ||
            (horizontal > kJoyOffsetPos && vertical >= kJoyOffsetNeg && vertical <= kJoyOffsetPos);
 }
 
-bool joistickDown(int vertical, int horizontal)
+bool joistickDown(const int joystick[2])
 {
+    const int vertical = joystick[0];
+    const int horizontal = joystick[1];
+
     return (vertical > kJoyOffsetPos && horizontal < kJoyOffsetNeg && (vertical - kJoyOffsetPos) < (kJoyOffsetNeg - horizontal)) ||
            (vertical < kJoyOffsetNeg && horizontal < kJoyOffsetNeg && (kJoyOffsetNeg - vertical) < (kJoyOffsetPos - horizontal)) ||
            (horizontal < kJoyOffsetNeg && vertical >= kJoyOffsetNeg && vertical <= kJoyOffsetPos);
