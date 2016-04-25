@@ -9,11 +9,9 @@
 #include "Config.h"
 #include "AnalogJoystick.h"
 
-
 //== Declare Global Parameters ==
-
-static int leftJoystick[2] = {kJoyOffsetRested, kJoyOffsetRested};
-static int rightJoystick[2] = {kJoyOffsetRested, kJoyOffsetRested};
+AnalogJoystick leftJoystick;
+AnalogJoystick rightJoystick;
 
 //Normal Operation Pararmeter
 BOLIDE_Player XYZrobot;
@@ -130,10 +128,8 @@ void loop()
                 //==== RCU Command ====
                 if (packet[1] != 255 & packet[2] != 1)
                 {
-                    leftJoystick[0] = packet[1];
-                    leftJoystick[1] = packet[2];
-                    rightJoystick[0] = packet[3];
-                    rightJoystick[1] = packet[4];
+                    leftJoystick.update(&packet[1]);
+                    rightJoystick.update(&packet[3]);
 
                     LED_Task(1);
 
@@ -226,19 +222,14 @@ void loop()
         }
         else
         {
-            AnalogJoystick joystickR(rightJoystick);
-            AnalogJoystick joystickL(leftJoystick);
-
-            if (joystickR.isRested() && joystickL.isRested())
+            if (leftJoystick.isRested() && rightJoystick.isRested())
             {
                 // Button task
                 BUTTON_Task();
             }
             else
             {
-#if DOING_SOME_MAGIC_CONTROLLER
                 checkJoystickActions();
-#endif //  DOING_SOME_MAGIC_CONTROLLER
             }
         }
     }
@@ -252,20 +243,19 @@ void checkJoystickActions()
 
 void checkLeftJoystickActions()
 {
-    AnalogJoystick joystick(leftJoystick);
-    if (joystick.isRight())
+    if (leftJoystick.isRight())
     {
         performMoveAction(RCU_LJR);
     }
-    else if (joystick.isLeft())
+    else if (leftJoystick.isLeft())
     {
         performMoveAction(RCU_LJL);
     }
-    else if (joystick.isUp())
+    else if (leftJoystick.isUp())
     {
         performMoveAction(RCU_LJU);
     }
-    else if (joystick.isDown())
+    else if (leftJoystick.isDown())
     {
         performMoveAction(RCU_LJD);
     }
@@ -273,21 +263,19 @@ void checkLeftJoystickActions()
 
 void checkRightJoystickActions()
 {
-    AnalogJoystick joystick(rightJoystick);
-
-    if (joystick.isRight())
+    if (rightJoystick.isRight())
     {
         performMoveAction(RCU_RJR);
     }
-    else if (joystick.isLeft())
+    else if (rightJoystick.isLeft())
     {
         performMoveAction(RCU_RJL);
     }
-    else if (joystick.isUp())
+    else if (rightJoystick.isUp())
     {
         performMoveAction(RCU_RJU);
     }
-    else if (joystick.isDown())
+    else if (rightJoystick.isDown())
     {
         performMoveAction(RCU_RJD);
     }}
@@ -1342,10 +1330,8 @@ void Action(int N)
             }
             else
             {
-                leftJoystick[0] = packet[1];
-                leftJoystick[1] = packet[2];
-                rightJoystick[0] = packet[3];
-                rightJoystick[1] = packet[4];
+                leftJoystick.update(&packet[1]);
+                rightJoystick.update(&packet[3]);
             }
         }
     }

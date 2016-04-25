@@ -5,6 +5,30 @@
 #include <stdlib.h>
 #include "AnalogJoystick.h"
 
+enum JoystickOffsets
+{
+    kJoyOffsetRested = 125,
+    kJoyOffsetThreshold = 20,
+};
+
+AnalogJoystick::AnalogJoystick()
+    : horizontal_(kJoyOffsetRested)
+      , vertical_(kJoyOffsetRested)
+{
+}
+
+AnalogJoystick::AnalogJoystick(int *joystick)
+    : horizontal_(joystick[0])
+      , vertical_(joystick[1])
+{
+}
+
+void AnalogJoystick::update(int *joystick)
+{
+    horizontal_ = joystick[0];
+    vertical_ = joystick[1];
+}
+
 bool AnalogJoystick::isRested()
 {
     return isAxisRested(horizontal_) && isAxisRested(vertical_);

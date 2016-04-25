@@ -4,20 +4,14 @@
 
 #pragma once
 
-enum JoystickOffsets
-{
-    kJoyOffsetRested = 125,
-    kJoyOffsetThreshold = 20,
-};
 
 class AnalogJoystick
 {
 public:
-    AnalogJoystick(int *joystick)
-        : horizontal_(joystick[0])
-        , vertical_(joystick[1])
-    {
-    }
+    AnalogJoystick();
+    AnalogJoystick(int *joystick);
+
+    void update(int *joystick);
 
     bool isRested();
 
