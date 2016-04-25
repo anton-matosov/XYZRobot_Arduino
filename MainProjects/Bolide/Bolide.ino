@@ -1281,17 +1281,16 @@ void MusicPlaying_wav_volume(int volume) {
 
 // Buzzer function : play start music
 void Start_Music(void) {
+    int currentTone = 0;
 #ifdef DISABLE_STARTUP_MUSIC
-    const int musicLength = 0;
+    currentTone = gStartupMusicLength;
 #elif defined(SHORT_STARTUP_MUSIC)
-    const int musicLength = gStartupMusicShortLength;
-#else
-    const int musicLength = gStartupMusicLength;
+    currentTone = gStartupMusicLength - gStartupMusicShortLength;
 #endif
 
-    for (int i = 0; i < musicLength; i++) {
-        tone(BUZZER_PIN, pgm_read_word_near(&start_music_frq[i]));
-        delay(250);
+    for (; currentTone < gStartupMusicLength; currentTone++) {
+        tone(BUZZER_PIN, pgm_read_word_near(&start_music_frq[currentTone]));
+        delay(200);
         noTone(BUZZER_PIN);
     }
 }
