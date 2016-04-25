@@ -9,6 +9,7 @@
 #include "Config.h"
 
 //== Declare Global Parameters ==
+
 //Normal Operation Pararmeter
 BOLIDE_Player XYZrobot;
 static float ax, ay, az;
@@ -18,21 +19,69 @@ static int SN_packet[9] = {0}, SN_packet_index = 0, inByte = 0;
 static int packet[7], LED_mode, g_packet[8], ir_packet[4], ir_msb, ir_lsb, ir_rowdata;
 static boolean torque_release = false, BT_update = false;
 static int joystick_status[4] = {125, 125, 125, 125};
+
 //Motion Editor Parameter
 static boolean packet_timeout_status = false;
 static boolean seq_trigger = false, seq_loop_trigger = false;
 static int seq_pSeqCnt = 0xFF, SeqPos = 0x00;
-void performMoveAction(int actionId);
 static int poses[max_pose_index][MAX_SERVOS];      // poses [index][servo_id-1], check for the motion index!!
 static int pose_index[max_pose_index];
 sp_trans_t sequence[max_seq_index];// sequence
+
+
+#define WALK_FORWARD_ACTION_ID 1
+
+void playCanNotGoTone();
+void performMoveAction(int actionId);
+void ConfigureAllServos(void);
+void BT_Task_Setup(void);
+void Speaker_Task_Setup(void);
+void Eye_LED_Setup(void);
+void Buzzer_Setup(void);
+void Button_Setup(void);
+void Analog_Input_Setup(void);
+void Timer_Task_Setup(void);
+void G_SENSOR_Task_Setup(void);
+void setReg(int reg, int data);
+int getData(int reg);
+int Falling_Task(void);
+void Getup_Task(int posture_index);
+int IR_SENSOR_Task(void);
+void Motion_Editor_Packet_Task(void);
+void cb_USB(void);
+void Motion_Editor_Seq_Play(void);
+void Packet_Init(unsigned char motor_num);
+void Packet_Set(unsigned char motor_ID, int pos_set);
+void Packet_Capture(unsigned char motor_ID);
+void Packet_Relax(unsigned char motor_ID);
+void Packet_SN(void);
+void Packet_Version_Read(void);
+void Packet_Error_Feedback(unsigned char CMD_reaction);
+void Initial_Pose_Setup(void);
+void Action(int N);
+boolean BT_Packet_Task(void);
+void BT_Gsensor_Data(void);
+void BT_IR_Data(void);
+void BT_ActionEnding(int ActionNum);
+void BT_FW();
+void cb_BT(void);
+void find_header_BT(void);
+void MusicPlaying_wav_play(char song_name[]);
+void MusicPlaying_wav_stop();
+void MusicPlaying_wav_volume(int volume);
+void Start_Music(void);
+void BUTTON_Task(void);
+void LED_Task(char mode);
+void Power_Detection_Task(void);
+
+bool irSensorDetectedObstacle();
 
 //========================= Set up =======================================
 void setup()
 {
     //Configure all basic setting
     Serial.begin(115200);
-    AIM_Task_Setup();
+    ConfigureAllServos();
     BT_Task_Setup();
     Speaker_Task_Setup();
     Eye_LED_Setup();
@@ -426,7 +475,7 @@ void performMoveAction(int actionId)
 //=========================== Function ================================
 //== Setup function ==
 //Configure A1-16 servo motor
-void AIM_Task_Setup(void)
+void ConfigureAllServos(void)
 {
     XYZrobot.setup(115200, 18);
 }
@@ -1677,7 +1726,7 @@ void find_header_BT(void)
 }
 
 // Speaker function
-void MusicPlaying_wav_play(char song_name[])
+void MusicPlaying_wav_play(const char song_name[])
 {
     Serial3.write(0);
     Serial3.print("P");
