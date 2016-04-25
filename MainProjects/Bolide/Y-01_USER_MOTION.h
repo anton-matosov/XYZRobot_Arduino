@@ -2,16 +2,10 @@
 #define Y_01_USER_MOTION_H
 
 #include <avr/pgmspace.h>
-//#include <cstdint>
 #include "BOLIDE_Player.h"
 
 #define Adjustment_index true
 #define Avoidance_index true
-
-
-#ifndef PROGMEM
-#define PROGMEM
-#endif
 
 //===== User Default Sequence ======
 const PROGMEM uint16_t DefaultPose1[] = {18, 263, 759, 372, 650, 467, 555, 373, 650, 512, 512, 339, 684, 269, 754, 633, 390, 512, 512};
