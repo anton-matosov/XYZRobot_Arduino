@@ -278,8 +278,8 @@ void checkRightJoystickActions()
     else if (rightJoystick.isDown())
     {
         performMoveAction(RCU_RJD);
-    }}
-
+    }
+}
 
 void performMoveAction(int actionId)
 {
