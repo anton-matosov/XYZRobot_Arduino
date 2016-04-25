@@ -82,6 +82,7 @@ void BUTTON_Task(void);
 void LED_Task(char mode);
 void Power_Detection_Task(void);
 
+bool joystickRested(const int *joystick);
 bool joystickRight(const int *joystick);
 bool joystickLeft(const int *joystick);
 bool joystickUp(const int *joystick);
@@ -89,11 +90,9 @@ bool joystickDown(const int *joystick);
 
 bool irSensorDetectedObstacle();
 
-void checkLeftJoystickActions();
-
-void checkRightJoystickActions();
-
 void checkJoystickActions();
+void checkLeftJoystickActions();
+void checkRightJoystickActions();
 
 //========================= Set up =======================================
 void setup()
@@ -238,9 +237,7 @@ void loop()
         }
         else
         {
-            if (leftJoystick[0] <= kJoyOffsetPos & leftJoystick[0] >= kJoyOffsetNeg & leftJoystick[1] <= kJoyOffsetPos &
-                leftJoystick[1] >= kJoyOffsetNeg & rightJoystick[0] <= kJoyOffsetPos & rightJoystick[0] >= kJoyOffsetNeg &
-                rightJoystick[1] <= kJoyOffsetPos & rightJoystick[1] >= kJoyOffsetNeg)
+            if (joystickRested(leftJoystick) && joystickRested(rightJoystick))
             {
                 // Button task
                 BUTTON_Task();
@@ -299,6 +296,15 @@ void checkRightJoystickActions()
     {
         performMoveAction(RCU_RJD);
     }
+}
+
+bool joystickRested(const int *joystick)
+{
+    const int vertical = joystick[0];
+    const int horizontal = joystick[1];
+
+    return vertical <= kJoyOffsetPos && vertical >= kJoyOffsetNeg &&
+        horizontal <= kJoyOffsetPos && horizontal >= kJoyOffsetNeg;
 }
 
 bool joystickRight(const int *joystick)
