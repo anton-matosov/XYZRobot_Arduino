@@ -319,9 +319,8 @@ bool joystickRight(const int *joystick)
 
     const bool shiftedRight = horizontal > kJoyOffsetPos;
 
-    return (shiftedRight && vertical > kJoyOffsetPos && horizontal > vertical) ||
-           (shiftedRight && vertical < kJoyOffsetNeg && (horizontal - kJoyOffsetPos) > (kJoyOffsetNeg - vertical)) ||
-           (shiftedRight && joystickAxisRested(vertical));
+    return shiftedRight &&
+        (abs(horizontal - kJoyOffsetRested) > abs(vertical - kJoyOffsetRested));
 }
 
 bool joystickLeft(const int *joystick)
@@ -331,9 +330,8 @@ bool joystickLeft(const int *joystick)
 
     const bool shiftedLeft = horizontal < kJoyOffsetNeg;
 
-    return (shiftedLeft && vertical > kJoyOffsetPos && (kJoyOffsetNeg - horizontal) > (vertical - kJoyOffsetPos)) ||
-           (shiftedLeft && vertical < kJoyOffsetPos && (kJoyOffsetNeg - horizontal) > (kJoyOffsetNeg - vertical)) ||
-           (shiftedLeft && joystickAxisRested(vertical));
+    return shiftedLeft &&
+           (abs(horizontal - kJoyOffsetRested) > abs(vertical - kJoyOffsetRested));
 }
 
 bool joystickUp(const int *joystick)
