@@ -252,7 +252,7 @@ void checkJoystickActions()
 
 void checkLeftJoystickActions()
 {
-    AnalogJoystick joystick(rightJoystick);
+    AnalogJoystick joystick(leftJoystick);
     if (joystick.isRight())
     {
         performMoveAction(RCU_LJR);
