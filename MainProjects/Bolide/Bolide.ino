@@ -8,7 +8,17 @@
 
 #include "Config.h"
 
+
 //== Declare Global Parameters ==
+
+enum JoystickOffsets
+{
+    kJoyOffsetRested = 125,
+    kJoyOffsetPos = 155,
+    kJoyOffsetNeg = 95
+};
+static int leftJoystick[2] = {kJoyOffsetRested, kJoyOffsetRested};
+static int rightJoistick[2] = {kJoyOffsetRested, kJoyOffsetRested};
 
 //Normal Operation Pararmeter
 BOLIDE_Player XYZrobot;
@@ -18,8 +28,6 @@ static int distance;
 static int SN_packet[9] = {0}, SN_packet_index = 0, inByte = 0;
 static int packet[7], LED_mode, g_packet[8], ir_packet[4], ir_msb, ir_lsb, ir_rowdata;
 static boolean torque_release = false, BT_update = false;
-static int leftJoystick[2] = {125, 125};
-static int rightJoistick[2] = {125, 125};
 
 //Motion Editor Parameter
 static boolean packet_timeout_status = false;
@@ -29,9 +37,6 @@ static int poses[max_pose_index][MAX_SERVOS];      // poses [index][servo_id-1],
 static int pose_index[max_pose_index];
 sp_trans_t sequence[max_seq_index];// sequence
 
-
-static const int kJoyOffsetPos = 155;
-static const int kJoyOffsetNeg = 95;
 #define WALK_FORWARD_ACTION_ID 1
 
 void playCanNotGoTone();
