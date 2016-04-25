@@ -300,51 +300,51 @@ void checkRightJoystickActions()
 
 bool joystickRested(const int *joystick)
 {
-    const int vertical = joystick[0];
-    const int horizontal = joystick[1];
+    const int horizontal = joystick[0];
+    const int vertical = joystick[1];
 
-    return vertical <= kJoyOffsetPos && vertical >= kJoyOffsetNeg &&
-        horizontal <= kJoyOffsetPos && horizontal >= kJoyOffsetNeg;
+    return horizontal <= kJoyOffsetPos && horizontal >= kJoyOffsetNeg &&
+        vertical <= kJoyOffsetPos && vertical >= kJoyOffsetNeg;
 }
 
 bool joystickRight(const int *joystick)
 {
-    const int vertical = joystick[0];
-    const int horizontal = joystick[1];
+    const int horizontal = joystick[0];
+    const int vertical = joystick[1];
 
-    return (vertical > kJoyOffsetPos && horizontal > kJoyOffsetPos && vertical > horizontal) ||
-           (vertical > kJoyOffsetPos && horizontal < kJoyOffsetNeg && (vertical - kJoyOffsetPos) > (kJoyOffsetNeg - horizontal)) ||
-           (vertical > kJoyOffsetPos && horizontal >= kJoyOffsetNeg && horizontal <= kJoyOffsetPos);
+    return (horizontal > kJoyOffsetPos && vertical > kJoyOffsetPos && horizontal > vertical) ||
+           (horizontal > kJoyOffsetPos && vertical < kJoyOffsetNeg && (horizontal - kJoyOffsetPos) > (kJoyOffsetNeg - vertical)) ||
+           (horizontal > kJoyOffsetPos && vertical >= kJoyOffsetNeg && vertical <= kJoyOffsetPos);
 }
 
 bool joystickLeft(const int *joystick)
 {
-    const int vertical = joystick[0];
-    const int horizontal = joystick[1];
+    const int horizontal = joystick[0];
+    const int vertical = joystick[1];
 
-    return (vertical < kJoyOffsetNeg && horizontal > kJoyOffsetPos && (kJoyOffsetNeg - vertical) > (horizontal - kJoyOffsetPos)) ||
-           (vertical < kJoyOffsetNeg && horizontal < kJoyOffsetPos && (kJoyOffsetNeg - vertical) > (kJoyOffsetNeg - horizontal)) ||
-           (vertical < kJoyOffsetNeg && horizontal >= kJoyOffsetNeg && horizontal <= kJoyOffsetPos);
+    return (horizontal < kJoyOffsetNeg && vertical > kJoyOffsetPos && (kJoyOffsetNeg - horizontal) > (vertical - kJoyOffsetPos)) ||
+           (horizontal < kJoyOffsetNeg && vertical < kJoyOffsetPos && (kJoyOffsetNeg - horizontal) > (kJoyOffsetNeg - vertical)) ||
+           (horizontal < kJoyOffsetNeg && vertical >= kJoyOffsetNeg && vertical <= kJoyOffsetPos);
 }
 
 bool joystickUp(const int *joystick)
 {
-    const int vertical = joystick[0];
-    const int horizontal = joystick[1];
+    const int horizontal = joystick[0];
+    const int vertical = joystick[1];
 
-    return (vertical > kJoyOffsetPos && horizontal > kJoyOffsetPos && vertical < horizontal) ||
-           (vertical < kJoyOffsetNeg && horizontal > kJoyOffsetPos && (kJoyOffsetNeg - vertical) < (horizontal - kJoyOffsetPos)) ||
-           (horizontal > kJoyOffsetPos && vertical >= kJoyOffsetNeg && vertical <= kJoyOffsetPos);
+    return (horizontal > kJoyOffsetPos && vertical > kJoyOffsetPos && horizontal < vertical) ||
+           (horizontal < kJoyOffsetNeg && vertical > kJoyOffsetPos && (kJoyOffsetNeg - horizontal) < (vertical - kJoyOffsetPos)) ||
+           (vertical > kJoyOffsetPos && horizontal >= kJoyOffsetNeg && horizontal <= kJoyOffsetPos);
 }
 
 bool joystickDown(const int *joystick)
 {
-    const int vertical = joystick[0];
-    const int horizontal = joystick[1];
+    const int horizontal = joystick[0];
+    const int vertical = joystick[1];
 
-    return (vertical > kJoyOffsetPos && horizontal < kJoyOffsetNeg && (vertical - kJoyOffsetPos) < (kJoyOffsetNeg - horizontal)) ||
-           (vertical < kJoyOffsetNeg && horizontal < kJoyOffsetNeg && (kJoyOffsetNeg - vertical) < (kJoyOffsetPos - horizontal)) ||
-           (horizontal < kJoyOffsetNeg && vertical >= kJoyOffsetNeg && vertical <= kJoyOffsetPos);
+    return (horizontal > kJoyOffsetPos && vertical < kJoyOffsetNeg && (horizontal - kJoyOffsetPos) < (kJoyOffsetNeg - vertical)) ||
+           (horizontal < kJoyOffsetNeg && vertical < kJoyOffsetNeg && (kJoyOffsetNeg - horizontal) < (kJoyOffsetPos - vertical)) ||
+           (vertical < kJoyOffsetNeg && horizontal >= kJoyOffsetNeg && horizontal <= kJoyOffsetPos);
 }
 
 void performMoveAction(int actionId)
