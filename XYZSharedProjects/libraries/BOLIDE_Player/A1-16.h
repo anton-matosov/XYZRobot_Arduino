@@ -136,7 +136,6 @@ void A1_16_WriteData2(unsigned char _pID, unsigned char _CMD, unsigned char _add
 
 void A1_16_Basic(unsigned char _pID, unsigned char _CMD);
 
-
 #define SetPositionS_JOG(id, time, pos) (A1_16_SetPosition(id, CMD_S_JOG,  time, pos))
 #define SetPositionI_JOG(id, time, pos) (A1_16_SetPosition(id, CMD_I_JOG,  time, pos))
 

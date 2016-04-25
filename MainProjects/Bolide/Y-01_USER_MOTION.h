@@ -1921,7 +1921,6 @@ const PROGMEM transition_t D_Dance30[] = {{0,             11},
                                           {D_SD178,       500},
                                           {D_InitialPose, 500}};
 
-
 const PROGMEM transition_t D_KungFu1[] = {{0,             11},
                                           {D_KF19,        500},
                                           {D_KF16,        500},
@@ -2200,7 +2199,6 @@ const PROGMEM transition_t D_KungFu24[] = {{0,             11},
                                            {D_KF117,       600},
                                            {D_InitialPose, 500}};
 
-
 const PROGMEM transition_t D_Fight1[] = {{0,     4},
                                          {D_FP1, 300},
                                          {D_FP2, 100},
@@ -2325,7 +2323,6 @@ const PROGMEM transition_t D_Fight23[] = {{0,      5},
 const PROGMEM transition_t D_Fight24[] = {{0,      2},
                                           {D_FP41, 500},
                                           {D_FP58, 500}};
-
 
 //=====MusicDanceSequence======
 const PROGMEM transition_t D_KungFuDance[] = {{0,       141},

@@ -39,13 +39,15 @@
 #define A1_16_SHIFT             3
 
 /** a structure to hold transitions **/
-typedef struct {
+typedef struct
+{
     const uint16_t *pose;    // addr of pose to transition to
     int time;               // time for transition
 } transition_t;
 
 /** Bioloid Controller Class for mega324p/644p clients. **/
-class BOLIDE_Player {
+class BOLIDE_Player
+{
 public:
     /* For compatibility with legacy code */
     //BOLIDE_Player(long baud);               
