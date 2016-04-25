@@ -83,6 +83,7 @@ void LED_Task(char mode);
 void Power_Detection_Task(void);
 
 bool joystickRested(const int *joystick);
+bool joystickAxisRested(const int joystickAxis);
 bool joystickRight(const int *joystick);
 bool joystickLeft(const int *joystick);
 bool joystickUp(const int *joystick);
@@ -303,8 +304,12 @@ bool joystickRested(const int *joystick)
     const int horizontal = joystick[0];
     const int vertical = joystick[1];
 
-    return horizontal <= kJoyOffsetPos && horizontal >= kJoyOffsetNeg &&
-        vertical <= kJoyOffsetPos && vertical >= kJoyOffsetNeg;
+    return joystickAxisRested(horizontal) && joystickAxisRested(vertical);
+}
+
+bool joystickAxisRested(const int joystickAxis)
+{
+    return joystickAxis <= kJoyOffsetPos && joystickAxis >= kJoyOffsetNeg;
 }
 
 bool joystickRight(const int *joystick)
@@ -316,7 +321,7 @@ bool joystickRight(const int *joystick)
 
     return (shiftedRight && vertical > kJoyOffsetPos && horizontal > vertical) ||
            (shiftedRight && vertical < kJoyOffsetNeg && (horizontal - kJoyOffsetPos) > (kJoyOffsetNeg - vertical)) ||
-           (shiftedRight && vertical >= kJoyOffsetNeg && vertical <= kJoyOffsetPos);
+           (shiftedRight && joystickAxisRested(vertical));
 }
 
 bool joystickLeft(const int *joystick)
@@ -328,7 +333,7 @@ bool joystickLeft(const int *joystick)
 
     return (shiftedLeft && vertical > kJoyOffsetPos && (kJoyOffsetNeg - horizontal) > (vertical - kJoyOffsetPos)) ||
            (shiftedLeft && vertical < kJoyOffsetPos && (kJoyOffsetNeg - horizontal) > (kJoyOffsetNeg - vertical)) ||
-           (shiftedLeft && vertical >= kJoyOffsetNeg && vertical <= kJoyOffsetPos);
+           (shiftedLeft && joystickAxisRested(vertical));
 }
 
 bool joystickUp(const int *joystick)
@@ -340,7 +345,7 @@ bool joystickUp(const int *joystick)
 
     return (shiftedUp && horizontal > kJoyOffsetPos && horizontal < vertical) ||
            (shiftedUp && horizontal < kJoyOffsetNeg && (kJoyOffsetNeg - horizontal) < (vertical - kJoyOffsetPos)) ||
-           (shiftedUp && horizontal >= kJoyOffsetNeg && horizontal <= kJoyOffsetPos);
+           (shiftedUp && joystickAxisRested(horizontal));
 }
 
 bool joystickDown(const int *joystick)
@@ -352,7 +357,7 @@ bool joystickDown(const int *joystick)
 
     return (shiftedDown && horizontal > kJoyOffsetPos && (horizontal - kJoyOffsetPos) < (kJoyOffsetNeg - vertical)) ||
            (shiftedDown && horizontal < kJoyOffsetNeg && (kJoyOffsetNeg - horizontal) < (kJoyOffsetPos - vertical)) ||
-           (shiftedDown && horizontal >= kJoyOffsetNeg && horizontal <= kJoyOffsetPos);
+           (shiftedDown && joystickAxisRested(horizontal));
 }
 
 void performMoveAction(int actionId)
