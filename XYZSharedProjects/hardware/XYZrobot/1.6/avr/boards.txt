@@ -21,7 +21,7 @@ XYZrobot1280.bootloader.lock_bits=0x0CF
 XYZrobot1280.build.mcu=atmega1280
 XYZrobot1280.build.f_cpu=16000000L
 XYZrobot1280.build.core=XYZrobot1280
-XYZrobot1280.build.variant=XYZrobot1280
+XYZrobot1280.build.variant=XYZrobot1280_pins
 
 # USB identifiers for Port List menu
 XYZrobot1280.pid.0=0x6001
