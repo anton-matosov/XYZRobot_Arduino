@@ -300,21 +300,7 @@ void loop()
                     (joystick_status[0] > 155 & joystick_status[1] >= 95 & joystick_status[1] <= 155))
                 {
                     //LeftJoystick_Rightside
-                    if (Adjustment_index)
-                    {
-                        if (Falling_Task() == 5)
-                        {
-                            Action(RCU_LJR);
-                        }
-                        else
-                        {
-                            Getup_Task(Falling_Task());
-                        }
-                    }
-                    else
-                    {
-                        Action(RCU_LJR);
-                    }
+                    performMoveAction(RCU_LJR);
                 }
 
                 else if ((joystick_status[0] < 95 & joystick_status[1] > 155 &
@@ -324,21 +310,7 @@ void loop()
                          (joystick_status[0] < 95 & joystick_status[1] >= 95 & joystick_status[1] <= 155))
                 {
                     //LeftJoystick_Leftside
-                    if (Adjustment_index)
-                    {
-                        if (Falling_Task() == 5)
-                        {
-                            Action(RCU_LJL);
-                        }
-                        else
-                        {
-                            Getup_Task(Falling_Task());
-                        }
-                    }
-                    else
-                    {
-                        Action(RCU_LJL);
-                    }
+                    performMoveAction(RCU_LJL);
                 }
 
                 else if ((joystick_status[0] > 155 & joystick_status[1] > 155 &
@@ -384,21 +356,7 @@ void loop()
                          (joystick_status[1] < 95 & joystick_status[0] >= 95 & joystick_status[0] <= 155))
                 {
                     //LeftJoystick_Downside
-                    if (Adjustment_index)
-                    {
-                        if (Falling_Task() == 5)
-                        {
-                            Action(RCU_LJD);
-                        }
-                        else
-                        {
-                            Getup_Task(Falling_Task());
-                        }
-                    }
-                    else
-                    {
-                        Action(RCU_LJD);
-                    }
+                    performMoveAction(RCU_LJD);
                 }
 
                 else if ((joystick_status[2] > 155 & joystick_status[3] > 155 &
@@ -408,21 +366,7 @@ void loop()
                          (joystick_status[2] > 155 & joystick_status[3] >= 95 & joystick_status[3] <= 155))
                 {
                     //RightJoystick_Rightside
-                    if (Adjustment_index)
-                    {
-                        if (Falling_Task() == 5)
-                        {
-                            Action(RCU_RJR);
-                        }
-                        else
-                        {
-                            Getup_Task(Falling_Task());
-                        }
-                    }
-                    else
-                    {
-                        Action(RCU_RJR);
-                    }
+                    performMoveAction(RCU_RJR);
                 }
 
                 else if ((joystick_status[2] < 95 & joystick_status[3] > 155 &
@@ -432,21 +376,7 @@ void loop()
                          (joystick_status[2] < 95 & joystick_status[3] >= 95 & joystick_status[3] <= 155))
                 {
                     //RightJoystick_Leftside
-                    if (Adjustment_index)
-                    {
-                        if (Falling_Task() == 5)
-                        {
-                            Action(RCU_RJL);
-                        }
-                        else
-                        {
-                            Getup_Task(Falling_Task());
-                        }
-                    }
-                    else
-                    {
-                        Action(RCU_RJL);
-                    }
+                    performMoveAction(RCU_RJL);
                 }
 
                 else if ((joystick_status[2] > 155 & joystick_status[3] > 155 &
@@ -456,21 +386,7 @@ void loop()
                          (joystick_status[3] > 155 & joystick_status[2] >= 95 & joystick_status[2] <= 155))
                 {
                     //RightJoystick_Upside
-                    if (Adjustment_index)
-                    {
-                        if (Falling_Task() == 5)
-                        {
-                            Action(RCU_RJU);
-                        }
-                        else
-                        {
-                            Getup_Task(Falling_Task());
-                        }
-                    }
-                    else
-                    {
-                        Action(RCU_RJU);
-                    }
+                    performMoveAction(RCU_RJU);
                 }
 
                 else if ((joystick_status[2] > 155 & joystick_status[3] < 95 &
@@ -480,21 +396,7 @@ void loop()
                          (joystick_status[3] < 95 & joystick_status[2] >= 95 & joystick_status[2] <= 155))
                 {
                     //RightJoystick_Downside
-                    if (Adjustment_index)
-                    {
-                        if (Falling_Task() == 5)
-                        {
-                            Action(RCU_RJD);
-                        }
-                        else
-                        {
-                            Getup_Task(Falling_Task());
-                        }
-                    }
-                    else
-                    {
-                        Action(RCU_RJD);
-                    }
+                    performMoveAction(RCU_RJD);
                 }
             }
         }
