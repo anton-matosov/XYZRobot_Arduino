@@ -133,11 +133,9 @@ void loop()
                     if (packet[5] & RCU_mask_release) //Release Button
                     {
                         A1_16_TorqueOff(A1_16_Broadcast_ID);
-//          cb_BT();
                     }
                     else if (packet[5] & RCU_mask_BT) //Bluetooth Button
                     {
-//          cb_BT();
                     }
                     else if (packet[5] & RCU_mask_power) //Power Button
                     {
@@ -146,7 +144,6 @@ void loop()
                         {
                             XYZrobot.play();
                         }
-//          cb_BT();
                     }
                     else if (packet[6] & RCU_mask_L1)
                     {
@@ -172,88 +169,61 @@ void loop()
                     {
                         performMoveAction(RCU_R3);
                     }
-                        //LeftJoystick_Rightside
                     else if ((packet[1] > 155 & packet[2] > 155 & packet[1] > packet[2]) |
                              (packet[1] > 155 & packet[2] < 95 & (packet[1] - 155) > (95 - packet[2])) |
                              (packet[1] > 155 & packet[2] >= 95 & packet[2] <= 155))
                     {
+                        //LeftJoystick_Rightside
                         performMoveAction(RCU_LJR);
                     }
-                        //LeftJoystick_Leftside
                     else if ((packet[1] < 95 & packet[2] > 155 & (95 - packet[1]) > (packet[2] - 155)) |
                              (packet[1] < 95 & packet[2] < 155 & (95 - packet[1]) > (95 - packet[2])) |
                              (packet[1] < 95 & packet[2] >= 95 & packet[2] <= 155))
                     {
+                        //LeftJoystick_Leftside
                         performMoveAction(RCU_LJL);
                     }
-
-                        //LeftJoystick_Upside
                     else if ((packet[1] > 155 & packet[2] > 155 & packet[1] < packet[2]) |
                              (packet[1] < 95 & packet[2] > 155 & (95 - packet[1]) < (packet[2] - 155)) |
                              (packet[2] > 155 & packet[1] >= 95 & packet[1] <= 155))
                     {
-                        if (Adjustment_index)
-                        {
-                            if (Falling_Task() == 5)
-                            {
-                                if (Avoidance_index & IR_SENSOR_Task() < 20)
-                                {
-                                    for (int i = 0; i < 3; i++)
-                                    {
-                                        tone(BUZZER_PIN, pgm_read_word_near(&obstacle_alarm_frq[i]));
-                                        delay(250);
-                                        noTone(BUZZER_PIN);
-                                    }
-                                }
-                                else
-                                {
-                                    Action(RCU_LJU);
-                                }
-                            }
-                            else
-                            {
-                                Getup_Task(Falling_Task());
-                            }
-                        }
-                        else
-                        {
-                            Action(RCU_LJU);
-                        }
+                        //LeftJoystick_Upside
+                        performMoveAction(RCU_LJU);
                     }
-                        //LeftJoystick_Downside
                     else if ((packet[1] > 155 & packet[2] < 95 & (packet[1] - 155) < (95 - packet[2])) |
                              (packet[1] < 95 & packet[2] < 95 & (95 - packet[1]) < (155 - packet[2])) |
                              (packet[2] < 95 & packet[1] >= 95 & packet[1] <= 155))
                     {
+                        //LeftJoystick_Downside
                         performMoveAction(RCU_LJD);
                     }
 
-                        //RightJoystick_Rightside
                     else if ((packet[3] > 155 & packet[4] > 155 & packet[3] > packet[4]) |
                              (packet[3] > 155 & packet[4] < 95 & (packet[3] - 155) > (95 - packet[4])) |
                              (packet[3] > 155 & packet[4] >= 95 & packet[4] <= 155))
                     {
+                        //RightJoystick_Rightside
                         performMoveAction(RCU_RJR);
                     }
-                        //RightJoystick_Leftside
                     else if ((packet[3] < 95 & packet[4] > 155 & (95 - packet[3]) > (packet[4] - 155)) |
                              (packet[3] < 95 & packet[4] < 95 & (95 - packet[3]) > (95 - packet[4])) |
                              (packet[3] < 95 & packet[4] >= 95 & packet[4] <= 155))
                     {
+                        //RightJoystick_Leftside
                         performMoveAction(RCU_RJL);
                     }
-                        //RightJoystick_Upside
                     else if ((packet[3] > 155 & packet[4] > 155 & packet[3] < packet[4]) |
                              (packet[3] < 95 & packet[4] > 155 & (95 - packet[3]) < (packet[4] - 155)) |
                              (packet[4] > 155 & packet[3] >= 95 & packet[3] <= 155))
                     {
+                        //RightJoystick_Upside
                         performMoveAction(RCU_RJU);
                     }
-                        //RightJoystick_Downside
                     else if ((packet[3] > 155 & packet[4] < 95 & (packet[3] - 155) < (95 - packet[4])) |
                              (packet[3] < 155 & packet[4] < 95 & (95 - packet[3]) < (95 - packet[4])) |
                              (packet[4] < 95 & packet[3] >= 95 & packet[3] <= 155))
                     {
+                        //RightJoystick_Downside
                         performMoveAction(RCU_RJD);
                     }
 
@@ -264,7 +234,9 @@ void loop()
                 else if (packet[1] == 255 & packet[2] == 1)
                 {
                     LED_Task(3);
-                    if (packet[3] == 101)
+                    int actionFromApp = packet[3];
+
+                    if (actionFromApp == 101)
                     {
                         XYZrobot.playSeq(DefaultInitial);
                         while (XYZrobot.playing)
@@ -272,65 +244,32 @@ void loop()
                             XYZrobot.play();
                         }
                     }
-                    else if (packet[3] == 102)
+                    else if (actionFromApp == 102)
                     {
                         A1_16_TorqueOff(254);
                     }
-                    else if (packet[3] == 251)
+                    else if (actionFromApp == 251)
                     {
                         BT_Gsensor_Data();
                     }
-                    else if (packet[3] == 252)
+                    else if (actionFromApp == 252)
                     {
                         BT_IR_Data();
                     }
-                    else if (packet[3] == 253)
+                    else if (actionFromApp == 253)
                     {
                         BT_FW();
                     }
                     else
                     {
-                        if (Adjustment_index)
-                        {
-                            if (Falling_Task() == 5)
-                            {
-                                if (packet[3] == 1)
-                                {//WalkForward
-                                    if (Avoidance_index & IR_SENSOR_Task() < 20)
-                                    {
-                                        for (int i = 0; i < 3; i++)
-                                        {
-                                            tone(BUZZER_PIN, pgm_read_word_near(&obstacle_alarm_frq[i]));
-                                            delay(250);
-                                            noTone(BUZZER_PIN);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        Action(packet[3]);
-                                    }
-                                }
-                                else
-                                {
-                                    Action(packet[3]);
-                                }
-                            }
-                            else
-                            {
-                                Getup_Task(Falling_Task());
-                            }
-                        }
-                        else
-                        {
-                            Action(packet[3]);
-                        }
+                        performMoveAction(actionFromApp);
                     }
+
                     LED_Task(0);
                     BT_update = false;
                 }
             }
         }
-#if DOING_SOME_MAGIC_CONTROLLER
         else
         {
             if (joystick_status[0] <= 155 & joystick_status[0] >= 95 & joystick_status[1] <= 155 &
@@ -342,7 +281,7 @@ void loop()
             }
             else
             {
-
+#if DOING_SOME_MAGIC_CONTROLLER
                 if ((joystick_status[0] > 155 & joystick_status[1] > 155 & joystick_status[0] > joystick_status[1]) |
                     (joystick_status[0] > 155 & joystick_status[1] < 95 &
                      (joystick_status[0] - 155) > (95 - joystick_status[1])) |
@@ -369,33 +308,7 @@ void loop()
                          (joystick_status[1] > 155 & joystick_status[0] >= 95 & joystick_status[0] <= 155))
                 {
                     //LeftJoystick_Upside
-                    if (Adjustment_index)
-                    {
-                        if (Falling_Task() == 5)
-                        {
-                            if (Avoidance_index & IR_SENSOR_Task() < 20)
-                            {
-                                for (int i = 0; i < 3; i++)
-                                {
-                                    tone(BUZZER_PIN, pgm_read_word_near(&obstacle_alarm_frq[i]));
-                                    delay(250);
-                                    noTone(BUZZER_PIN);
-                                }
-                            }
-                            else
-                            {
-                                Action(RCU_LJU);
-                            }
-                        }
-                        else
-                        {
-                            Getup_Task(Falling_Task());
-                        }
-                    }
-                    else
-                    {
-                        Action(RCU_LJU);
-                    }
+                    performMoveAction(RCU_LJU);
                 }
 
                 else if ((joystick_status[0] > 155 & joystick_status[1] < 95 &
@@ -447,9 +360,9 @@ void loop()
                     //RightJoystick_Downside
                     performMoveAction(RCU_RJD);
                 }
+#endif //  DOING_SOME_MAGIC_CONTROLLER
             }
         }
-#endif // DOING_SOME_MAGIC_CONTROLLER
     }
 }
 
@@ -459,7 +372,15 @@ void performMoveAction(int actionId)
     {
         if (Falling_Task() == 5)
         {
-            Action(actionId);
+            if (actionId == WALK_FORWARD_ACTION_ID &&
+                irSensorDetectedObstacle())
+            {
+                playCanNotGoTone();
+            }
+            else
+            {
+                Action(actionId);
+            }
         }
         else
         {
@@ -469,6 +390,21 @@ void performMoveAction(int actionId)
     else
     {
         Action(actionId);
+    }
+}
+
+bool irSensorDetectedObstacle()
+{
+    return Avoidance_index & IR_SENSOR_Task() < 20;
+}
+
+void playCanNotGoTone()
+{
+    for (int i = 0; i < 3; i++)
+    {
+        tone(BUZZER_PIN, pgm_read_word_near(&obstacle_alarm_frq[i]));
+        delay(250);
+        noTone(BUZZER_PIN);
     }
 }
 
