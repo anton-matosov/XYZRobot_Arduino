@@ -1,5 +1,5 @@
 //
-// Created by Anton Matosov [CTR] on 4/25/16.
+// Created by Anton Matosov on 4/25/16.
 //
 
 #pragma once
