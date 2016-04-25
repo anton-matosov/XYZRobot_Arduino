@@ -7,15 +7,11 @@
 #include "Y-01_USER_MOTION.h"
 
 #include "Config.h"
+#include "AnalogJoystick.h"
 
 
 //== Declare Global Parameters ==
 
-enum JoystickOffsets
-{
-    kJoyOffsetRested = 125,
-    kJoyOffsetThreshold = 20,
-};
 static int leftJoystick[2] = {kJoyOffsetRested, kJoyOffsetRested};
 static int rightJoystick[2] = {kJoyOffsetRested, kJoyOffsetRested};
 
@@ -80,13 +76,6 @@ void Start_Music(void);
 void BUTTON_Task(void);
 void LED_Task(char mode);
 void Power_Detection_Task(void);
-
-bool joystickRested(const int *joystick);
-bool joystickAxisRested(const int joystickAxis);
-bool joystickRight(const int *joystick);
-bool joystickLeft(const int *joystick);
-bool joystickUp(const int *joystick);
-bool joystickDown(const int *joystick);
 
 bool irSensorDetectedObstacle();
 
@@ -237,7 +226,10 @@ void loop()
         }
         else
         {
-            if (joystickRested(leftJoystick) && joystickRested(rightJoystick))
+            AnalogJoystick joystickR(rightJoystick);
+            AnalogJoystick joystickL(leftJoystick);
+
+            if (joystickR.isRested() && joystickL.isRested())
             {
                 // Button task
                 BUTTON_Task();
@@ -260,19 +252,20 @@ void checkJoystickActions()
 
 void checkLeftJoystickActions()
 {
-    if (joystickRight(leftJoystick))
+    AnalogJoystick joystick(rightJoystick);
+    if (joystick.isRight())
     {
         performMoveAction(RCU_LJR);
     }
-    else if (joystickLeft(leftJoystick))
+    else if (joystick.isLeft())
     {
         performMoveAction(RCU_LJL);
     }
-    else if (joystickUp(leftJoystick))
+    else if (joystick.isUp())
     {
         performMoveAction(RCU_LJU);
     }
-    else if (joystickDown(leftJoystick))
+    else if (joystick.isDown())
     {
         performMoveAction(RCU_LJD);
     }
@@ -280,92 +273,25 @@ void checkLeftJoystickActions()
 
 void checkRightJoystickActions()
 {
-    if (joystickRight(rightJoystick))
+    AnalogJoystick joystick(rightJoystick);
+
+    if (joystick.isRight())
     {
         performMoveAction(RCU_RJR);
     }
-    else if (joystickLeft(rightJoystick))
+    else if (joystick.isLeft())
     {
         performMoveAction(RCU_RJL);
     }
-    else if (joystickUp(rightJoystick))
+    else if (joystick.isUp())
     {
         performMoveAction(RCU_RJU);
     }
-    else if (joystickDown(rightJoystick))
+    else if (joystick.isDown())
     {
         performMoveAction(RCU_RJD);
-    }
-}
+    }}
 
-bool joystickRested(const int *joystick)
-{
-    const int horizontal = joystick[0];
-    const int vertical = joystick[1];
-
-    return joystickAxisRested(horizontal) && joystickAxisRested(vertical);
-}
-
-bool joystickAxisRested(const int joystickAxis)
-{
-    return abs(joystickAxis - kJoyOffsetRested) < kJoyOffsetThreshold;
-}
-
-bool joystickRight(const int *joystick)
-{
-    const int horizontal = joystick[0];
-    const int vertical = joystick[1];
-
-    const int horizontalOffset = horizontal - kJoyOffsetRested;
-    const int absoluteHorizontalOffset = abs(horizontalOffset);
-    const int absoluteVerticalOffset = abs(vertical - kJoyOffsetRested);
-
-    return horizontalOffset > 0 &&
-           absoluteHorizontalOffset > kJoyOffsetThreshold &&
-           absoluteHorizontalOffset > absoluteVerticalOffset;
-}
-
-bool joystickLeft(const int *joystick)
-{
-    const int horizontal = joystick[0];
-    const int vertical = joystick[1];
-
-    const int horizontalOffset = horizontal - kJoyOffsetRested;
-    const int absoluteHorizontalOffset = abs(horizontalOffset);
-    const int absoluteVerticalOffset = abs(vertical - kJoyOffsetRested);
-
-    return horizontalOffset < 0 &&
-           absoluteHorizontalOffset > kJoyOffsetThreshold &&
-           absoluteHorizontalOffset > absoluteVerticalOffset;
-}
-
-bool joystickUp(const int *joystick)
-{
-    const int horizontal = joystick[0];
-    const int vertical = joystick[1];
-
-    const int verticalOffset = vertical - kJoyOffsetRested;
-    const int absoluteHorizontalOffset = abs(horizontal - kJoyOffsetRested);
-    const int absoluteVerticalOffset = abs(verticalOffset);
-
-    return verticalOffset > 0 &&
-           absoluteVerticalOffset > kJoyOffsetThreshold &&
-           absoluteVerticalOffset > absoluteHorizontalOffset;
-}
-
-bool joystickDown(const int *joystick)
-{
-    const int horizontal = joystick[0];
-    const int vertical = joystick[1];
-
-    const int verticalOffset = vertical - kJoyOffsetRested;
-    const int absoluteHorizontalOffset = abs(horizontal - kJoyOffsetRested);
-    const int absoluteVerticalOffset = abs(verticalOffset);
-
-    return verticalOffset < 0 &&
-           absoluteVerticalOffset > kJoyOffsetThreshold &&
-           absoluteVerticalOffset > absoluteHorizontalOffset;
-}
 
 void performMoveAction(int actionId)
 {

@@ -4,15 +4,31 @@
 
 #pragma once
 
+enum JoystickOffsets
+{
+    kJoyOffsetRested = 125,
+    kJoyOffsetThreshold = 20,
+};
+
 class AnalogJoystick
 {
 public:
-    BolideJoystick(int *joystick)
+    AnalogJoystick(int *joystick)
+        : horizontal_(joystick[0])
+        , vertical_(joystick[1])
     {
-
     }
 
+    bool isRested();
+
+    bool isRight();
+    bool isLeft();
+    bool isUp();
+    bool isDown();
+
 private:
+    bool isAxisRested(const int joystickAxis);
+
     int horizontal_;
     int vertical_;
 };

@@ -14,6 +14,12 @@ link_directories(${XYZ_SHARED_PROJECTS}/libraries)
 
 register_hardware_platform("${XYZ_SHARED_PROJECTS}/hardware/XYZrobot/Current/XYZrobot")
 
+generate_arduino_library(AnalogJoystick
+            HDRS AnalogJoystick.h
+            SRCS AnalogJoystick.cpp
+        )
+
 generate_arduino_firmware(${CMAKE_PROJECT_NAME}
         SKETCH Bolide.ino
+        LIBS AnalogJoystick
 )
