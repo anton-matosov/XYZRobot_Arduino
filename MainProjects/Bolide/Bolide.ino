@@ -22,6 +22,7 @@ static int joystick_status[4] = {125, 125, 125, 125};
 static boolean packet_timeout_status = false;
 static boolean seq_trigger = false, seq_loop_trigger = false;
 static int seq_pSeqCnt = 0xFF, SeqPos = 0x00;
+void performMoveAction(int actionId);
 static int poses[max_pose_index][MAX_SERVOS];      // poses [index][servo_id-1], check for the motion index!!
 static int pose_index[max_pose_index];
 sp_trans_t sequence[max_seq_index];// sequence
@@ -58,13 +59,10 @@ void loop()
     {
         Motion_Editor_Packet_Task();
     }
-
-        //play sequence edited by motion editor
-    else if (seq_trigger)
+    else if (seq_trigger) //play sequence edited by motion editor
     {
         Motion_Editor_Seq_Play();
     }
-
     else
     {
         //BT Communcation motion
@@ -83,21 +81,16 @@ void loop()
                 {
                     LED_Task(1);
 
-                    //Release Button
-                    if (packet[5] & RCU_mask_release)
+                    if (packet[5] & RCU_mask_release) //Release Button
                     {
                         A1_16_TorqueOff(A1_16_Broadcast_ID);
 //          cb_BT();
                     }
-
-                        //Bluetooth Button
-                    else if (packet[5] & RCU_mask_BT)
+                    else if (packet[5] & RCU_mask_BT) //Bluetooth Button
                     {
 //          cb_BT();
                     }
-
-                        //Power Button
-                    else if (packet[5] & RCU_mask_power)
+                    else if (packet[5] & RCU_mask_power) //Power Button
                     {
                         XYZrobot.playSeq(DefaultInitial);
                         while (XYZrobot.playing)
@@ -106,169 +99,43 @@ void loop()
                         }
 //          cb_BT();
                     }
-
-                        //L1 Button
                     else if (packet[6] & RCU_mask_L1)
                     {
-                        if (Adjustment_index)
-                        {
-                            if (Falling_Task() == 5)
-                            {
-                                Action(RCU_L1);
-                            }
-                            else
-                            {
-                                Getup_Task(Falling_Task());
-                            }
-                        }
-                        else
-                        {
-                            Action(RCU_L1);
-                        }
+                        performMoveAction(RCU_L1);
                     }
-
-                        //L2 Button
                     else if (packet[6] & RCU_mask_L2)
                     {
-                        if (Adjustment_index)
-                        {
-                            if (Falling_Task() == 5)
-                            {
-                                Action(RCU_L2);
-                            }
-                            else
-                            {
-                                Getup_Task(Falling_Task());
-                            }
-                        }
-                        else
-                        {
-                            Action(RCU_L2);
-                        }
+                        performMoveAction(RCU_L2);
                     }
-
-                        //L3 Button
                     else if (packet[6] & RCU_mask_L3)
                     {
-                        if (Adjustment_index)
-                        {
-                            if (Falling_Task() == 5)
-                            {
-                                Action(RCU_L3);
-                            }
-                            else
-                            {
-                                Getup_Task(Falling_Task());
-                            }
-                        }
-                        else
-                        {
-                            Action(RCU_L3);
-                        }
+                        performMoveAction(RCU_L3);
                     }
-
-                        //R1 Button
                     else if (packet[5] & RCU_mask_R1)
                     {
-                        if (Adjustment_index)
-                        {
-                            if (Falling_Task() == 5)
-                            {
-                                Action(RCU_R1);
-                            }
-                            else
-                            {
-                                Getup_Task(Falling_Task());
-                            }
-                        }
-                        else
-                        {
-                            Action(RCU_R1);
-                        }
+                        performMoveAction(RCU_R1);
                     }
-
-                        //R2 Button
                     else if (packet[5] & RCU_mask_R2)
                     {
-                        if (Adjustment_index)
-                        {
-                            if (Falling_Task() == 5)
-                            {
-                                Action(RCU_R2);
-                            }
-                            else
-                            {
-                                Getup_Task(Falling_Task());
-                            }
-                        }
-                        else
-                        {
-                            Action(RCU_R2);
-                        }
+                        performMoveAction(RCU_R2);
                     }
-
-                        //R3 Button
                     else if (packet[5] & RCU_mask_R3)
                     {
-                        if (Adjustment_index)
-                        {
-                            if (Falling_Task() == 5)
-                            {
-                                Action(RCU_R3);
-                            }
-                            else
-                            {
-                                Getup_Task(Falling_Task());
-                            }
-                        }
-                        else
-                        {
-                            Action(RCU_R3);
-                        }
+                        performMoveAction(RCU_R3);
                     }
-
                         //LeftJoystick_Rightside
                     else if ((packet[1] > 155 & packet[2] > 155 & packet[1] > packet[2]) |
                              (packet[1] > 155 & packet[2] < 95 & (packet[1] - 155) > (95 - packet[2])) |
                              (packet[1] > 155 & packet[2] >= 95 & packet[2] <= 155))
                     {
-                        if (Adjustment_index)
-                        {
-                            if (Falling_Task() == 5)
-                            {
-                                Action(RCU_LJR);
-                            }
-                            else
-                            {
-                                Getup_Task(Falling_Task());
-                            }
-                        }
-                        else
-                        {
-                            Action(RCU_LJR);
-                        }
+                        performMoveAction(RCU_LJR);
                     }
-
                         //LeftJoystick_Leftside
                     else if ((packet[1] < 95 & packet[2] > 155 & (95 - packet[1]) > (packet[2] - 155)) |
                              (packet[1] < 95 & packet[2] < 155 & (95 - packet[1]) > (95 - packet[2])) |
                              (packet[1] < 95 & packet[2] >= 95 & packet[2] <= 155))
                     {
-                        if (Adjustment_index)
-                        {
-                            if (Falling_Task() == 5)
-                            {
-                                Action(RCU_LJL);
-                            }
-                            else
-                            {
-                                Getup_Task(Falling_Task());
-                            }
-                        }
-                        else
-                        {
-                            Action(RCU_LJL);
-                        }
+                        performMoveAction(RCU_LJL);
                     }
 
                         //LeftJoystick_Upside
@@ -304,27 +171,12 @@ void loop()
                             Action(RCU_LJU);
                         }
                     }
-
                         //LeftJoystick_Downside
                     else if ((packet[1] > 155 & packet[2] < 95 & (packet[1] - 155) < (95 - packet[2])) |
                              (packet[1] < 95 & packet[2] < 95 & (95 - packet[1]) < (155 - packet[2])) |
                              (packet[2] < 95 & packet[1] >= 95 & packet[1] <= 155))
                     {
-                        if (Adjustment_index)
-                        {
-                            if (Falling_Task() == 5)
-                            {
-                                Action(RCU_LJD);
-                            }
-                            else
-                            {
-                                Getup_Task(Falling_Task());
-                            }
-                        }
-                        else
-                        {
-                            Action(RCU_LJD);
-                        }
+                        performMoveAction(RCU_LJD);
                     }
 
                         //RightJoystick_Rightside
@@ -332,87 +184,28 @@ void loop()
                              (packet[3] > 155 & packet[4] < 95 & (packet[3] - 155) > (95 - packet[4])) |
                              (packet[3] > 155 & packet[4] >= 95 & packet[4] <= 155))
                     {
-                        if (Adjustment_index)
-                        {
-                            if (Falling_Task() == 5)
-                            {
-                                Action(RCU_RJR);
-                            }
-                            else
-                            {
-                                Getup_Task(Falling_Task());
-                            }
-                        }
-                        else
-                        {
-                            Action(RCU_RJR);
-                        }
+                        performMoveAction(RCU_RJR);
                     }
-
                         //RightJoystick_Leftside
                     else if ((packet[3] < 95 & packet[4] > 155 & (95 - packet[3]) > (packet[4] - 155)) |
                              (packet[3] < 95 & packet[4] < 95 & (95 - packet[3]) > (95 - packet[4])) |
                              (packet[3] < 95 & packet[4] >= 95 & packet[4] <= 155))
                     {
-                        if (Adjustment_index)
-                        {
-                            if (Falling_Task() == 5)
-                            {
-                                Action(RCU_RJL);
-                            }
-                            else
-                            {
-                                Getup_Task(Falling_Task());
-                            }
-                        }
-                        else
-                        {
-                            Action(RCU_RJL);
-                        }
+                        performMoveAction(RCU_RJL);
                     }
-
                         //RightJoystick_Upside
                     else if ((packet[3] > 155 & packet[4] > 155 & packet[3] < packet[4]) |
                              (packet[3] < 95 & packet[4] > 155 & (95 - packet[3]) < (packet[4] - 155)) |
                              (packet[4] > 155 & packet[3] >= 95 & packet[3] <= 155))
                     {
-                        if (Adjustment_index)
-                        {
-                            if (Falling_Task() == 5)
-                            {
-                                Action(RCU_RJU);
-                            }
-                            else
-                            {
-                                Getup_Task(Falling_Task());
-                            }
-                        }
-                        else
-                        {
-                            Action(RCU_RJU);
-                        }
+                        performMoveAction(RCU_RJU);
                     }
-
                         //RightJoystick_Downside
                     else if ((packet[3] > 155 & packet[4] < 95 & (packet[3] - 155) < (95 - packet[4])) |
                              (packet[3] < 155 & packet[4] < 95 & (95 - packet[3]) < (95 - packet[4])) |
                              (packet[4] < 95 & packet[3] >= 95 & packet[3] <= 155))
                     {
-                        if (Adjustment_index)
-                        {
-                            if (Falling_Task() == 5)
-                            {
-                                Action(RCU_RJD);
-                            }
-                            else
-                            {
-                                Getup_Task(Falling_Task());
-                            }
-                        }
-                        else
-                        {
-                            Action(RCU_RJD);
-                        }
+                        performMoveAction(RCU_RJD);
                     }
 
                     LED_Task(0);
@@ -612,6 +405,25 @@ void loop()
             }
         }
 #endif // DOING_SOME_MAGIC_CONTROLLER
+    }
+}
+
+void performMoveAction(int actionId)
+{
+    if (Adjustment_index)
+    {
+        if (Falling_Task() == 5)
+        {
+            Action(actionId);
+        }
+        else
+        {
+            Getup_Task(Falling_Task());
+        }
+    }
+    else
+    {
+        Action(actionId);
     }
 }
 

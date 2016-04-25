@@ -108,6 +108,7 @@
       <library name="Header Search Paths">
         <CLASSES>
           <root url="file://$MODULE_DIR$/../../XYZSharedProjects/libraries/BOLIDE_Player" />
+          <root url="file://$MODULE_DIR$/../../XYZSharedProjects/hardware/XYZrobot/Current/XYZrobot/variants/XYZrobot1280_pins" />
           <root url="file://$MODULE_DIR$/../../XYZSharedProjects/hardware/XYZrobot/Current/XYZrobot/cores/XYZrobot1280" />
           <root url="file:///Applications/Arduino.app/Contents/Java/libraries" />
           <root url="file:///Applications/Arduino.app/Contents/Java/hardware/tools/avr/lib/gcc/avr/4.8.1/include" />
@@ -118,6 +119,7 @@
         </CLASSES>
         <SOURCES>
           <root url="file://$MODULE_DIR$/../../XYZSharedProjects/libraries/BOLIDE_Player" />
+          <root url="file://$MODULE_DIR$/../../XYZSharedProjects/hardware/XYZrobot/Current/XYZrobot/variants/XYZrobot1280_pins" />
           <root url="file://$MODULE_DIR$/../../XYZSharedProjects/hardware/XYZrobot/Current/XYZrobot/cores/XYZrobot1280" />
           <root url="file:///Applications/Arduino.app/Contents/Java/libraries" />
           <root url="file:///Applications/Arduino.app/Contents/Java/hardware/tools/avr/lib/gcc/avr/4.8.1/include" />
