@@ -1,0 +1,6 @@
+[submodule "libraries/boost_1_51_0"]
+	path = libraries/boost_1_51_0
+	url = https://github.com/vancegroup/arduino-boost.git
+[submodule "libraries/StandardCplusplus"]
+	path = libraries/StandardCplusplus
+	url = https://github.com/rpavlik/StandardCplusplus.git
