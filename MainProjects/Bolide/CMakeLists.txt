@@ -14,7 +14,7 @@ set(ARDUINO_DEFAULT_PORT /dev/cu.usbserial-A104D3XB)
 message("ArduinoSDK: ${ARDUINO_SDK_VERSION}")
 
 
-
+link_directories(${XYZ_PROJECTS_ROOT}/libraries)
 link_directories(${XYZ_SHARED_PROJECTS}/libraries)
 
 register_hardware_platform("${XYZ_SHARED_PROJECTS}/hardware/XYZrobot/Current/XYZrobot")

@@ -8,6 +8,7 @@
       <sourceFolder url="file:///Applications/Arduino.app/Contents/Java/hardware/arduino/avr/libraries/Wire/src/utility/twi.c" isTestSource="false" />
     </content>
     <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/libraries/boost_1_51_0/boost_1_51_0.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/MainProjects/Bolide/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/MainProjects/Bolide/Bolide.ino" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/MainProjects/Bolide/AnalogJoystick.h" isTestSource="false" />
