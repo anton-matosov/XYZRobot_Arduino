@@ -956,6 +956,10 @@ function(find_arduino_libraries VAR_NAME SRCS ARDLIBS)
                                  DIRECTORY     # Property Scope
                                  PROPERTY LINK_DIRECTORIES)
                     foreach(LIB_SEARCH_PATH ${include_dirs} ${LIBRARY_SEARCH_PATH} ${ARDUINO_LIBRARIES_PATH} ${${ARDUINO_PLATFORM}_LIBRARIES_PATH} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/libraries ${ARDUINO_EXTRA_LIBRARIES_PATH})
+                         if(NOT IS_DIRECTORY ${LIB_SEARCH_PATH}/${INCLUDE_NAME})
+                             continue()
+                         endif()
+
                         if(EXISTS ${LIB_SEARCH_PATH}/${INCLUDE_NAME}/${CMAKE_MATCH_1})
                             list(APPEND ARDUINO_LIBS ${LIB_SEARCH_PATH}/${INCLUDE_NAME})
                             break()
