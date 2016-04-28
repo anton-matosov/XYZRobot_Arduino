@@ -29,7 +29,7 @@ typedef struct{
 //Eye LED function definition
 #define EYE_LED_BLE digitalWrite(LED_BLUE_PIN, HIGH), digitalWrite(LED_GREEN_PIN, LOW)
 #define EYE_LED_GRN digitalWrite(LED_BLUE_PIN, LOW), digitalWrite(LED_GREEN_PIN, HIGH)
-#define EYE_LED_OFF digitalWrite(LED_BLUE_PIN, LOW), digitalWrite(LED_GREEN_PIN, LOW)
+#define EYE_LEE_OFF digitalWrite(LED_BLUE_PIN, LOW), digitalWrite(LED_GREEN_PIN, LOW)
 
 //Timer function definition
 #define _enable_timer3() TIMSK3 |= _BV(TOIE3)

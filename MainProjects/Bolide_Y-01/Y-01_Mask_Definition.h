@@ -49,13 +49,13 @@
 #define packet_error               0x02
 
 #define model_Bolide		   0x42
-#define type_Y01		   0x01
-#define type_Crawler		   0x02
-#define type_Others		   0xFF
+#define type_humanoid		   0x01
+#define type_spider		   0x02
 #define application_default	   0x44
+#define application_tickle	   0x54
 #define main_version_number	   0x01
-#define secondary_version_number   0x02
-#define revision_number		   0x06
+#define secondary_version_number   0x01
+#define revision_number		   0x01
 
 #endif
 
