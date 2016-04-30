@@ -3,6 +3,5 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/libraries/StandardCplusplus" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/libraries/boost_1_51_0" vcs="Git" />
   </component>
 </project>
