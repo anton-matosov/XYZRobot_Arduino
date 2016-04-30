@@ -23,8 +23,12 @@ generate_arduino_library(AnalogJoystick
             HDRS AnalogJoystick.h
             SRCS AnalogJoystick.cpp
         )
+generate_arduino_library(MotionEditor
+            HDRS MotionEditor.h
+            SRCS MotionEditor.cpp
+        )
 
 generate_arduino_firmware(${CMAKE_PROJECT_NAME}
         SKETCH Bolide.ino
-        LIBS AnalogJoystick
+        LIBS AnalogJoystick MotionEditor
 )
