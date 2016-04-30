@@ -1228,9 +1228,12 @@ void Start_Music(void)
 void BUTTON_Task(void)
 {
     static unsigned char button_timer = 0x00;
-    static int key = 0x00, last_key = 0x00;
-    key = !digitalRead(BUTTON1_PIN) + ((!digitalRead(BUTTON2_PIN)) << 1) + ((!digitalRead(BUTTON3_PIN)) << 2) +
-          ((!digitalRead(BUTTON4_PIN)) << 3);
+    static int last_key = 0x00;
+    int key = !digitalRead(BUTTON1_PIN)
+              | ((!digitalRead(BUTTON2_PIN)) << 1)
+              | ((!digitalRead(BUTTON3_PIN)) << 2)
+              | ((!digitalRead(BUTTON4_PIN)) << 3);
+
     if (key != last_key)
     {
         button_timer++;
@@ -1239,6 +1242,7 @@ void BUTTON_Task(void)
     {
         button_timer = 0;
     }
+
     if (button_timer > 20)
     {
         button_timer = 0;
@@ -1246,19 +1250,19 @@ void BUTTON_Task(void)
         if (key != 0)
         {
             LED_Task(2);
-            if (last_key == key_mask_button1)
+            if (last_key == KEY_MASK_BUTTON_1)
             {
                 Action(RB_1);
             }
-            else if (last_key == key_mask_button2)
+            else if (last_key == KEY_MASK_BUTTON_2)
             {
                 Action(RB_2);
             }
-            else if (last_key == key_mask_button3)
+            else if (last_key == KEY_MASK_BUTTON_3)
             {
                 Action(RB_3);
             }
-            else if (last_key == key_mask_button4)
+            else if (last_key == KEY_MASK_BUTTON_4)
             {
                 Action(RB_4);
             }

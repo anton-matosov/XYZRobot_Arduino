@@ -43,10 +43,10 @@ typedef struct
 #define timeout_limit              15625    // Ticks for 1 sec @16 MHz,prescale=1024
 
 //Button
-#define key_mask_button1            0x01
-#define key_mask_button2            0x02
-#define key_mask_button3            0x04
-#define key_mask_button4            0x08
+#define KEY_MASK_BUTTON_1            0x01
+#define KEY_MASK_BUTTON_2            0x02
+#define KEY_MASK_BUTTON_3            0x04
+#define KEY_MASK_BUTTON_4            0x08
 
 //RCU mask
 #define RCU_mask_release            0x0010
