@@ -18,11 +18,8 @@ typedef struct
 #define LSA_LED_BLUE_PIN        44
 #define LSA_LED_GREEN_PIN       45
 #define LSA_LED_RED_PIN         46
-//Digital input Pin
-#define BUTTON1_PIN             32
-#define BUTTON2_PIN             33
-#define BUTTON3_PIN             34
-#define BUTTON4_PIN             35
+
+
 //Analog input pin
 #define PWRDET_PIN              0
 #define DISTANCE_SENSOR_PIN     3
@@ -42,11 +39,6 @@ typedef struct
 #define _reset_timer4(t) TCNT4 = -t
 #define timeout_limit              15625    // Ticks for 1 sec @16 MHz,prescale=1024
 
-//Button
-#define KEY_MASK_BUTTON_1            0x01
-#define KEY_MASK_BUTTON_2            0x02
-#define KEY_MASK_BUTTON_3            0x04
-#define KEY_MASK_BUTTON_4            0x08
 
 //RCU mask
 #define RCU_mask_release            0x0010
