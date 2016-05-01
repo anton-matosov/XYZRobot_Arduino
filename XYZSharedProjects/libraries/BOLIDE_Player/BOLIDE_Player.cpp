@@ -28,6 +28,14 @@ static char packet_send[110];
 static unsigned int checksum_1;
 static unsigned int checksum_2;
 
+#include <StandardCplusplus.h>
+#include <serstream>
+
+namespace std
+{
+    ohserialstream cout(Serial);
+}
+
 /* new-style setup */
 void BOLIDE_Player::setup(long baud, int servo_cnt)
 {
@@ -75,9 +83,14 @@ void BOLIDE_Player::loadPose(const unsigned int *addr)
 /* read in current servo positions to the pose. */
 void BOLIDE_Player::readPose()
 {
+    readPoseTo(pose_);
+}
+
+void BOLIDE_Player::readPoseTo(uint16_t *saveToPose)
+{
     for (int i = 0; i < poseSize; i++)
     {
-        pose_[i] = ReadPosition(id_[i]) << A1_16_SHIFT;
+        saveToPose[i] = (uint16_t)(ReadPosition(id_[i]) << A1_16_SHIFT);
         delay(25);
     }
 }
@@ -237,6 +250,20 @@ void BOLIDE_Player::setNextPose(int id, int pos)
     }
 }
 
+void BOLIDE_Player::printPose(uint16_t *poseToPrint, const char* label)
+{
+    std::cout << std::endl;
+    for (int i = 0; i < poseSize; i++)
+    {
+        if (i > 0)
+        {
+            std::cout << ", ";
+        }
+        std::cout << LO_WORD(poseToPrint[i] >> A1_16_SHIFT);
+    }
+    std::cout << "  <<<<< " << label << std::endl;
+}
+
 /* play a sequence. */
 void BOLIDE_Player::playSeq(const transition_t *addr)
 {
@@ -244,6 +271,13 @@ void BOLIDE_Player::playSeq(const transition_t *addr)
 
     TransitionConfig *config = (TransitionConfig *)(void*)addr;
     transitions = pgm_read_word_near(&config->totalPoses);
+
+    if (torquOff_)
+    {
+        torquOff_ = false;
+
+        readPose();
+    }
 
     // load a transition
     const transition_t *firstFrame = ++sequence;
@@ -280,4 +314,23 @@ void BOLIDE_Player::play()
         }
     }
 }
+
+void BOLIDE_Player::torqueOff()
+{
+    A1_16_TorqueOff(A1_16_Broadcast_ID);
+
+    torquOff_ = true;
+}
+
+void BOLIDE_Player::printPose()
+{
+    uint16_t currentPose[poseSize];
+
+    readPoseTo(currentPose);
+    printPose(currentPose, "current pose");
+}
+
+
+
+
 

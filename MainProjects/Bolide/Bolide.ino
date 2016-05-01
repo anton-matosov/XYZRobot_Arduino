@@ -32,7 +32,6 @@ void BT_Task_Setup(void);
 void Speaker_Task_Setup(void);
 void Eye_LED_Setup(void);
 void Buzzer_Setup(void);
-void Button_Setup(void);
 void Analog_Input_Setup(void);
 void Timer_Task_Setup(void);
 void G_SENSOR_Task_Setup(void);
@@ -158,15 +157,15 @@ void checkJoystickActions()
 
     if (rightAndMiddleButtons & RCU_mask_release) //Release Button
     {
-        A1_16_TorqueOff(A1_16_Broadcast_ID);
+        XYZrobot.torqueOff();
     }
     else if (rightAndMiddleButtons & RCU_mask_BT) //Bluetooth Button
     {
-        transitionToInitialPoseDirectly();
+        XYZrobot.printPose();
     }
     else if (rightAndMiddleButtons & RCU_mask_power) //Power Button
     {
-        transitionToInitialPose();
+        transitionToInitialPoseDirectly();
     }
     else if (leftButtons & RCU_mask_L1)
     {
@@ -178,7 +177,7 @@ void checkJoystickActions()
     }
     else if (leftButtons & RCU_mask_L3)
     {
-        performMoveAction(RCU_L3);
+//        performMoveAction(RCU_L3);
     }
     else if (rightAndMiddleButtons & RCU_mask_R1)
     {
@@ -190,7 +189,9 @@ void checkJoystickActions()
     }
     else if (rightAndMiddleButtons & RCU_mask_R3)
     {
-        performMoveAction(RCU_R3);
+        XYZrobot.readPose();
+        XYZrobot.writePose();
+//        performMoveAction(RCU_R3);
     }
     else
     {
@@ -208,11 +209,11 @@ void checkRemoteAppActions()
 
     if (actionFromApp == 101)
     {
-        transitionToInitialPose();
+        transitionToInitialPoseDirectly();
     }
     else if (actionFromApp == 102)
     {
-        A1_16_TorqueOff(254);
+        XYZrobot.torqueOff();
     }
     else if (actionFromApp == 251)
     {
@@ -952,7 +953,7 @@ void Action(int N)
     }
     if (torque_release)
     {
-        A1_16_TorqueOff(A1_16_Broadcast_ID);
+        XYZrobot.torqueOff();
         MusicPlaying_wav_stop();
         torque_release = false;
     }

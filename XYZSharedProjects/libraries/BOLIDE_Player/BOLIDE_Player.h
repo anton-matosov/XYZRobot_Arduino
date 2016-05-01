@@ -36,7 +36,7 @@
    recommended values for interpolateSetup are of the form X*BIOLOID_FRAME_LENGTH - 1 */
 #define A1_16_FRAME_LENGTH      33
 /* we need some extra resolution, use 13 bits, rather than 10, during interpolation */
-#define A1_16_SHIFT             3
+#define A1_16_SHIFT             6
 
 /** a structure to hold transitions **/
 typedef struct
@@ -61,6 +61,8 @@ public:
     /* New-style constructor/setup */
     //BOLIDE_Player() {};
     void setup(long baud, int servo_cnt);        // baud usually 115200
+
+    void torqueOff();
 
     /* Pose Manipulation */
     void loadPose(const unsigned int *addr); // load a named pose from FLASH
@@ -100,9 +102,12 @@ public:
      *  }
      */
 
+    void printPose();
+    void resetPose();
+
 private:
-    unsigned int *pose_;                       // the current pose, updated by Step(), set out by Sync()
-    unsigned int *nextpose_;                   // the destination pose, where we put on load
+    uint16_t *pose_;                       // the current pose, updated by Step(), set out by Sync()
+    uint16_t *nextpose_;                   // the destination pose, where we put on load
     int *speed_;                               // speeds for interpolation
     unsigned char *id_;                        // servo id for this index
 
@@ -113,6 +118,10 @@ private:
     transition_t *sequence;                    // sequence we are running
     int transitions;                            // how many transitions we have left to load
 
+    bool torquOff_;
+
+    void printPose(uint16_t *poseToPrint, const char* label);
+    void readPoseTo(uint16_t* saveToPose);
 };
 
 #endif
