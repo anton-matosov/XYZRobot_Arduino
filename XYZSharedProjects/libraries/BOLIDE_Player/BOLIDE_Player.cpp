@@ -40,7 +40,7 @@ namespace std
 }
 
 /* new-style setup */
-void BOLIDE_Player::setup(long baud, uint8_t servo_cnt)
+void BOLIDE_Player::setup(unsigned long baud, uint8_t servo_cnt)
 {
     A1_16_Ini(baud);
 

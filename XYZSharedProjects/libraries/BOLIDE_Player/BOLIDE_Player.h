@@ -55,12 +55,8 @@ typedef struct
 class BOLIDE_Player
 {
 public:
-    /* For compatibility with legacy code */
-    //BOLIDE_Player(long baud);               
-
     /* New-style constructor/setup */
-    //BOLIDE_Player() {};
-    void setup(long baud, uint8_t servo_cnt);        // baud usually 115200
+    void setup(unsigned long baud, uint8_t servo_cnt);        // baud usually 115200
 
     void torqueOff();
 
