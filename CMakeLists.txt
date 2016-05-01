@@ -20,3 +20,4 @@ register_hardware_platform("${XYZ_SHARED_PROJECTS}/hardware/XYZrobot/Current/XYZ
 
 add_subdirectory(MainProjects/Bolide)
 add_subdirectory(MainProjects/RobotEditor)
+add_subdirectory(MainProjects/ServoIdSetting)
