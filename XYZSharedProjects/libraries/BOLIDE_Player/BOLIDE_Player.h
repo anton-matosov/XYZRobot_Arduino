@@ -60,7 +60,7 @@ public:
 
     /* New-style constructor/setup */
     //BOLIDE_Player() {};
-    void setup(long baud, int servo_cnt);        // baud usually 115200
+    void setup(long baud, uint8_t servo_cnt);        // baud usually 115200
 
     void torqueOff();
 
@@ -71,15 +71,15 @@ public:
     int getCurPose(int id);                     // get a servo value in the current pose
     int getNextPose(int id);                    // get a servo value in the next pose
     void setNextPose(int id, int pos);          // set a servo value in the next pose
-    void setId(int index, int id);              // set the id of a particular storage index
-    int getId(int index);                       // get the id of a particular storage index
+    void setId(uint8_t index, uint8_t id);              // set the id of a particular storage index
+    uint8_t getId(uint8_t index);                       // get the id of a particular storage index
 
     /* Pose Engine */
     void interpolateSetup(int time);            // calculate speeds for smooth transition
     void interpolateStep();                     // move forward one step in current interpolation  
     unsigned char interpolating;                // are we in an interpolation? 0=No, 1=Yes
     unsigned char runningSeq;                   // are we running a sequence? 0=No, 1=Yes 
-    int poseSize;                               // how many servos are in this pose, used by Sync()
+    uint8_t poseSize;                               // how many servos are in this pose, used by Sync()
 
     /* to interpolate:
      *  bioloid.loadPose(myPose);
@@ -109,7 +109,7 @@ private:
     uint16_t *pose_;                       // the current pose, updated by Step(), set out by Sync()
     uint16_t *nextpose_;                   // the destination pose, where we put on load
     int *speed_;                               // speeds for interpolation
-    unsigned char *id_;                        // servo id for this index
+    uint8_t *id_;                        // servo id for this index
 
     unsigned long lastframe_;                   // time last frame was sent out
     unsigned int total_frame;                    // Wei-Shun You edits: total frame between two pose

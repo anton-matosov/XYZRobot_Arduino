@@ -31,39 +31,45 @@ static unsigned int checksum_2;
 #include <StandardCplusplus.h>
 #include <serstream>
 
+#define SERVO_TO_POSE(x) (uint8_t)((x) << A1_16_SHIFT)
+#define POSE_TO_SERVO(x) (uint8_t)((x) >> A1_16_SHIFT)
+
 namespace std
 {
     ohserialstream cout(Serial);
 }
 
 /* new-style setup */
-void BOLIDE_Player::setup(long baud, int servo_cnt)
+void BOLIDE_Player::setup(long baud, uint8_t servo_cnt)
 {
     A1_16_Ini(baud);
-    // setup storage
-    id_ = (unsigned char *)malloc(servo_cnt * sizeof(unsigned char));
-    pose_ = (unsigned int *)malloc(servo_cnt * sizeof(unsigned int));
-    nextpose_ = (unsigned int *)malloc(servo_cnt * sizeof(unsigned int));
-    speed_ = (int *)malloc(servo_cnt * sizeof(int));
-    // initialize
+
     poseSize = servo_cnt;
-    for (int i = 0; i < poseSize; i++)
+
+    // setup storage
+    id_ = new uint8_t[servo_cnt];
+    pose_ = new uint16_t[servo_cnt];
+    nextpose_ = new uint16_t[servo_cnt];
+    speed_ = new int[servo_cnt];
+
+    // initialize
+    for (uint8_t i = 0; i < poseSize; i++)
     {
         id_[i] = i + 1;
-        pose_[i] = 512 << A1_16_SHIFT;
-        nextpose_[i] = 512 << A1_16_SHIFT;
+        pose_[i] = SERVO_TO_POSE(512);
+        nextpose_[i] = SERVO_TO_POSE(512);
     }
     interpolating = 0;
     playing = 0;
     lastframe_ = millis();
 }
 
-void BOLIDE_Player::setId(int index, int id)
+void BOLIDE_Player::setId(uint8_t index, uint8_t id)
 {
     id_[index] = id;
 }
 
-int BOLIDE_Player::getId(int index)
+uint8_t BOLIDE_Player::getId(uint8_t index)
 {
     return id_[index];
 }
@@ -75,7 +81,7 @@ void BOLIDE_Player::loadPose(const unsigned int *addr)
     poseSize = pgm_read_word_near(addr); // number of servos in this pose
     for (i = 0; i < poseSize; i++)
     {
-        nextpose_[i] = pgm_read_word_near(addr + 1 + i) << A1_16_SHIFT;
+        nextpose_[i] = SERVO_TO_POSE(pgm_read_word_near(addr + 1 + i));
     }
 }
 
@@ -99,7 +105,7 @@ void BOLIDE_Player::readPoseTo(uint16_t *saveToPose, unsigned char addr)
 {
     for (int i = 0; i < poseSize; i++)
     {
-        saveToPose[i] = (uint16_t)(ReadDataRAM2(id_[i], addr) << A1_16_SHIFT);
+        saveToPose[i] = SERVO_TO_POSE(ReadDataRAM2(id_[i], addr));
 
         delay(25);
     }
@@ -128,13 +134,13 @@ void BOLIDE_Player::writePose()
     const int commandOffset = 7;
     for (int i = 0; i < poseSize; i++)
     {
-        int temp = pose_[i] >> A1_16_SHIFT;
+        int servoPosition = POSE_TO_SERVO(pose_[i]);
         const int servoOffset = 5 * i;
 
-        packet_send[7 + servoOffset] = LO_BYTE(temp);
+        packet_send[7 + servoOffset] = LO_BYTE(servoPosition);
         checksum_1 ^= packet_send[7 + servoOffset];
 
-        packet_send[8 + servoOffset] = HI_BYTE(temp);
+        packet_send[8 + servoOffset] = HI_BYTE(servoPosition);
         checksum_1 ^= packet_send[8 + servoOffset];
 
         packet_send[9 + servoOffset] = recoveringTorque_ ? 3 : 0; // 0 (position control) / 1 (speed control) / 2 (torque off) /3 (position control servo on)
@@ -246,7 +252,7 @@ int BOLIDE_Player::getCurPose(int id)
     {
         if (id_[i] == id)
         {
-            return ((pose_[i]) >> A1_16_SHIFT);
+            return POSE_TO_SERVO(pose_[i]);
         }
     }
     return -1;
@@ -259,7 +265,7 @@ int BOLIDE_Player::getNextPose(int id)
     {
         if (id_[i] == id)
         {
-            return ((nextpose_[i]) >> A1_16_SHIFT);
+            return POSE_TO_SERVO(nextpose_[i]);
         }
     }
     return -1;
@@ -272,7 +278,7 @@ void BOLIDE_Player::setNextPose(int id, int pos)
     {
         if (id_[i] == id)
         {
-            nextpose_[i] = (pos << A1_16_SHIFT);
+            nextpose_[i] = SERVO_TO_POSE(pos);
             return;
         }
     }
@@ -287,7 +293,7 @@ void BOLIDE_Player::printPose(uint16_t *poseToPrint, const char* label)
         {
             std::cout << ", ";
         }
-        std::cout << LO_WORD(poseToPrint[i] >> A1_16_SHIFT);
+        std::cout << POSE_TO_SERVO(poseToPrint[i]);
     }
     std::cout << "  <<<<< " << label << std::endl;
 }
