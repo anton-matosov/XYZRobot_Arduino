@@ -2,6 +2,8 @@
 #include <BOLIDE_Player.h>
 #include "mask_definition.h"
 
+#include <StandardCplusplus.h>
+
 //definition of struct
 typedef struct
 {
