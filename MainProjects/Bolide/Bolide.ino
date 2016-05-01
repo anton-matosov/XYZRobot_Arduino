@@ -49,7 +49,8 @@ void Packet_Relax(unsigned char motor_ID);
 void Packet_SN(void);
 void Packet_Version_Read(void);
 void Packet_Error_Feedback(unsigned char CMD_reaction);
-void transitionToInitialPose(void);
+void transitionToInitialPose();
+void transitionToInitialPoseDirectly();
 void Action(int N);
 boolean BT_Packet_Task(void);
 void BT_Gsensor_Data(void);
@@ -161,7 +162,7 @@ void checkJoystickActions()
     }
     else if (rightAndMiddleButtons & RCU_mask_BT) //Bluetooth Button
     {
-        transitionToInitialPose();
+        transitionToInitialPoseDirectly();
     }
     else if (rightAndMiddleButtons & RCU_mask_power) //Power Button
     {
@@ -477,9 +478,14 @@ int IR_SENSOR_Task(void)
 }
 
 //Initial Pose Task
-void transitionToInitialPose(void)
+void transitionToInitialPose()
 {
     XYZrobot.readPose();
+    transitionToInitialPoseDirectly();
+}
+
+void transitionToInitialPoseDirectly()
+{
     XYZrobot.playSeq(DefaultInitial);
     while (XYZrobot.playing)
     {
