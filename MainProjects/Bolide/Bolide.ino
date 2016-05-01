@@ -156,48 +156,48 @@ void checkJoystickActions()
     LED_Task(1);
 
     if (rightAndMiddleButtons & RCU_mask_release) //Release Button
-                    {
-                        A1_16_TorqueOff(A1_16_Broadcast_ID);
-                    }
-                    else if (rightAndMiddleButtons & RCU_mask_BT) //Bluetooth Button
-                    {
-                    }
-                    else if (rightAndMiddleButtons & RCU_mask_power) //Power Button
-                    {
-                        XYZrobot.playSeq(DefaultInitial);
-                        while (XYZrobot.playing)
-                        {
-                            XYZrobot.play();
-                        }
-                    }
-                    else if (leftButtons & RCU_mask_L1)
-                    {
-                        performMoveAction(RCU_L1);
-                    }
-                    else if (leftButtons & RCU_mask_L2)
-                    {
-                        performMoveAction(RCU_L2);
-                    }
-                    else if (leftButtons & RCU_mask_L3)
-                    {
-                        performMoveAction(RCU_L3);
-                    }
-                    else if (rightAndMiddleButtons & RCU_mask_R1)
-                    {
-                        performMoveAction(RCU_R1);
-                    }
-                    else if (rightAndMiddleButtons & RCU_mask_R2)
-                    {
-                        performMoveAction(RCU_R2);
-                    }
-                    else if (rightAndMiddleButtons & RCU_mask_R3)
-                    {
-                        performMoveAction(RCU_R3);
-                    }
-                    else
-                    {
-                        checkJoystickSticks();
-                    }
+    {
+        A1_16_TorqueOff(A1_16_Broadcast_ID);
+    }
+    else if (rightAndMiddleButtons & RCU_mask_BT) //Bluetooth Button
+    {
+    }
+    else if (rightAndMiddleButtons & RCU_mask_power) //Power Button
+    {
+        XYZrobot.playSeq(DefaultInitial);
+        while (XYZrobot.playing)
+        {
+            XYZrobot.play();
+        }
+    }
+    else if (leftButtons & RCU_mask_L1)
+    {
+        performMoveAction(RCU_L1);
+    }
+    else if (leftButtons & RCU_mask_L2)
+    {
+        performMoveAction(RCU_L2);
+    }
+    else if (leftButtons & RCU_mask_L3)
+    {
+        performMoveAction(RCU_L3);
+    }
+    else if (rightAndMiddleButtons & RCU_mask_R1)
+    {
+        performMoveAction(RCU_R1);
+    }
+    else if (rightAndMiddleButtons & RCU_mask_R2)
+    {
+        performMoveAction(RCU_R2);
+    }
+    else if (rightAndMiddleButtons & RCU_mask_R3)
+    {
+        performMoveAction(RCU_R3);
+    }
+    else
+    {
+        checkJoystickSticks();
+    }
 
     LED_Task(0);
     BT_update = false;
@@ -209,33 +209,33 @@ void checkRemoteAppActions()
     int actionFromApp = packet[3];
 
     if (actionFromApp == 101)
-                    {
-                        XYZrobot.playSeq(DefaultInitial);
-                        while (XYZrobot.playing)
-                        {
-                            XYZrobot.play();
-                        }
-                    }
-                    else if (actionFromApp == 102)
-                    {
-                        A1_16_TorqueOff(254);
-                    }
-                    else if (actionFromApp == 251)
-                    {
-                        BT_Gsensor_Data();
-                    }
-                    else if (actionFromApp == 252)
-                    {
-                        BT_IR_Data();
-                    }
-                    else if (actionFromApp == 253)
-                    {
-                        BT_FW();
-                    }
-                    else
-                    {
-                        performMoveAction(actionFromApp);
-                    }
+    {
+        XYZrobot.playSeq(DefaultInitial);
+        while (XYZrobot.playing)
+        {
+            XYZrobot.play();
+        }
+    }
+    else if (actionFromApp == 102)
+    {
+        A1_16_TorqueOff(254);
+    }
+    else if (actionFromApp == 251)
+    {
+        BT_Gsensor_Data();
+    }
+    else if (actionFromApp == 252)
+    {
+        BT_IR_Data();
+    }
+    else if (actionFromApp == 253)
+    {
+        BT_FW();
+    }
+    else
+    {
+        performMoveAction(actionFromApp);
+    }
 
     LED_Task(0);
     BT_update = false;
@@ -482,7 +482,6 @@ int IR_SENSOR_Task(void)
     distance = (6787 / (analogRead(DISTANCE_SENSOR_PIN) - 3)) - 4;
     return distance;
 }
-
 
 //Initial Pose Task
 void Initial_Pose_Setup(void)
@@ -1230,7 +1229,6 @@ void Start_Music(void)
         noTone(BUZZER_PIN);
     }
 }
-
 
 // LED function
 void LED_Task(char mode)
