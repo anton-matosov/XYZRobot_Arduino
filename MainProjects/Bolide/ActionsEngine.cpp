@@ -4,8 +4,10 @@
 
 #include "ActionsEngine.h"
 
+extern void Action(int N);
+
 void ActionsEngine::perform(int actionID)
 {
-
+    Action(actionID);
 }
 
