@@ -118,10 +118,14 @@ private:
     transition_t *sequence;                    // sequence we are running
     int transitions;                            // how many transitions we have left to load
 
-    bool torquOff_;
+    bool torqueOff_;
+    bool recoveringTorque_;
+    bool traceSeqPlay_;
 
     void printPose(uint16_t *poseToPrint, const char* label);
     void readPoseTo(uint16_t* saveToPose);
+    void readPoseTo(uint16_t* saveToPose, unsigned char addr);
+    void readPosGoalTo(uint16_t* saveToPose);
 };
 
 #endif

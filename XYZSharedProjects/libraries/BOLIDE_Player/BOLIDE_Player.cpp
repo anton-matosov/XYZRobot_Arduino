@@ -39,7 +39,6 @@ namespace std
 /* new-style setup */
 void BOLIDE_Player::setup(long baud, int servo_cnt)
 {
-    static int i;
     A1_16_Ini(baud);
     // setup storage
     id_ = (unsigned char *)malloc(servo_cnt * sizeof(unsigned char));
@@ -48,7 +47,7 @@ void BOLIDE_Player::setup(long baud, int servo_cnt)
     speed_ = (int *)malloc(servo_cnt * sizeof(int));
     // initialize
     poseSize = servo_cnt;
-    for (i = 0; i < poseSize; i++)
+    for (int i = 0; i < poseSize; i++)
     {
         id_[i] = i + 1;
         pose_[i] = 512 << A1_16_SHIFT;
@@ -88,9 +87,20 @@ void BOLIDE_Player::readPose()
 
 void BOLIDE_Player::readPoseTo(uint16_t *saveToPose)
 {
+    readPoseTo(saveToPose, RAM_Joint_Position);
+}
+
+void BOLIDE_Player::readPosGoalTo(uint16_t* saveToPose)
+{
+    readPoseTo(saveToPose, RAM_Position_Goal);
+}
+
+void BOLIDE_Player::readPoseTo(uint16_t *saveToPose, unsigned char addr)
+{
     for (int i = 0; i < poseSize; i++)
     {
-        saveToPose[i] = (uint16_t)(ReadPosition(id_[i]) << A1_16_SHIFT);
+        saveToPose[i] = (uint16_t)(ReadDataRAM2(id_[i], addr) << A1_16_SHIFT);
+
         delay(25);
     }
 }
@@ -98,36 +108,54 @@ void BOLIDE_Player::readPoseTo(uint16_t *saveToPose)
 /* write pose out to servos using sync write. */
 void BOLIDE_Player::writePose()
 {
-    static int temp;
-    static char _i, _j;
-    packet_send[0] = 0xff;
-    packet_send[1] = 0xff;
-    packet_send[2] = 7 + 5 * poseSize;
-    packet_send[3] = 0xfe;
-    packet_send[4] = CMD_I_JOG;
-    checksum_1 = packet_send[2] ^ packet_send[3] ^ packet_send[4];
-    for (_i = 0; _i < poseSize; _i++)
+    if (traceSeqPlay_)
     {
-        temp = pose_[_i] >> A1_16_SHIFT;
-        packet_send[7 + 5 * _i] = temp & 0xff;
-        checksum_1 ^= packet_send[7 + 5 * _i];
-        packet_send[8 + 5 * _i] = (temp & 0xff00) >> 8;
-        checksum_1 ^= packet_send[8 + 5 * _i];
-        packet_send[9 + 5 * _i] = 0;
-        checksum_1 ^= packet_send[9 + 5 * _i];
-        packet_send[10 + 5 * _i] = _i + 1;
-        checksum_1 ^= packet_send[10 + 5 * _i];
-        packet_send[11 + 5 * _i] = 2;
-        checksum_1 ^= packet_send[11 + 5 * _i];
+        printPose(pose_, "trace");
+
+//        uint16_t positionGoal[poseSize];
+//        readPosGoalTo(positionGoal);
+//        printPose(positionGoal, "goal");
+    }
+
+    packet_send[0] = (char)0xff;
+    packet_send[1] = (char)0xff;
+    packet_send[2] = (char)(7 + 5 * poseSize);
+    packet_send[3] = (char)0xfe;
+    packet_send[4] = CMD_I_JOG;
+    // 5-6 - checksum
+    checksum_1 = (unsigned int)(packet_send[2] ^ packet_send[3] ^ packet_send[4]);
+
+    const int commandOffset = 7;
+    for (int i = 0; i < poseSize; i++)
+    {
+        int temp = pose_[i] >> A1_16_SHIFT;
+        const int servoOffset = 5 * i;
+
+        packet_send[7 + servoOffset] = LO_BYTE(temp);
+        checksum_1 ^= packet_send[7 + servoOffset];
+
+        packet_send[8 + servoOffset] = HI_BYTE(temp);
+        checksum_1 ^= packet_send[8 + servoOffset];
+
+        packet_send[9 + servoOffset] = recoveringTorque_ ? 3 : 0; // 0 (position control) / 1 (speed control) / 2 (torque off) /3 (position control servo on)
+        checksum_1 ^= packet_send[9 + servoOffset];
+
+        packet_send[10 + servoOffset] = id_[i];
+        checksum_1 ^= packet_send[10 + servoOffset];
+
+        packet_send[11 + servoOffset] = recoveringTorque_ ? 0 : 2;  // playtime, unit 10ms
+        checksum_1 ^= packet_send[11 + servoOffset];
     }
     checksum_1 &= 0xfe;
-    packet_send[5] = checksum_1;
+    packet_send[5] = (char)checksum_1;
     checksum_2 = (~checksum_1) & 0xfe;
-    packet_send[6] = checksum_2;
-    for (_j = 0; _j < packet_send[2]; _j++)
+    packet_send[6] = (char)checksum_2;
+    for (int byteIndex = 0; byteIndex < packet_send[2]; byteIndex++)
     {
-        Serial1.write(packet_send[_j]);
+        Serial1.write(packet_send[byteIndex]);
     }
+
+    recoveringTorque_ = false;
 }
 
 /* set up for an interpolation from pose to nextpose over TIME 
@@ -252,7 +280,7 @@ void BOLIDE_Player::setNextPose(int id, int pos)
 
 void BOLIDE_Player::printPose(uint16_t *poseToPrint, const char* label)
 {
-    std::cout << std::endl;
+//    std::cout << std::endl;
     for (int i = 0; i < poseSize; i++)
     {
         if (i > 0)
@@ -272,18 +300,23 @@ void BOLIDE_Player::playSeq(const transition_t *addr)
     TransitionConfig *config = (TransitionConfig *)(void*)addr;
     transitions = pgm_read_word_near(&config->totalPoses);
 
-    if (torquOff_)
-    {
-        torquOff_ = false;
-
-        readPose();
-    }
-
     // load a transition
     const transition_t *firstFrame = ++sequence;
+    int time = pgm_read_word_near(&firstFrame->time);
+    if (torqueOff_)
+    {
+        torqueOff_ = false;
+
+        readPose();
+        traceSeqPlay_ = true;
+        recoveringTorque_ = true;
+
+        time += 200;
+    }
+
 
     loadPose((const unsigned int *)pgm_read_word_near(&firstFrame->pose));
-    interpolateSetup(pgm_read_word_near(&firstFrame->time));
+    interpolateSetup(time);
     transitions--;
     playing = 1;
 }
@@ -311,6 +344,7 @@ void BOLIDE_Player::play()
         else
         {
             playing = 0;
+            traceSeqPlay_ = false;
         }
     }
 }
@@ -319,7 +353,7 @@ void BOLIDE_Player::torqueOff()
 {
     A1_16_TorqueOff(A1_16_Broadcast_ID);
 
-    torquOff_ = true;
+    torqueOff_ = true;
 }
 
 void BOLIDE_Player::printPose()
@@ -328,6 +362,9 @@ void BOLIDE_Player::printPose()
 
     readPoseTo(currentPose);
     printPose(currentPose, "current pose");
+
+    readPosGoalTo(currentPose);
+    printPose(currentPose, "current goal");
 }
 
 
