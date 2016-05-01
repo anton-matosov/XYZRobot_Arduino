@@ -28,4 +28,6 @@ generate_arduino_library(ALL_CODE)
 generate_arduino_firmware(${CMAKE_PROJECT_NAME}
         SKETCH Bolide.ino
         LIBS ALL_CODE
+        SERIAL screen @SERIAL_PORT@ 115200
+#        SERIAL /Applications/iTerm.app/Contents/MacOS/iTerm @SERIAL_PORT@ 115200
 )
