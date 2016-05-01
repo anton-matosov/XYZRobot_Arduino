@@ -8,6 +8,7 @@
 #include "Config.h"
 #include "MotionEditor.h"
 #include "AnalogJoystick.h"
+#include "OnBoardButtons.h"
 
 //== Declare Global Parameters ==
 AnalogJoystick leftJoystick;
@@ -81,7 +82,7 @@ void setup()
     Speaker_Task_Setup();
     Eye_LED_Setup();
     Buzzer_Setup();
-    Button_Setup();
+    OnBoardButtons::setup();
     Analog_Input_Setup();
     Timer_Task_Setup();
     _enable_timer4();
@@ -214,8 +215,7 @@ void loop()
         {
             if (leftJoystick.isRested() && rightJoystick.isRested())
             {
-                // Button task
-                BUTTON_Task();
+                OnBoardButtons::checkButtonStates();
             }
             else
             {
@@ -347,15 +347,6 @@ void Eye_LED_Setup(void)
 void Buzzer_Setup(void)
 {
     pinMode(BUZZER_PIN, OUTPUT);
-}
-
-//Configure onboard button pin
-void Button_Setup(void)
-{
-    pinMode(BUTTON1_PIN, INPUT);
-    pinMode(BUTTON2_PIN, INPUT);
-    pinMode(BUTTON3_PIN, INPUT);
-    pinMode(BUTTON4_PIN, INPUT);
 }
 
 //Configure Analog input pin

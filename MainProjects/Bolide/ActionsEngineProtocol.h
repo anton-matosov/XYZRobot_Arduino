@@ -7,7 +7,7 @@
 class ActionsEngineProtocol
 {
 public:
-    virtual void performAction(int actionID) = 0;
+    virtual void perform(int actionID) = 0;
 
     virtual ~ActionsEngineProtocol() {}
 };

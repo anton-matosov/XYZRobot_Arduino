@@ -12,7 +12,7 @@ class Robot
 public:
     static Robot& sharedInstance();
 
-    LEDTasksProtocol& LEDTasks();
+    LEDTasksProtocol& LED();
 
     ActionsEngineProtocol& actionsEngine();
 

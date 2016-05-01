@@ -4,9 +4,11 @@
 
 #pragma once
 
+
 class OnBoardButtons
 {
 public:
+    static void setup();
     static void checkButtonStates();
 };
 

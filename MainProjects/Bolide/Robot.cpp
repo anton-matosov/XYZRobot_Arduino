@@ -15,7 +15,7 @@ ActionsEngineProtocol& Robot::actionsEngine()
     return _actionsEngine;
 }
 
-LEDTasksProtocol& Robot::LEDTasks()
+LEDTasksProtocol& Robot::LED()
 {
     return _ledTasks;
 }

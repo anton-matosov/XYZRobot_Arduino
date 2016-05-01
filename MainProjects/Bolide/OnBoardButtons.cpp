@@ -6,6 +6,14 @@
 #include "OnBoardButtons.h"
 #include "Robot.h"
 
+
+//=== Robot Button Actions ====
+#define RB_1  23
+#define RB_2  24
+#define RB_3  25
+#define RB_4  26
+
+
 //Digital input Pin
 #define BUTTON1_PIN             32
 #define BUTTON2_PIN             33
@@ -17,6 +25,16 @@
 #define KEY_MASK_BUTTON_2            0x02
 #define KEY_MASK_BUTTON_3            0x04
 #define KEY_MASK_BUTTON_4            0x08
+
+//Configure onboard button pin
+void OnBoardButtons::setup()
+{
+    pinMode(BUTTON1_PIN, INPUT);
+    pinMode(BUTTON2_PIN, INPUT);
+    pinMode(BUTTON3_PIN, INPUT);
+    pinMode(BUTTON4_PIN, INPUT);
+}
+
 
 // Button function
 void OnBoardButtons::checkButtonStates()
@@ -43,24 +61,24 @@ void OnBoardButtons::checkButtonStates()
         lastKeyMaskPressed = keyMask;
         if (keyMask != 0)
         {
-            LED_Task(2);
+            Robot::sharedInstance().LED().runTask(2);
             if (keyMask == KEY_MASK_BUTTON_1)
             {
-                Robot::sharedInstance().actionsEngine().performAction(RB_1);
+                Robot::sharedInstance().actionsEngine().perform(RB_1);
             }
             else if (keyMask == KEY_MASK_BUTTON_2)
             {
-                Robot::sharedInstance().actionsEngine().performAction(RB_2);
+                Robot::sharedInstance().actionsEngine().perform(RB_2);
             }
             else if (keyMask == KEY_MASK_BUTTON_3)
             {
-                Robot::sharedInstance().actionsEngine().performAction(RB_3);
+                Robot::sharedInstance().actionsEngine().perform(RB_3);
             }
             else if (keyMask == KEY_MASK_BUTTON_4)
             {
-                Robot::sharedInstance().actionsEngine().performAction(RB_4);
+                Robot::sharedInstance().actionsEngine().perform(RB_4);
             }
-            LED_Task(0);
+            Robot::sharedInstance().LED().runTask(0);
         }
     }
 }

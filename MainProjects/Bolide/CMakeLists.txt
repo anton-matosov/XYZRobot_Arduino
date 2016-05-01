@@ -22,8 +22,6 @@ register_hardware_platform("${XYZ_SHARED_PROJECTS}/hardware/XYZrobot/Current/XYZ
 
 file(GLOB ALL_CODE_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
 file(GLOB ALL_CODE_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
-
-
 generate_arduino_library(ALL_CODE)
 
 

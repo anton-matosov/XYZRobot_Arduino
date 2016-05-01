@@ -4,7 +4,7 @@
 
 #include "ActionsEngine.h"
 
-void ActionsEngine::performAction(int actionID)
+void ActionsEngine::perform(int actionID)
 {
 
 }

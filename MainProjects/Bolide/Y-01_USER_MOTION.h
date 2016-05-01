@@ -3035,11 +3035,7 @@ const PROGMEM transition_t D_ShowDance[] = {{0,             175},
 #define ActionNo_54    D_SideGetUp
 
 ////==== User Motion Control ====////
-//=== Robot Button ====
-#define RB_1  23
-#define RB_2  24
-#define RB_3  25
-#define RB_4  26
+
 //=== Remote Control ====
 #define RCU_LJU   1
 #define RCU_LJD   2

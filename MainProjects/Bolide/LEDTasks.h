@@ -2,7 +2,7 @@
 // Created by Anton Matosov on 4/30/16.
 //
 
-#pragma once 
+#pragma once
 
 #include "LEDTasksProtocol.h"
 
