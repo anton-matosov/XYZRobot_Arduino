@@ -68,9 +68,13 @@ void Power_Detection_Task(void);
 
 bool irSensorDetectedObstacle();
 
-void checkJoystickActions();
+void checkJoystickSticks();
 void checkLeftJoystickActions();
 void checkRightJoystickActions();
+
+void checkRemoteAppActions();
+
+void checkJoystickActions();
 
 //========================= Set up =======================================
 void setup()
@@ -114,24 +118,51 @@ void loop()
         if (Serial2.available() > 0)
         {
             BT_Packet_Task();
+
             if (BT_update)
             {
-                //==== RCU Command ====
-                if (packet[1] != 255 & packet[2] != 1)
+                if (packet[1] != 255 & packet[2] != 1) //==== RCU Command ====
                 {
-                    leftJoystick.update(&packet[1]);
-                    rightJoystick.update(&packet[3]);
+                    checkJoystickActions();
+                }
+                else if (packet[1] == 255 & packet[2] == 1) //==== App Command ====
+                {
+                    checkRemoteAppActions();
+                }
+            }
+        }
+        else
+        {
+            if (leftJoystick.isRested() && rightJoystick.isRested())
+            {
+                OnBoardButtons::checkButtonStates();
+            }
+            else if (packet[1] != 255 & packet[2] != 1) //==== RCU Command ====
+            {
+                checkJoystickSticks();
+            }
+        }
+    }
+}
 
-                    LED_Task(1);
+void checkJoystickActions()
+{
+    leftJoystick.update(&packet[1]);
+    rightJoystick.update(&packet[3]);
 
-                    if (packet[5] & RCU_mask_release) //Release Button
+    int rightAndMiddleButtons = packet[5];
+    int leftButtons = packet[6];
+
+    LED_Task(1);
+
+    if (rightAndMiddleButtons & RCU_mask_release) //Release Button
                     {
                         A1_16_TorqueOff(A1_16_Broadcast_ID);
                     }
-                    else if (packet[5] & RCU_mask_BT) //Bluetooth Button
+                    else if (rightAndMiddleButtons & RCU_mask_BT) //Bluetooth Button
                     {
                     }
-                    else if (packet[5] & RCU_mask_power) //Power Button
+                    else if (rightAndMiddleButtons & RCU_mask_power) //Power Button
                     {
                         XYZrobot.playSeq(DefaultInitial);
                         while (XYZrobot.playing)
@@ -139,45 +170,45 @@ void loop()
                             XYZrobot.play();
                         }
                     }
-                    else if (packet[6] & RCU_mask_L1)
+                    else if (leftButtons & RCU_mask_L1)
                     {
                         performMoveAction(RCU_L1);
                     }
-                    else if (packet[6] & RCU_mask_L2)
+                    else if (leftButtons & RCU_mask_L2)
                     {
                         performMoveAction(RCU_L2);
                     }
-                    else if (packet[6] & RCU_mask_L3)
+                    else if (leftButtons & RCU_mask_L3)
                     {
                         performMoveAction(RCU_L3);
                     }
-                    else if (packet[5] & RCU_mask_R1)
+                    else if (rightAndMiddleButtons & RCU_mask_R1)
                     {
                         performMoveAction(RCU_R1);
                     }
-                    else if (packet[5] & RCU_mask_R2)
+                    else if (rightAndMiddleButtons & RCU_mask_R2)
                     {
                         performMoveAction(RCU_R2);
                     }
-                    else if (packet[5] & RCU_mask_R3)
+                    else if (rightAndMiddleButtons & RCU_mask_R3)
                     {
                         performMoveAction(RCU_R3);
                     }
                     else
                     {
-                        checkJoystickActions();
+                        checkJoystickSticks();
                     }
 
-                    LED_Task(0);
-                    BT_update = false;
-                }
-                    //==== App Command ====
-                else if (packet[1] == 255 & packet[2] == 1)
-                {
-                    LED_Task(3);
-                    int actionFromApp = packet[3];
+    LED_Task(0);
+    BT_update = false;
+}
 
-                    if (actionFromApp == 101)
+void checkRemoteAppActions()
+{
+    LED_Task(3);
+    int actionFromApp = packet[3];
+
+    if (actionFromApp == 101)
                     {
                         XYZrobot.playSeq(DefaultInitial);
                         while (XYZrobot.playing)
@@ -206,26 +237,11 @@ void loop()
                         performMoveAction(actionFromApp);
                     }
 
-                    LED_Task(0);
-                    BT_update = false;
-                }
-            }
-        }
-        else
-        {
-            if (leftJoystick.isRested() && rightJoystick.isRested())
-            {
-                OnBoardButtons::checkButtonStates();
-            }
-            else
-            {
-                checkJoystickActions();
-            }
-        }
-    }
+    LED_Task(0);
+    BT_update = false;
 }
 
-void checkJoystickActions()
+void checkJoystickSticks()
 {
     checkLeftJoystickActions();
     checkRightJoystickActions();
