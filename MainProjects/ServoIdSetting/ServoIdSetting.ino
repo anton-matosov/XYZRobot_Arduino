@@ -75,7 +75,6 @@ _Timeout_Feedback:
   _disable_timer4();
   _reset_timer_counter();
   Serial.println("Setting ID Fail!!");
-  goto _receive_Data;
 }
 void MOTOR_task_setup(void){
   A1_16_Ini(115200);
