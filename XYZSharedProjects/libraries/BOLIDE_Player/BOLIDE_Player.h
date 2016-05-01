@@ -45,6 +45,12 @@ typedef struct
     int time;               // time for transition
 } transition_t;
 
+typedef struct
+{
+    void *unused;
+    int totalPoses; // number of transitions in the play sequence
+} TransitionConfig;
+
 /** Bioloid Controller Class for mega324p/644p clients. **/
 class BOLIDE_Player
 {

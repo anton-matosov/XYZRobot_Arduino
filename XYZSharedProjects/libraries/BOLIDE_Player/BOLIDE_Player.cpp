@@ -241,12 +241,15 @@ void BOLIDE_Player::setNextPose(int id, int pos)
 void BOLIDE_Player::playSeq(const transition_t *addr)
 {
     sequence = (transition_t *)addr;
-    // number of transitions left to load
-    transitions = pgm_read_word_near(&sequence->time);
-    sequence++;
+
+    TransitionConfig *config = (TransitionConfig *)(void*)addr;
+    transitions = pgm_read_word_near(&config->totalPoses);
+
     // load a transition
-    loadPose((const unsigned int *)pgm_read_word_near(&sequence->pose));
-    interpolateSetup(pgm_read_word_near(&sequence->time));
+    const transition_t *firstFrame = ++sequence;
+
+    loadPose((const unsigned int *)pgm_read_word_near(&firstFrame->pose));
+    interpolateSetup(pgm_read_word_near(&firstFrame->time));
     transitions--;
     playing = 1;
 }
