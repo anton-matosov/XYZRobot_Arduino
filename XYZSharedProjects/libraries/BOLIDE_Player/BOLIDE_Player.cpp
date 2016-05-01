@@ -311,7 +311,7 @@ void BOLIDE_Player::playSeq(const transition_t *addr)
         traceSeqPlay_ = true;
         recoveringTorque_ = true;
 
-        time += 200;
+        time = std::max(time, 400);
     }
 
 
