@@ -49,7 +49,7 @@ void Packet_Relax(unsigned char motor_ID);
 void Packet_SN(void);
 void Packet_Version_Read(void);
 void Packet_Error_Feedback(unsigned char CMD_reaction);
-void Initial_Pose_Setup(void);
+void transitionToInitialPose(void);
 void Action(int N);
 boolean BT_Packet_Task(void);
 void BT_Gsensor_Data(void);
@@ -61,7 +61,7 @@ void find_header_BT(void);
 void MusicPlaying_wav_play(char song_name[]);
 void MusicPlaying_wav_stop();
 void MusicPlaying_wav_volume(int volume);
-void Start_Music(void);
+void playWelcomeSong(void);
 void BUTTON_Task(void);
 void LED_Task(char mode);
 void Power_Detection_Task(void);
@@ -93,9 +93,9 @@ void setup()
 
     //Start motion
     LED_Task(2);
-    Start_Music();
+    playWelcomeSong();
     G_SENSOR_Task_Setup();
-    Initial_Pose_Setup();
+    transitionToInitialPose();
     delay(1000);
     LED_Task(0);
 }
@@ -161,14 +161,11 @@ void checkJoystickActions()
     }
     else if (rightAndMiddleButtons & RCU_mask_BT) //Bluetooth Button
     {
+        transitionToInitialPose();
     }
     else if (rightAndMiddleButtons & RCU_mask_power) //Power Button
     {
-        XYZrobot.playSeq(DefaultInitial);
-        while (XYZrobot.playing)
-        {
-            XYZrobot.play();
-        }
+        transitionToInitialPose();
     }
     else if (leftButtons & RCU_mask_L1)
     {
@@ -210,11 +207,7 @@ void checkRemoteAppActions()
 
     if (actionFromApp == 101)
     {
-        XYZrobot.playSeq(DefaultInitial);
-        while (XYZrobot.playing)
-        {
-            XYZrobot.play();
-        }
+        transitionToInitialPose();
     }
     else if (actionFromApp == 102)
     {
@@ -484,7 +477,7 @@ int IR_SENSOR_Task(void)
 }
 
 //Initial Pose Task
-void Initial_Pose_Setup(void)
+void transitionToInitialPose(void)
 {
     XYZrobot.readPose();
     XYZrobot.playSeq(DefaultInitial);
@@ -1213,7 +1206,7 @@ void MusicPlaying_wav_volume(int volume)
 }
 
 // Buzzer function : play start music
-void Start_Music(void)
+void playWelcomeSong(void)
 {
     int currentTone = 0;
 #ifdef DISABLE_STARTUP_MUSIC
