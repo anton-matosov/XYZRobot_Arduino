@@ -5,3 +5,4 @@ project(${PROJECT_NAME})
 
 
 add_subdirectory(MainProjects/Bolide)
+add_subdirectory(MainProjects/RobotEditor)
