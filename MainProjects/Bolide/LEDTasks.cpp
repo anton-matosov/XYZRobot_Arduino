@@ -4,7 +4,10 @@
 
 #include "LEDTasks.h"
 
-void LEDTasks::runTask(int id)
+extern void LED_Task(char mode);
+
+void LEDTasks::runTask(char id)
 {
+    LED_Task(id);
 }
 

@@ -10,7 +10,7 @@ class LEDTasks : public LEDTasksProtocol
 {
 public:
 
-    virtual void runTask(int id);
+    virtual void runTask(char id);
 };
 
 
