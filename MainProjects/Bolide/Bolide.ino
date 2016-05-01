@@ -1217,7 +1217,7 @@ void playWelcomeSong(void)
 
     for (; currentTone < gStartupMusicLength; currentTone++)
     {
-        tone(BUZZER_PIN, pgm_read_word_near(&start_music_frq[currentTone]));
+//        tone(BUZZER_PIN, pgm_read_word_near(&start_music_frq[currentTone]));
         delay(200);
         noTone(BUZZER_PIN);
     }
