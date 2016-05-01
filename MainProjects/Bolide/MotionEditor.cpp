@@ -6,7 +6,7 @@
 
 #include <EEPROM.h>
 #include <Wire.h>
-#include "BOLIDE_Y-01_Board.h"
+#include "Y-01_Board.h"
 #include "Y-01_Mask_Definition.h"
 #include "Y-01_USER_MOTION.h"
 
