@@ -8,6 +8,11 @@
 #ifndef A1_16_h
 #define A1_16_h
 
+#define LO_BYTE(x) ((x) & 0xFF)
+#define HI_BYTE(x) (((x) & 0xFF00) >> 8)
+#define LO_WORD(x) ((x) & 0xFFFF)
+
+
 #define MAX_SERVOS                         20
 #define BUFFER_SIZE                        64
 
