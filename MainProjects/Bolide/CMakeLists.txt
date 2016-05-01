@@ -8,10 +8,8 @@ file(GLOB ALL_CODE_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
 file(GLOB ALL_CODE_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 generate_arduino_library(ALL_CODE)
 
-
 generate_arduino_firmware(${PROJECT_NAME}
         SKETCH ${PROJECT_NAME}.ino
         LIBS ALL_CODE
         SERIAL screen @SERIAL_PORT@ 115200
-#        SERIAL /Applications/iTerm.app/Contents/MacOS/iTerm @SERIAL_PORT@ 115200
 )
