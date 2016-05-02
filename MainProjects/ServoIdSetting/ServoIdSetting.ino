@@ -22,7 +22,7 @@ void loop()
 {
     static int ID_Setting;
     static int temp = 0;
-    _receive_Data:
+_receive_Data:
     while (Serial.available() < 1)
     {
     }
@@ -103,13 +103,13 @@ void loop()
     status_check_1 |= Position_mask;
     WriteDataRAM1(ID_Setting, RAM_LED_Control, LED_GRN_MASK);
     delay(20);
-    _finish_test:
+_finish_test:
     _disable_timer4();
     _reset_timer_counter();
     status_check_2 |= timeout_mask;
     Serial.println("Setting ID Successful!!");
     goto _receive_Data;
-    _Timeout_Feedback:
+_Timeout_Feedback:
     _disable_timer4();
     _reset_timer_counter();
     Serial.println("Setting ID Fail!!");
