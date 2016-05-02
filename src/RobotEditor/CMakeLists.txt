@@ -10,5 +10,6 @@ project(${PROJECT_NAME})
 
 generate_arduino_firmware(${PROJECT_NAME}
         SKETCH ${PROJECT_NAME}.ino
+#        ARDLIBS StandardCplusplus
 #        LIBS ALL_CODE
         )
