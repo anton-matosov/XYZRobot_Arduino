@@ -28,8 +28,8 @@ static char packet_send[110];
 static unsigned int checksum_1;
 static unsigned int checksum_2;
 
-#include <StandardCplusplus.h>
 #include <serstream>
+#include <new>
 
 #define SERVO_TO_POSE(x) (uint8_t)((x) << A1_16_SHIFT)
 #define POSE_TO_SERVO(x) (uint8_t)((x) >> A1_16_SHIFT)

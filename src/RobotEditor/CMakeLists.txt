@@ -11,5 +11,4 @@ project(${PROJECT_NAME})
 generate_arduino_firmware(${PROJECT_NAME}
         SKETCH ${PROJECT_NAME}.ino
 #        LIBS ALL_CODE
-        SERIAL screen @SERIAL_PORT@ 115200
         )
