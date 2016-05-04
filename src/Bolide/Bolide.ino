@@ -12,6 +12,8 @@
 
 
 #include "StandardCplusplus.h"
+#include "Robot.h"
+#include "ScopedLEDTask.h"
 
 //== Declare Global Parameters ==
 AnalogJoystick leftJoystick;
@@ -23,7 +25,7 @@ static float ax, ay, az;
 static int I2C_Address = 0x3B >> 1;
 static int distance;
 static int SN_packet[9] = {0}, SN_packet_index = 0, inByte = 0;
-static int packet[7], LED_mode, g_packet[8], ir_packet[4], ir_msb, ir_lsb, ir_rowdata;
+static int packet[7], g_packet[8], ir_packet[4], ir_msb, ir_lsb, ir_rowdata;
 static boolean torque_release = false, BT_update = false;
 
 #define WALK_FORWARD_ACTION_ID 1
@@ -66,7 +68,6 @@ void MusicPlaying_wav_stop();
 void MusicPlaying_wav_volume(int volume);
 void playWelcomeSong(void);
 void BUTTON_Task(void);
-void LED_Task(char mode);
 void Power_Detection_Task(void);
 
 bool irSensorDetectedObstacle();
@@ -95,12 +96,12 @@ void setup()
     _enable_timer4();
 
     //Start motion
-    LED_Task(2);
+    ScopedLEDTask(2, Robot::sharedInstance().LED());
+
     playWelcomeSong();
     G_SENSOR_Task_Setup();
     transitionToInitialPose();
     delay(1000);
-    LED_Task(0);
 }
 
 //========================= Main =======================================
@@ -156,7 +157,7 @@ void handleJoystickActions()
     int rightAndMiddleButtons = packet[5];
     int leftButtons = packet[6];
 
-    LED_Task(1);
+    ScopedLEDTask(1, Robot::sharedInstance().LED());
 
     if (rightAndMiddleButtons & RCU_mask_release) //Release Button
     {
@@ -199,13 +200,12 @@ void handleJoystickActions()
         checkJoystickSticks();
     }
 
-    LED_Task(0);
     BT_update = false;
 }
 
 void handleMobileAppActions()
 {
-    LED_Task(3);
+    ScopedLEDTask(3, Robot::sharedInstance().LED());
     int actionFromApp = packet[3];
 
     if (actionFromApp == 101)
@@ -233,7 +233,6 @@ void handleMobileAppActions()
         performMoveAction(actionFromApp);
     }
 
-    LED_Task(0);
     BT_update = false;
 }
 
@@ -1231,126 +1230,6 @@ void playWelcomeSong(void)
     }
 }
 
-// LED function
-void LED_Task(char mode)
-{
-    if (mode != 0)
-    {
-        TCNT3 = -1;
-        _enable_timer3();
-        LED_mode = mode;
-    }
-    else
-    {
-        EYE_LED_OFF;
-        _disable_timer3();
-        LED_mode = 0;
-    }
-}
-
-ISR(TIMER3_OVF_vect)
-{
-    static int R = 0, G = 0, B = 0;
-    static int _R = 41, _G = 41, _B = 41;
-    static boolean blink_LED = true;
-    if (LED_mode == 1)
-    {
-        if (blink_LED)
-            EYE_LED_BLE;
-        else
-            EYE_LED_GRN;
-        blink_LED = !blink_LED;
-        _reset_timer3(4500);
-    }
-    else if (LED_mode == 2)
-    {
-        if (R < 40)
-        {
-            R++;
-            OCR5A = pgm_read_word_near(&log_light_40[R]);
-        }
-        else if (_R > 0)
-        {
-            _R--;
-            OCR5A = pgm_read_word_near(&log_light_40[_R]);
-        }
-        else if (G < 40)
-        {
-            G++;
-            OCR5B = pgm_read_word_near(&log_light_40[G]);
-            EYE_LED_BLE;
-        }
-        else if (_G > 0)
-        {
-            _G--;
-            OCR5B = pgm_read_word_near(&log_light_40[_G]);
-        }
-        else if (B < 40)
-        {
-            B++;
-            OCR5C = pgm_read_word_near(&log_light_40[B]);
-            EYE_LED_GRN;
-        }
-        else if (_B > 0)
-        {
-            _B--;
-            OCR5C = pgm_read_word_near(&log_light_40[_B]);
-        }
-        else
-        {
-            R = 0;
-            G = 0;
-            B = 0;
-            _R = 41;
-            _G = 41;
-            _B = 41;
-        }
-        _reset_timer3(200);
-    }
-    else if (LED_mode == 3)
-    {
-        if (R < 40)
-        {
-            R++;
-            OCR5A = pgm_read_word_near(&log_light_40[R]);
-        }
-        else if (_R > 0)
-        {
-            _R--;
-            OCR5A = pgm_read_word_near(&log_light_40[_R]);
-        }
-        else if (G < 40)
-        {
-            G++;
-            OCR5B = pgm_read_word_near(&log_light_40[G]);
-        }
-        else if (_G > 0)
-        {
-            _G--;
-            OCR5B = pgm_read_word_near(&log_light_40[_G]);
-        }
-        else if (B < 40)
-        {
-            B++;
-            OCR5C = pgm_read_word_near(&log_light_40[B]);
-        }
-        else if (_B > 0)
-        {
-            _B--;
-            OCR5C = pgm_read_word_near(&log_light_40[_B]);
-        }
-        else
-        {
-            R = 0;
-            G = 0;
-            B = 0;
-            _R = 41;
-            _G = 41;
-            _B = 41;
-        }
-        _reset_timer3(200);
-    }
-}
 
 // Power Detection function
 void Power_Detection_Task(void)
@@ -1361,6 +1240,13 @@ void Power_Detection_Task(void)
     {
         tone(BUZZER_PIN, 1000);
     }
+}
+
+
+
+ISR(TIMER3_OVF_vect)
+{
+    Robot::sharedInstance().LED().onTimer();
 }
 
 ISR(TIMER4_OVF_vect)

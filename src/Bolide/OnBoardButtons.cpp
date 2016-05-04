@@ -5,6 +5,7 @@
 #include <USBAPI.h>
 #include "OnBoardButtons.h"
 #include "Robot.h"
+#include "ScopedLEDTask.h"
 
 
 //=== Robot Button Actions ====
@@ -61,7 +62,8 @@ void OnBoardButtons::checkButtonStates()
         lastKeyMaskPressed = keyMask;
         if (keyMask != 0)
         {
-            Robot::sharedInstance().LED().runTask(2);
+            ScopedLEDTask(2, Robot::sharedInstance().LED());
+
             if (keyMask == KEY_MASK_BUTTON_1)
             {
                 Robot::sharedInstance().actionsEngine().perform(RB_1);
@@ -78,7 +80,6 @@ void OnBoardButtons::checkButtonStates()
             {
                 Robot::sharedInstance().actionsEngine().perform(RB_4);
             }
-            Robot::sharedInstance().LED().runTask(0);
         }
     }
 }

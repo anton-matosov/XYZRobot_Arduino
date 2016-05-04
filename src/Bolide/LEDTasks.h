@@ -10,7 +10,16 @@ class LEDTasks : public LEDTasksProtocol
 {
 public:
 
-    virtual void runTask(char id);
+    void switchToMode(char mode) override;
+    char currentMode() const override;
+    void onTimer() override;
+
+private:
+
+    char _mode;
+    int R = 0, G = 0, B = 0;
+    int _R = 41, _G = 41, _B = 41;
+    bool blink_LED = true;
 };
 
 

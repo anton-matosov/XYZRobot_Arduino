@@ -75,12 +75,7 @@ typedef struct
 //Power Detection
 #define  Power_Voltage_Alarm        10
 //================================================================================================================================
-//=== LED Frequency ===
-const PROGMEM uint16_t log_light_40[41] = {1,
-                                           1, 1, 2, 2, 2, 3, 3, 4, 5, 6,
-                                           7, 8, 10, 11, 13, 16, 19, 23, 27, 32,
-                                           38, 45, 54, 64, 76, 90, 108, 128, 152, 181,
-                                           215, 256, 304, 362, 430, 512, 608, 723, 860, 1023};
+
 //=== Music Frequency ===
 const PROGMEM uint16_t start_music_frq[] = {262, 262, 392, 392, 440, 440, 392};
 const PROGMEM uint8_t gStartupMusicLength = sizeof(start_music_frq) / sizeof(start_music_frq[0]);
