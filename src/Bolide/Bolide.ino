@@ -61,8 +61,8 @@ void BT_Gsensor_Data(void);
 void BT_IR_Data(void);
 void BT_ActionEnding(int ActionNum);
 void BT_FW();
-void cb_BT(void);
-void find_header_BT(void);
+void cleanBluetoothBuffer(void);
+void findBluetoothHeader(void);
 void MusicPlaying_wav_play(char song_name[]);
 void MusicPlaying_wav_stop();
 void MusicPlaying_wav_volume(int volume);
@@ -941,7 +941,7 @@ void Action(int N)
         {
             if (BT_Packet_Task())
             {
-                cb_BT();
+                cleanBluetoothBuffer();
                 break;
             }
             else
@@ -972,37 +972,37 @@ boolean BT_Packet_Task(void)
         }
         else
         {
-            find_header_BT();
+            findBluetoothHeader();
             return false;
         }
         if ((temp_packet[1] = Serial2.read()) == 0)
         {
-            find_header_BT();
+            findBluetoothHeader();
             return false;
         }
         if ((temp_packet[2] = Serial2.read()) == 0)
         {
-            find_header_BT();
+            findBluetoothHeader();
             return false;
         }
         if ((temp_packet[3] = Serial2.read()) == 0)
         {
-            find_header_BT();
+            findBluetoothHeader();
             return false;
         }
         if ((temp_packet[4] = Serial2.read()) == 0)
         {
-            find_header_BT();
+            findBluetoothHeader();
             return false;
         }
         if ((temp_packet[5] = Serial2.read()) == 0)
         {
-            find_header_BT();
+            findBluetoothHeader();
             return false;
         }
         if ((temp_packet[6] = Serial2.read()) == 0)
         {
-            find_header_BT();
+            findBluetoothHeader();
             return false;
         }
         if (temp_packet[1] != 255 && temp_packet[2] != 1)
@@ -1170,23 +1170,22 @@ void BT_FW()
 }
 
 // Clean BT Buffer
-void cb_BT(void)
+void cleanBluetoothBuffer(void)
 {
     while ((Serial2.read()) != -1)
     {
     }
 }
 
-void find_header_BT(void)
+void findBluetoothHeader(void)
 {
-    static int cb = 0x00;
     while (Serial2.available() > 0)
     {
         if (Serial2.peek() == 0)
         {
             return;
         }
-        cb = Serial2.read();
+        Serial2.read();
     }
 }
 
@@ -1194,14 +1193,14 @@ void find_header_BT(void)
 void MusicPlaying_wav_play(const char song_name[])
 {
     Serial3.write(0);
-    Serial3.print("P");
+    Serial3.write("P");
     Serial3.write(song_name); //set the filename of song : 0000 ~ 9999
 }
 
 void MusicPlaying_wav_stop()
 {
     Serial3.write(0);
-    Serial3.print("S0000");
+    Serial3.write("S0000");
 }
 
 void MusicPlaying_wav_volume(int volume)
@@ -1209,7 +1208,7 @@ void MusicPlaying_wav_volume(int volume)
     Serial3.write(0);
     Serial3.write('V');
     Serial3.write(volume);// volume : 0x01 ~ 0x7F
-    Serial3.print("000");
+    Serial3.write("000");
 }
 
 // Buzzer function : play start music
@@ -1241,7 +1240,6 @@ void Power_Detection_Task(void)
         tone(BUZZER_PIN, 1000);
     }
 }
-
 
 
 ISR(TIMER3_OVF_vect)
