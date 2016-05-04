@@ -7,7 +7,7 @@
 
 #include "Config.h"
 #include "MotionEditor.h"
-#include "AnalogJoystick.h"
+#include "Joystick/AnalogJoystick.h"
 #include "OnBoardButtons.h"
 
 
@@ -75,9 +75,9 @@ void checkJoystickSticks();
 void checkLeftJoystickActions();
 void checkRightJoystickActions();
 
-void checkRemoteAppActions();
+void handleMobileAppActions();
 
-void checkJoystickActions();
+void handleJoystickActions();
 
 //========================= Set up =======================================
 void setup()
@@ -126,11 +126,11 @@ void loop()
             {
                 if (packet[1] != 255 & packet[2] != 1) //==== RCU Command ====
                 {
-                    checkJoystickActions();
+                    handleJoystickActions();
                 }
                 else if (packet[1] == 255 & packet[2] == 1) //==== App Command ====
                 {
-                    checkRemoteAppActions();
+                    handleMobileAppActions();
                 }
             }
         }
@@ -142,13 +142,13 @@ void loop()
             }
             else if (packet[1] != 255 & packet[2] != 1) //==== RCU Command ====
             {
-                checkJoystickSticks();
+                handleJoystickActions();
             }
         }
     }
 }
 
-void checkJoystickActions()
+void handleJoystickActions()
 {
     leftJoystick.update(&packet[1]);
     rightJoystick.update(&packet[3]);
@@ -180,7 +180,7 @@ void checkJoystickActions()
     }
     else if (leftButtons & RCU_mask_L3)
     {
-//        performMoveAction(RCU_L3);
+        performMoveAction(RCU_L3);
     }
     else if (rightAndMiddleButtons & RCU_mask_R1)
     {
@@ -192,9 +192,7 @@ void checkJoystickActions()
     }
     else if (rightAndMiddleButtons & RCU_mask_R3)
     {
-        XYZrobot.readPose();
-        XYZrobot.writePose();
-//        performMoveAction(RCU_R3);
+        performMoveAction(RCU_R3);
     }
     else
     {
@@ -205,7 +203,7 @@ void checkJoystickActions()
     BT_update = false;
 }
 
-void checkRemoteAppActions()
+void handleMobileAppActions()
 {
     LED_Task(3);
     int actionFromApp = packet[3];
