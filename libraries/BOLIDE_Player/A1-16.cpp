@@ -5,10 +5,6 @@
 #include <Arduino.h>
 #include "A1-16.h"
 
-unsigned char packet_received[BUFFER_SIZE];
-
-unsigned int checksum_1;
-unsigned int checksum_2;
 
 void A1_16_Ini(unsigned long baud)
 {
@@ -19,6 +15,9 @@ void A1_16_Ini(unsigned long baud)
 
 void A1_16_SetPosition(unsigned char _pID, unsigned char _CMD, unsigned char _playtime, unsigned int _position)
 {
+    unsigned int checksum_1;
+    unsigned int checksum_2;
+
     static unsigned int _data[5];
     static int _i = 0;
 
@@ -60,6 +59,9 @@ void A1_16_SetPosition(unsigned char _pID, unsigned char _CMD, unsigned char _pl
 
 void A1_16_SetSpeed(unsigned char _pID, unsigned char _playtime, int _speed)
 {
+    unsigned int checksum_1;
+    unsigned int checksum_2;
+
     static unsigned int _data[5];
     static int _i = 0;
     _data[0] = _speed & 0xff;
@@ -89,8 +91,11 @@ void A1_16_SetSpeed(unsigned char _pID, unsigned char _playtime, int _speed)
 
 void A1_16_TorqueOff(unsigned char _pID)
 {
-    static unsigned int _data[5];
-    static int _i = 0;
+    unsigned int checksum_1;
+    unsigned int checksum_2;
+
+    unsigned int _data[5];
+    int _i = 0;
     _data[0] = 0;
     _data[1] = 512 & 0xff;
     _data[2] = (512 & 0xff00) >> 8;
@@ -118,6 +123,9 @@ void A1_16_TorqueOff(unsigned char _pID)
 
 int A1_16_ReadData(unsigned char _pID, unsigned char _CMD, unsigned char _addr_start, unsigned char _data_length)
 {
+    unsigned int checksum_1;
+    unsigned int checksum_2;
+
     while (Serial1.read() != -1)
     {
     }
@@ -138,6 +146,10 @@ int A1_16_ReadData(unsigned char _pID, unsigned char _CMD, unsigned char _addr_s
 
 int A1_16_ReadPacket(unsigned char _data_length)
 {
+    unsigned int checksum_1;
+    unsigned int checksum_2;
+    unsigned char packet_received[BUFFER_SIZE];
+
     unsigned char packet_length = 11 + _data_length;
     unsigned char packet_pointer = 0;
     unsigned char _i;
@@ -199,6 +211,9 @@ int A1_16_ReadPacket(unsigned char _data_length)
 
 void A1_16_WriteData(unsigned char _pID, unsigned char _CMD, unsigned char _addr_start, char _data_write)
 {
+    unsigned int checksum_1;
+    unsigned int checksum_2;
+
     checksum_1 = (10 ^ _pID ^ _CMD ^ _addr_start ^ 0x01 ^ _data_write) & 0xfe;
     checksum_2 = (~checksum_1) & 0xfe;
     Serial1.write(0xff);
@@ -215,6 +230,9 @@ void A1_16_WriteData(unsigned char _pID, unsigned char _CMD, unsigned char _addr
 
 void A1_16_WriteData2(unsigned char _pID, unsigned char _CMD, unsigned char _addr_start, int _data_write)
 {
+    unsigned int checksum_1;
+    unsigned int checksum_2;
+
     unsigned char BYTE_1 = _data_write & 0xff;
     unsigned char BYTE_2 = (_data_write & 0xff00) >> 8;
     checksum_1 = (11 ^ _pID ^ _CMD ^ _addr_start ^ 0x02 ^ BYTE_1 ^ BYTE_2) & 0xfe;
@@ -234,6 +252,9 @@ void A1_16_WriteData2(unsigned char _pID, unsigned char _CMD, unsigned char _add
 
 void A1_16_Basic(unsigned char _pID, unsigned char _CMD)
 {
+    unsigned int checksum_1;
+    unsigned int checksum_2;
+
     checksum_1 = (7 ^ _pID ^ _CMD) & 0xfe;
     checksum_2 = (~checksum_1) & 0xfe;
     Serial1.write(0xff);          //header
