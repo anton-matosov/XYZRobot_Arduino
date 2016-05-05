@@ -79,10 +79,10 @@ void BOLIDE_Player::loadPose(const unsigned int *poseAddress)
 {
     poseSize = _programMemory->readWordNear(poseAddress); // number of servos in this pose
 
-    enum { poseDataOffset = 1 };
+    enum { kPoseDataOffset = 1 };
     for (uint8_t servoIndex = 0; servoIndex < poseSize; servoIndex++)
     {
-        uint16_t servoPos = _programMemory->readWordNear(poseAddress + servoIndex + poseDataOffset);
+        uint16_t servoPos = _programMemory->readWordNear(poseAddress + servoIndex + kPoseDataOffset);
         nextpose_[servoIndex] = SERVO_TO_POSE(servoPos);
     }
 }
