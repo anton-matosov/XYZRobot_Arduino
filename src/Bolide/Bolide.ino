@@ -1223,10 +1223,10 @@ void playWelcomeSong(void)
     tonesToSkip = gStartupMusicLength - gStartupMusicShortLength;
 #endif
 
-    const int toneDuration = 350;
+    const int toneDuration = 200;
     for (int currentTone = 0; currentTone < gStartupMusicLength; currentTone++)
     {
-        if (tonesToSkip < currentTone)
+        if (tonesToSkip <= currentTone)
         {
             tone(BUZZER_PIN, pgm_read_word_near(&start_music_frq[currentTone]));
         }
