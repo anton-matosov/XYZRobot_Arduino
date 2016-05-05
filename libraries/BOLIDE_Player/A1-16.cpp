@@ -24,11 +24,11 @@ void A1_16_Ini(unsigned long baud, SerialProtocol& serialChannel)
 
 void A1_16_SetPosition(unsigned char _pID, unsigned char _CMD, unsigned char _playtime, unsigned int _position)
 {
-    unsigned int checksum_1;
-    unsigned int checksum_2;
+    unsigned int checksum_1 = 0;
+    unsigned int checksum_2 = 0;
 
-    static unsigned int _data[5];
-    static int _i = 0;
+    unsigned int _data[5] = {};
+    int _i = 0;
 
     if (_CMD == CMD_S_JOG)
     {
@@ -68,11 +68,12 @@ void A1_16_SetPosition(unsigned char _pID, unsigned char _CMD, unsigned char _pl
 
 void A1_16_SetSpeed(unsigned char _pID, unsigned char _playtime, int _speed)
 {
-    unsigned int checksum_1;
-    unsigned int checksum_2;
+    unsigned int checksum_1 = 0;
+    unsigned int checksum_2 = 0;
 
-    static unsigned int _data[5];
-    static int _i = 0;
+    unsigned int _data[5] = {};
+    int _i = 0;
+
     _data[0] = _speed & 0xff;
     _data[1] = (_speed & 0xff00) >> 8;
     _data[2] = 1;                    //set:0(position control), 1(speed control), 2(torque off), 3(position servo on)
@@ -100,11 +101,12 @@ void A1_16_SetSpeed(unsigned char _pID, unsigned char _playtime, int _speed)
 
 void A1_16_TorqueOff(unsigned char _pID)
 {
-    unsigned int checksum_1;
-    unsigned int checksum_2;
+    unsigned int checksum_1 = 0;
+    unsigned int checksum_2 = 0;
 
     unsigned int _data[5];
     int _i = 0;
+
     _data[0] = 0;
     _data[1] = 512 & 0xff;
     _data[2] = (512 & 0xff00) >> 8;
@@ -132,8 +134,8 @@ void A1_16_TorqueOff(unsigned char _pID)
 
 int A1_16_ReadData(unsigned char _pID, unsigned char _CMD, unsigned char _addr_start, unsigned char _data_length)
 {
-    unsigned int checksum_1;
-    unsigned int checksum_2;
+    unsigned int checksum_1 = 0;
+    unsigned int checksum_2 = 0;
 
     while (gSerialChannel->read() != -1)
     {
@@ -155,9 +157,9 @@ int A1_16_ReadData(unsigned char _pID, unsigned char _CMD, unsigned char _addr_s
 
 int A1_16_ReadPacket(unsigned char _data_length)
 {
-    unsigned int checksum_1;
-    unsigned int checksum_2;
-    unsigned char packet_received[BUFFER_SIZE];
+    unsigned int checksum_1 = 0;
+    unsigned int checksum_2 = 0;
+    unsigned char packet_received[BUFFER_SIZE] = {};
 
     unsigned char packet_length = 11 + _data_length;
     unsigned char packet_pointer = 0;
@@ -220,8 +222,8 @@ int A1_16_ReadPacket(unsigned char _data_length)
 
 void A1_16_WriteData(unsigned char _pID, unsigned char _CMD, unsigned char _addr_start, char _data_write)
 {
-    unsigned int checksum_1;
-    unsigned int checksum_2;
+    unsigned int checksum_1 = 0;
+    unsigned int checksum_2 = 0;
 
     checksum_1 = (10 ^ _pID ^ _CMD ^ _addr_start ^ 0x01 ^ _data_write) & 0xfe;
     checksum_2 = (~checksum_1) & 0xfe;
@@ -239,8 +241,8 @@ void A1_16_WriteData(unsigned char _pID, unsigned char _CMD, unsigned char _addr
 
 void A1_16_WriteData2(unsigned char _pID, unsigned char _CMD, unsigned char _addr_start, int _data_write)
 {
-    unsigned int checksum_1;
-    unsigned int checksum_2;
+    unsigned int checksum_1 = 0;
+    unsigned int checksum_2 = 0;
 
     unsigned char BYTE_1 = _data_write & 0xff;
     unsigned char BYTE_2 = (_data_write & 0xff00) >> 8;
@@ -261,8 +263,8 @@ void A1_16_WriteData2(unsigned char _pID, unsigned char _CMD, unsigned char _add
 
 void A1_16_Basic(unsigned char _pID, unsigned char _CMD)
 {
-    unsigned int checksum_1;
-    unsigned int checksum_2;
+    unsigned int checksum_1 = 0;
+    unsigned int checksum_2 = 0;
 
     checksum_1 = (7 ^ _pID ^ _CMD) & 0xfe;
     checksum_2 = (~checksum_1) & 0xfe;
