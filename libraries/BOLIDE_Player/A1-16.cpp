@@ -15,11 +15,11 @@ void configureServoChannel(SerialProtocol& serialChannel)
 
 void A1_16_Ini(unsigned long baud, SerialProtocol& serialChannel)
 {
+    configureServoChannel(serialChannel);
+
     DDRD &= ~_BV(DDD2);            //set the RXD input
     PORTD |= _BV(PORTD2);        //pull-high the RXD pinout
     gSerialChannel->begin(baud, SERIAL_8N1);
-
-    configureServoChannel(serialChannel);
 }
 
 void A1_16_SetPosition(unsigned char _pID, unsigned char _CMD, unsigned char _playtime, unsigned int _position)
