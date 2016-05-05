@@ -40,9 +40,9 @@ namespace std
 }
 
 /* new-style setup */
-void BOLIDE_Player::setup(unsigned long baud, uint8_t servo_cnt)
+void BOLIDE_Player::setup(unsigned long baud, uint8_t servo_cnt, SerialProtocol& serialChannel)
 {
-    A1_16_Ini(baud);
+    A1_16_Ini(baud, serialChannel);
 
     poseSize = servo_cnt;
 

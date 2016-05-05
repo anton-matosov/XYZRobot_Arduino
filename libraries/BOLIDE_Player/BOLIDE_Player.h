@@ -56,7 +56,7 @@ class BOLIDE_Player
 {
 public:
     /* New-style constructor/setup */
-    void setup(unsigned long baud, uint8_t servo_cnt);        // baud usually 115200
+    void setup(unsigned long baud, uint8_t servo_cnt, SerialProtocol& serialChannel);        // baud usually 115200
 
     void torqueOff();
 

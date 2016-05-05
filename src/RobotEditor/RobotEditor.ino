@@ -1,4 +1,5 @@
 #include <BOLIDE_Player.h>
+#include <ArduinoHardwareSerial.h>
 #include "mask_definition.h"
 
 #include "StandardCplusplus.h"
@@ -11,6 +12,8 @@ typedef struct
 } sp_trans_t;
 //definition of global variable
 BOLIDE_Player BOLIDE_Robot;
+static ArduinoHardwareSerial servoSerial(Serial1);
+
 static boolean packet_timeout_status = false;
 // pose and sequence storage
 static int poses[max_pose_index][MAX_SERVOS];      // poses [index][servo_id-1], check for the motion index!!
@@ -20,7 +23,7 @@ sp_trans_t sequence[max_seq_index];               // sequence
 void setup()
 {
     Serial.begin(115200);
-    BOLIDE_Robot.setup(115200, 18);
+    BOLIDE_Robot.setup(115200, 18, servoSerial);
     TIMER4_task_setup();
     delay(1000);
 }

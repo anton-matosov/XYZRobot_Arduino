@@ -127,7 +127,7 @@ class SerialProtocol;
 
 void configureServoChannel(SerialProtocol& serialChannel);
 
-void A1_16_Ini(unsigned long baud);
+void A1_16_Ini(unsigned long baud, SerialProtocol& serialChannel);
 
 void A1_16_SetPosition(unsigned char _pID, unsigned char _CMD, unsigned char _playtime, unsigned int _position);
 

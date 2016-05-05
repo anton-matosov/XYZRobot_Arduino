@@ -1,4 +1,5 @@
 #include <BOLIDE_Player.h>
+#include <ArduinoHardwareSerial.h>
 #include "Check_Mask.h"
 
 #define ID_default 0x01
@@ -117,7 +118,8 @@ _Timeout_Feedback:
 
 void MOTOR_task_setup(void)
 {
-    A1_16_Ini(115200);
+    static ArduinoHardwareSerial servoSerial(Serial1);
+    A1_16_Ini(115200, servoSerial);
 }
 
 //----------------------------------------------
