@@ -1223,7 +1223,7 @@ void playWelcomeSong(void)
     tonesToSkip = gStartupMusicLength - gStartupMusicShortLength;
 #endif
 
-    const int toneDuration = 200;
+    const int toneDuration = 350;
     for (int currentTone = 0; currentTone < gStartupMusicLength; currentTone++)
     {
 #ifndef DISABLE_STARTUP_MUSIC

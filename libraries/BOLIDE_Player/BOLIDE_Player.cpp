@@ -111,7 +111,6 @@ void BOLIDE_Player::readPoseTo(uint16_t *saveToPose, unsigned char addr)
 {
     for (int i = 0; i < poseSize; i++)
     {
-        delay(25);
         uint16_t servoPos = (uint16_t)ReadDataRAM2(id_[i], addr);
         saveToPose[i] = SERVO_TO_POSE(servoPos);
     }
