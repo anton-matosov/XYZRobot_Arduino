@@ -10,11 +10,11 @@
 class ArduinoProgramMemory : public ProgramMemoryProtocol
 {
 public:
-    uint8_t readByteNear(void* addr) override;
-    uint16_t readWordNear(void* addr) override;
-    uint32_t readDwordNear(void* addr) override;
-    float readFloatNear(void* addr) override;
-    void* readPtrNear(void* addr) override;
+    uint8_t readByteNear(const void* addr) override;
+    uint16_t readWordNear(const void* addr) override;
+    uint32_t readDwordNear(const void* addr) override;
+    float readFloatNear(const void* addr) override;
+    void* readPtrNear(const void* addr) override;
 };
 
 

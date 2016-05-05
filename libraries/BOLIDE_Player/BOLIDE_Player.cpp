@@ -24,6 +24,7 @@
 
 #include "BOLIDE_Player.h"
 #include "SerialProtocol.h"
+#include "ProgramMemoryProtocol.h"
 
 static char packet_send[110];
 static unsigned int checksum_1;
@@ -41,10 +42,11 @@ namespace std
 }
 
 /* new-style setup */
-void BOLIDE_Player::setup(unsigned long baud, uint8_t servo_cnt, SerialProtocol& serialChannel)
+void BOLIDE_Player::setup(unsigned long baud, uint8_t servo_cnt, ProgramMemoryProtocol& programMemory, SerialProtocol& serialChannel)
 {
     A1_16_Ini(baud, serialChannel);
     _serialChannel = &serialChannel;
+    _programMemory = &programMemory;
 
     poseSize = servo_cnt;
 
@@ -79,10 +81,10 @@ uint8_t BOLIDE_Player::getId(uint8_t index)
 /* load a named pose from FLASH into nextpose. */
 void BOLIDE_Player::loadPose(const unsigned int *addr)
 {
-    poseSize = pgm_read_word_near(addr); // number of servos in this pose
+    poseSize = _programMemory->readWordNear(addr); // number of servos in this pose
     for (uint8_t i = 1; i < poseSize + 1; i++)
     {
-        nextpose_[i] = SERVO_TO_POSE(pgm_read_word_near(addr + i));
+        nextpose_[i] = SERVO_TO_POSE(_programMemory->readWordNear(addr + i));
     }
 }
 
@@ -304,11 +306,11 @@ void BOLIDE_Player::playSeq(const transition_t *addr)
     sequence = (transition_t *)addr;
 
     TransitionConfig *config = (TransitionConfig *)(void*)addr;
-    transitions = pgm_read_word_near(&config->totalPoses);
+    transitions = _programMemory->readWordNear(&config->totalPoses);
 
     // load a transition
     const transition_t *firstFrame = ++sequence;
-    int time = pgm_read_word_near(&firstFrame->time);
+    int time = _programMemory->readWordNear(&firstFrame->time);
     if (torqueOff_)
     {
         torqueOff_ = false;
@@ -321,7 +323,7 @@ void BOLIDE_Player::playSeq(const transition_t *addr)
     }
 
 
-    loadPose((const unsigned int *)pgm_read_word_near(&firstFrame->pose));
+    loadPose((const unsigned int *)_programMemory->readWordNear(&firstFrame->pose));
     interpolateSetup(time);
     transitions--;
     playing = 1;
@@ -343,8 +345,8 @@ void BOLIDE_Player::play()
         sequence++;
         if (transitions > 0)
         {
-            loadPose((const unsigned int *)pgm_read_word_near(&sequence->pose));
-            interpolateSetup(pgm_read_word_near(&sequence->time));
+            loadPose((const unsigned int *)_programMemory->readWordNear(&sequence->pose));
+            interpolateSetup(_programMemory->readWordNear(&sequence->time));
             transitions--;
         }
         else

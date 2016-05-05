@@ -2,6 +2,7 @@
 #include <BOLIDE_Player.h>
 #include <Wire.h>
 #include <ArduinoHardwareSerial.h>
+#include <ArduinoProgramMemory.h>
 #include "Y-01_Board.h"
 #include "Y-01_Mask_Definition.h"
 #include "Y-01_USER_MOTION.h"
@@ -331,7 +332,8 @@ void playCanNotGoTone()
 void ConfigureAllServos(void)
 {
     static ArduinoHardwareSerial servoSerial(Serial1);
-    XYZrobot.setup(115200, 18, servoSerial);
+    static ArduinoProgramMemory programMemory;
+    XYZrobot.setup(115200, 18, programMemory, servoSerial);
 }
 
 //Configure BT board
