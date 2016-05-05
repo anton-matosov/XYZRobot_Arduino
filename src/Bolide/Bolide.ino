@@ -1217,19 +1217,19 @@ void MusicPlaying_wav_volume(int volume)
 void playWelcomeSong(void)
 {
     int tonesToSkip = 0;
-#ifdef DISABLE_STARTUP_MUSIC
-    tonesToSkip = gStartupMusicLength;
-#elif defined(SHORT_STARTUP_MUSIC)
+#ifdef SHORT_STARTUP_MUSIC
     tonesToSkip = gStartupMusicLength - gStartupMusicShortLength;
 #endif
 
     const int toneDuration = 200;
     for (int currentTone = 0; currentTone < gStartupMusicLength; currentTone++)
     {
+#ifndef DISABLE_STARTUP_MUSIC
         if (tonesToSkip <= currentTone)
         {
             tone(BUZZER_PIN, pgm_read_word_near(&start_music_frq[currentTone]));
         }
+#endif
         delay(toneDuration);
         noTone(BUZZER_PIN);
     }
