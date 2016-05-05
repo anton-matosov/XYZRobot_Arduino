@@ -82,9 +82,11 @@ uint8_t BOLIDE_Player::getId(uint8_t index)
 void BOLIDE_Player::loadPose(const unsigned int *addr)
 {
     poseSize = _programMemory->readWordNear(addr); // number of servos in this pose
-    for (uint8_t i = 1; i < poseSize + 1; i++)
+
+    enum { poseDataOffset = 1 };
+    for (uint8_t servoIndex = 0; servoIndex < poseSize; servoIndex++)
     {
-        nextpose_[i] = SERVO_TO_POSE(_programMemory->readWordNear(addr + i));
+        nextpose_[servoIndex] = SERVO_TO_POSE(_programMemory->readWordNear(addr + servoIndex + poseDataOffset));
     }
 }
 
