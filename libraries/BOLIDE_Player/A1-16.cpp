@@ -4,13 +4,20 @@
 */
 #include <Arduino.h>
 #include "A1-16.h"
+#include "SerialProtocol.h"
 
+static SerialProtocol* gSerialChannel;
+
+void configureServoChannel(SerialProtocol& serialChannel)
+{
+    gSerialChannel = &serialChannel;
+}
 
 void A1_16_Ini(unsigned long baud)
 {
     DDRD &= ~_BV(DDD2);            //set the RXD input
     PORTD |= _BV(PORTD2);        //pull-high the RXD pinout
-    Serial1.begin(baud, SERIAL_8N1);
+    gSerialChannel->begin(baud, SERIAL_8N1);
 }
 
 void A1_16_SetPosition(unsigned char _pID, unsigned char _CMD, unsigned char _playtime, unsigned int _position)
@@ -44,16 +51,16 @@ void A1_16_SetPosition(unsigned char _pID, unsigned char _CMD, unsigned char _pl
     }
     checksum_1 &= 0xfe;
     checksum_2 = (~checksum_1) & 0xfe;
-    Serial1.write(0xff);
-    Serial1.write(0xff);
-    Serial1.write(0x0c);                //package size
-    Serial1.write(_pID);
-    Serial1.write(_CMD);
-    Serial1.write(checksum_1);
-    Serial1.write(checksum_2);
+    gSerialChannel->write(0xff);
+    gSerialChannel->write(0xff);
+    gSerialChannel->write(0x0c);                //package size
+    gSerialChannel->write(_pID);
+    gSerialChannel->write(_CMD);
+    gSerialChannel->write(checksum_1);
+    gSerialChannel->write(checksum_2);
     for (_i = 0; _i < 5; _i++)
     {
-        Serial1.write(_data[_i]);
+        gSerialChannel->write(_data[_i]);
     }
 }
 
@@ -76,16 +83,16 @@ void A1_16_SetSpeed(unsigned char _pID, unsigned char _playtime, int _speed)
     }
     checksum_1 &= 0xfe;
     checksum_2 = (~checksum_1) & 0xfe;
-    Serial1.write(0xff);
-    Serial1.write(0xff);
-    Serial1.write(0x0c);                //package size
-    Serial1.write(_pID);
-    Serial1.write(CMD_I_JOG);
-    Serial1.write(checksum_1);
-    Serial1.write(checksum_2);
+    gSerialChannel->write(0xff);
+    gSerialChannel->write(0xff);
+    gSerialChannel->write(0x0c);                //package size
+    gSerialChannel->write(_pID);
+    gSerialChannel->write(CMD_I_JOG);
+    gSerialChannel->write(checksum_1);
+    gSerialChannel->write(checksum_2);
     for (_i = 0; _i < 5; _i++)
     {
-        Serial1.write(_data[_i]);
+        gSerialChannel->write(_data[_i]);
     }
 }
 
@@ -108,16 +115,16 @@ void A1_16_TorqueOff(unsigned char _pID)
     }
     checksum_1 &= 0xfe;
     checksum_2 = (~checksum_1) & 0xfe;
-    Serial1.write(0xff);
-    Serial1.write(0xff);
-    Serial1.write(0x0c);                //package size
-    Serial1.write(_pID);
-    Serial1.write(CMD_S_JOG);
-    Serial1.write(checksum_1);
-    Serial1.write(checksum_2);
+    gSerialChannel->write(0xff);
+    gSerialChannel->write(0xff);
+    gSerialChannel->write(0x0c);                //package size
+    gSerialChannel->write(_pID);
+    gSerialChannel->write(CMD_S_JOG);
+    gSerialChannel->write(checksum_1);
+    gSerialChannel->write(checksum_2);
     for (_i = 0; _i < 5; _i++)
     {
-        Serial1.write(_data[_i]);
+        gSerialChannel->write(_data[_i]);
     }
 }
 
@@ -126,20 +133,20 @@ int A1_16_ReadData(unsigned char _pID, unsigned char _CMD, unsigned char _addr_s
     unsigned int checksum_1;
     unsigned int checksum_2;
 
-    while (Serial1.read() != -1)
+    while (gSerialChannel->read() != -1)
     {
     }
     checksum_1 = (9 ^ _pID ^ _CMD ^ _addr_start ^ _data_length) & 0xfe;
     checksum_2 = (~checksum_1) & 0xfe;
-    Serial1.write(0xff);
-    Serial1.write(0xff);
-    Serial1.write(0x09);                        //packet size
-    Serial1.write(_pID);
-    Serial1.write(_CMD);
-    Serial1.write(checksum_1);
-    Serial1.write(checksum_2);
-    Serial1.write(_addr_start);
-    Serial1.write(_data_length);            //length of data
+    gSerialChannel->write(0xff);
+    gSerialChannel->write(0xff);
+    gSerialChannel->write(0x09);                        //packet size
+    gSerialChannel->write(_pID);
+    gSerialChannel->write(_CMD);
+    gSerialChannel->write(checksum_1);
+    gSerialChannel->write(checksum_2);
+    gSerialChannel->write(_addr_start);
+    gSerialChannel->write(_data_length);            //length of data
     int value = A1_16_ReadPacket(_data_length);
     return value;
 }
@@ -159,7 +166,7 @@ int A1_16_ReadPacket(unsigned char _data_length)
     while (packet_pointer < packet_length)
     {
         timeout_counter = 0;
-        while (Serial1.available() <= 0)
+        while (gSerialChannel->available() <= 0)
         {
             timeout_counter++;
             if (timeout_counter > 1000L)
@@ -167,7 +174,7 @@ int A1_16_ReadPacket(unsigned char _data_length)
                 return -1;
             }
         }
-        packet_received[packet_pointer] = Serial1.read();
+        packet_received[packet_pointer] = gSerialChannel->read();
         if ((packet_received[packet_pointer] == 0xff) && (header_check == 0))
         {
             packet_pointer++;
@@ -216,16 +223,16 @@ void A1_16_WriteData(unsigned char _pID, unsigned char _CMD, unsigned char _addr
 
     checksum_1 = (10 ^ _pID ^ _CMD ^ _addr_start ^ 0x01 ^ _data_write) & 0xfe;
     checksum_2 = (~checksum_1) & 0xfe;
-    Serial1.write(0xff);
-    Serial1.write(0xff);
-    Serial1.write(10);            //package size
-    Serial1.write(_pID);
-    Serial1.write(_CMD);
-    Serial1.write(checksum_1);
-    Serial1.write(checksum_2);
-    Serial1.write(_addr_start);
-    Serial1.write(0x01);            //length of data
-    Serial1.write(_data_write);
+    gSerialChannel->write(0xff);
+    gSerialChannel->write(0xff);
+    gSerialChannel->write(10);            //package size
+    gSerialChannel->write(_pID);
+    gSerialChannel->write(_CMD);
+    gSerialChannel->write(checksum_1);
+    gSerialChannel->write(checksum_2);
+    gSerialChannel->write(_addr_start);
+    gSerialChannel->write(0x01);            //length of data
+    gSerialChannel->write(_data_write);
 }
 
 void A1_16_WriteData2(unsigned char _pID, unsigned char _CMD, unsigned char _addr_start, int _data_write)
@@ -237,17 +244,17 @@ void A1_16_WriteData2(unsigned char _pID, unsigned char _CMD, unsigned char _add
     unsigned char BYTE_2 = (_data_write & 0xff00) >> 8;
     checksum_1 = (11 ^ _pID ^ _CMD ^ _addr_start ^ 0x02 ^ BYTE_1 ^ BYTE_2) & 0xfe;
     checksum_2 = (~checksum_1) & 0xfe;
-    Serial1.write(0xff);
-    Serial1.write(0xff);
-    Serial1.write(11);            //package size
-    Serial1.write(_pID);
-    Serial1.write(_CMD);
-    Serial1.write(checksum_1);
-    Serial1.write(checksum_2);
-    Serial1.write(_addr_start);
-    Serial1.write(0x02);            //length of data
-    Serial1.write(BYTE_1);
-    Serial1.write(BYTE_2);
+    gSerialChannel->write(0xff);
+    gSerialChannel->write(0xff);
+    gSerialChannel->write(11);            //package size
+    gSerialChannel->write(_pID);
+    gSerialChannel->write(_CMD);
+    gSerialChannel->write(checksum_1);
+    gSerialChannel->write(checksum_2);
+    gSerialChannel->write(_addr_start);
+    gSerialChannel->write(0x02);            //length of data
+    gSerialChannel->write(BYTE_1);
+    gSerialChannel->write(BYTE_2);
 }
 
 void A1_16_Basic(unsigned char _pID, unsigned char _CMD)
@@ -257,11 +264,11 @@ void A1_16_Basic(unsigned char _pID, unsigned char _CMD)
 
     checksum_1 = (7 ^ _pID ^ _CMD) & 0xfe;
     checksum_2 = (~checksum_1) & 0xfe;
-    Serial1.write(0xff);          //header
-    Serial1.write(0xff);          //header
-    Serial1.write(7);                //package size
-    Serial1.write(_pID);
-    Serial1.write(_CMD);
-    Serial1.write(checksum_1);
-    Serial1.write(checksum_2);
+    gSerialChannel->write(0xff);          //header
+    gSerialChannel->write(0xff);          //header
+    gSerialChannel->write(7);                //package size
+    gSerialChannel->write(_pID);
+    gSerialChannel->write(_CMD);
+    gSerialChannel->write(checksum_1);
+    gSerialChannel->write(checksum_2);
 }

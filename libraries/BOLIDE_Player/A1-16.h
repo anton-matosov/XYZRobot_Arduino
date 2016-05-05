@@ -5,6 +5,8 @@
 
 #include <Arduino.h>
 
+class SerialProtocol;
+
 #ifndef A1_16_h
 #define A1_16_h
 
@@ -122,6 +124,8 @@
 #define RAM_Omega_Ref                      0x4a        //  RO,2 byte
 #define RAM_Requested_Counts               0x4c        //  RO,2 byte
 #define RAM_ACK_Counts                     0x4e        //  RO,2 byte
+
+void configureServoChannel(SerialProtocol& serialChannel);
 
 void A1_16_Ini(unsigned long baud);
 
