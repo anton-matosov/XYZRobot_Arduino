@@ -26,10 +26,6 @@
 #include "SerialProtocol.h"
 #include "ProgramMemoryProtocol.h"
 
-static char packet_send[110];
-static unsigned int checksum_1;
-static unsigned int checksum_2;
-
 #include <serstream>
 #include <new>
 
@@ -127,6 +123,9 @@ void BOLIDE_Player::writePose()
 //        readPosGoalTo(positionGoal);
 //        printPose(positionGoal, "goal");
     }
+    char packet_send[110];
+    unsigned int checksum_1 = 0;
+    unsigned int checksum_2 = 0;
 
     packet_send[0] = (char)0xff;
     packet_send[1] = (char)0xff;
