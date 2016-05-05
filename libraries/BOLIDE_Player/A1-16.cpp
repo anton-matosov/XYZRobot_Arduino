@@ -151,6 +151,7 @@ int A1_16_ReadData(unsigned char _pID, unsigned char _CMD, unsigned char _addr_s
     gSerialChannel->write(checksum_2);
     gSerialChannel->write(_addr_start);
     gSerialChannel->write(_data_length);            //length of data
+
     int value = A1_16_ReadPacket(_data_length);
     return value;
 }

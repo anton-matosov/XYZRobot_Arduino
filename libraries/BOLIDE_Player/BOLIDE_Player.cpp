@@ -79,14 +79,15 @@ uint8_t BOLIDE_Player::getId(uint8_t index)
 }
 
 /* load a named pose from FLASH into nextpose. */
-void BOLIDE_Player::loadPose(const unsigned int *addr)
+void BOLIDE_Player::loadPose(const unsigned int *poseAddress)
 {
-    poseSize = _programMemory->readWordNear(addr); // number of servos in this pose
+    poseSize = _programMemory->readWordNear(poseAddress); // number of servos in this pose
 
     enum { poseDataOffset = 1 };
     for (uint8_t servoIndex = 0; servoIndex < poseSize; servoIndex++)
     {
-        nextpose_[servoIndex] = SERVO_TO_POSE(_programMemory->readWordNear(addr + servoIndex + poseDataOffset));
+        uint16_t servoPos = _programMemory->readWordNear(poseAddress + servoIndex + poseDataOffset);
+        nextpose_[servoIndex] = SERVO_TO_POSE(servoPos);
     }
 }
 
@@ -110,9 +111,9 @@ void BOLIDE_Player::readPoseTo(uint16_t *saveToPose, unsigned char addr)
 {
     for (int i = 0; i < poseSize; i++)
     {
-        saveToPose[i] = SERVO_TO_POSE(ReadDataRAM2(id_[i], addr));
-
         delay(25);
+        uint16_t servoPos = (uint16_t)ReadDataRAM2(id_[i], addr);
+        saveToPose[i] = SERVO_TO_POSE(servoPos);
     }
 }
 

@@ -63,7 +63,7 @@ public:
     void torqueOff();
 
     /* Pose Manipulation */
-    void loadPose(const unsigned int *addr); // load a named pose from FLASH
+    void loadPose(const unsigned int *poseAddress); // load a named pose from FLASH
     void readPose();                            // read a pose in from the servos  
     void writePose();                           // write a pose out to the servos
     int getCurPose(int id);                     // get a servo value in the current pose
