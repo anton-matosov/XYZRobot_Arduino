@@ -71,7 +71,7 @@ public:
     uint8_t getId(uint8_t index);                       // get the id of a particular storage index
 
     /* Pose Engine */
-    void interpolateSetup(int time);            // calculate speeds for smooth transition
+    void interpolateSetup(unsigned int time);            // calculate speeds for smooth transition
     void interpolateStep();                     // move forward one step in current interpolation  
     unsigned char interpolating;                // are we in an interpolation? 0=No, 1=Yes
     unsigned char runningSeq;                   // are we running a sequence? 0=No, 1=Yes 

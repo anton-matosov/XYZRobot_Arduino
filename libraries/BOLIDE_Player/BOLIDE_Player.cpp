@@ -79,11 +79,10 @@ uint8_t BOLIDE_Player::getId(uint8_t index)
 /* load a named pose from FLASH into nextpose. */
 void BOLIDE_Player::loadPose(const unsigned int *addr)
 {
-    int i;
     poseSize = pgm_read_word_near(addr); // number of servos in this pose
-    for (i = 0; i < poseSize; i++)
+    for (uint8_t i = 1; i < poseSize + 1; i++)
     {
-        nextpose_[i] = SERVO_TO_POSE(pgm_read_word_near(addr + 1 + i));
+        nextpose_[i] = SERVO_TO_POSE(pgm_read_word_near(addr + i));
     }
 }
 
@@ -168,14 +167,13 @@ void BOLIDE_Player::writePose()
 
 /* set up for an interpolation from pose to nextpose over TIME 
     milliseconds by setting servo speeds. */
-void BOLIDE_Player::interpolateSetup(int time)
+void BOLIDE_Player::interpolateSetup(unsigned int time)
 {
-    int i;
-    int frames = (time / A1_16_FRAME_LENGTH) + 1;
+    unsigned int frames = (time / A1_16_FRAME_LENGTH) + 1;
     total_frame = frames;                //Wei-Shun You edits: record the frames between poses
     lastframe_ = millis();
     // set speed each servo...
-    for (i = 0; i < poseSize; i++)
+    for (uint8_t i = 0; i < poseSize; i++)
     {
         if (nextpose_[i] > pose_[i])
         {
@@ -196,7 +194,7 @@ void BOLIDE_Player::interpolateStep()
     {
         return;
     }
-    int i;
+
     int complete = poseSize;
     while (millis() - lastframe_ < A1_16_FRAME_LENGTH)
     {
@@ -204,7 +202,7 @@ void BOLIDE_Player::interpolateStep()
     frame_counter++;
     lastframe_ = millis();
     // update each servo
-    for (i = 0; i < poseSize; i++)
+    for (uint8_t i = 0; i < poseSize; i++)
     {
         int diff = nextpose_[i] - pose_[i];
         if (diff == 0)
