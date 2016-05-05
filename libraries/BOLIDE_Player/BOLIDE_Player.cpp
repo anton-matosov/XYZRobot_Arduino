@@ -31,8 +31,8 @@ static unsigned int checksum_2;
 #include <serstream>
 #include <new>
 
-#define SERVO_TO_POSE(x) (uint8_t)((x) << A1_16_SHIFT)
-#define POSE_TO_SERVO(x) (uint8_t)((x) >> A1_16_SHIFT)
+#define SERVO_TO_POSE(x) (uint16_t)((x) << A1_16_SHIFT)
+#define POSE_TO_SERVO(x) (uint16_t)((x) >> A1_16_SHIFT)
 
 namespace std
 {
