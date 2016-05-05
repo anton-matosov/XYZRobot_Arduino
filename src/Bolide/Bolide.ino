@@ -97,7 +97,7 @@ void setup()
     _enable_timer4();
 
     //Start motion
-    ScopedLEDTask(2, Robot::sharedInstance().LED());
+    ScopedLEDTask ledTask(2, Robot::sharedInstance().LED());
 
     playWelcomeSong();
     G_SENSOR_Task_Setup();
@@ -158,7 +158,7 @@ void handleJoystickActions()
     int rightAndMiddleButtons = packet[5];
     int leftButtons = packet[6];
 
-    ScopedLEDTask(1, Robot::sharedInstance().LED());
+    ScopedLEDTask ledTask(1, Robot::sharedInstance().LED());
 
     if (rightAndMiddleButtons & RCU_mask_release) //Release Button
     {
@@ -206,7 +206,7 @@ void handleJoystickActions()
 
 void handleMobileAppActions()
 {
-    ScopedLEDTask(3, Robot::sharedInstance().LED());
+    ScopedLEDTask ledTask(3, Robot::sharedInstance().LED());
     int actionFromApp = packet[3];
 
     if (actionFromApp == 101)

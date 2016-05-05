@@ -62,7 +62,7 @@ void OnBoardButtons::checkButtonStates()
         lastKeyMaskPressed = keyMask;
         if (keyMask != 0)
         {
-            ScopedLEDTask(2, Robot::sharedInstance().LED());
+            ScopedLEDTask ledTask(2, Robot::sharedInstance().LED());
 
             if (keyMask == KEY_MASK_BUTTON_1)
             {
