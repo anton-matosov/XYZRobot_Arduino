@@ -23,6 +23,7 @@
 */
 
 #include "BOLIDE_Player.h"
+#include "SerialProtocol.h"
 
 static char packet_send[110];
 static unsigned int checksum_1;
@@ -43,6 +44,7 @@ namespace std
 void BOLIDE_Player::setup(unsigned long baud, uint8_t servo_cnt, SerialProtocol& serialChannel)
 {
     A1_16_Ini(baud, serialChannel);
+    _serialChannel = &serialChannel;
 
     poseSize = servo_cnt;
 
@@ -158,7 +160,7 @@ void BOLIDE_Player::writePose()
     packet_send[6] = (char)checksum_2;
     for (int byteIndex = 0; byteIndex < packet_send[2]; byteIndex++)
     {
-        Serial1.write(packet_send[byteIndex]);
+        _serialChannel->write(packet_send[byteIndex]);
     }
 
     recoveringTorque_ = false;

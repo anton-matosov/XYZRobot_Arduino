@@ -118,6 +118,8 @@ private:
     bool recoveringTorque_;
     bool traceSeqPlay_;
 
+    SerialProtocol* _serialChannel;
+
     void printPose(uint16_t *poseToPrint, const char* label);
     void readPoseTo(uint16_t* saveToPose);
     void readPoseTo(uint16_t* saveToPose, unsigned char addr);
