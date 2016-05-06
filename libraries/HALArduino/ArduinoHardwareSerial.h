@@ -5,7 +5,7 @@
 #pragma once 
 
 #include <stdint.h>
-#import "SerialProtocol.h"
+#import "../HAL/SerialProtocol.h"
 
 class HardwareSerial;
 

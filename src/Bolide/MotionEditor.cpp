@@ -6,8 +6,8 @@
 
 #include <EEPROM.h>
 #include <Wire.h>
-#include <ArduinoHardwareSerial.h>
-#include <ArduinoProgramMemory.h>
+#include "../../libraries/HALArduino/ArduinoHardwareSerial.h"
+#include "../../libraries/HALArduino/ArduinoProgramMemory.h"
 #include "Y-01_Board.h"
 #include "Y-01_Mask_Definition.h"
 #include "Y-01_USER_MOTION.h"

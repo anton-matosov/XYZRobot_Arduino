@@ -1,8 +1,7 @@
 //Include Library
 #include <BOLIDE_Player.h>
 #include <Wire.h>
-#include <ArduinoHardwareSerial.h>
-#include <ArduinoProgramMemory.h>
+#include <HALArduino.h>
 #include "Y-01_Board.h"
 #include "Y-01_Mask_Definition.h"
 #include "Y-01_USER_MOTION.h"

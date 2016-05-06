@@ -33,6 +33,7 @@
 #include "A1-16.h"
 
 class ProgramMemoryProtocol;
+class SerialProtocol;
 
 /* pose engine runs at 30Hz (33ms between frames) 
    recommended values for interpolateSetup are of the form X*BIOLOID_FRAME_LENGTH - 1 */

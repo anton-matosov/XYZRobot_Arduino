@@ -1,6 +1,5 @@
 #include <BOLIDE_Player.h>
-#include <ArduinoHardwareSerial.h>
-#include <ArduinoProgramMemory.h>
+#include <HALArduino.h>
 #include "mask_definition.h"
 
 #include "StandardCplusplus.h"

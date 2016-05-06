@@ -1,5 +1,5 @@
 #include <BOLIDE_Player.h>
-#include <ArduinoHardwareSerial.h>
+#include <HALArduino.h>
 #include "Check_Mask.h"
 
 #define ID_default 0x01

@@ -23,8 +23,7 @@
 */
 
 #include "BOLIDE_Player.h"
-#include "SerialProtocol.h"
-#include "ProgramMemoryProtocol.h"
+#include <HAL.h>
 
 #include <serstream>
 #include <new>

@@ -4,7 +4,7 @@
 */
 #include <Arduino.h>
 #include "A1-16.h"
-#include "SerialProtocol.h"
+#include "../HAL/SerialProtocol.h"
 
 static SerialProtocol* gSerialChannel;
 
