@@ -492,7 +492,7 @@ void transitionToInitialPose()
 void transitionToInitialPoseDirectly()
 {
     XYZrobot.playSeq(DefaultInitial);
-    while (XYZrobot.playing)
+    while (XYZrobot.playing())
     {
         XYZrobot.play();
     }
@@ -938,7 +938,7 @@ void Action(int N)
         }
     }
 
-    while ((XYZrobot.playing) && !(BT_Packet_Task()))
+    while ((XYZrobot.playing()) && !(BT_Packet_Task()))
     {
         XYZrobot.play();
         if (Serial2.available() > 0)

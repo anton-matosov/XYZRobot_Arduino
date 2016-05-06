@@ -7,6 +7,8 @@
 #include <stdint.h>
 #import "SerialProtocol.h"
 
+class HardwareSerial;
+
 class ArduinoHardwareSerial : public SerialProtocol
 {
 public:

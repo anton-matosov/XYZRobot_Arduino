@@ -28,6 +28,7 @@
 
 #include <serstream>
 #include <new>
+#include <assert.h>
 
 #define SERVO_TO_POSE(x) (uint16_t)((x) << A1_16_SHIFT)
 #define POSE_TO_SERVO(x) (uint16_t)((x) >> A1_16_SHIFT)
@@ -44,7 +45,7 @@ void BOLIDE_Player::setup(unsigned long baud, uint8_t servo_cnt, ProgramMemoryPr
     _serialChannel = &serialChannel;
     _programMemory = &programMemory;
 
-    poseSize = servo_cnt;
+    _poseSize = servo_cnt;
 
     // setup storage
     id_ = new uint8_t[servo_cnt];
@@ -53,14 +54,14 @@ void BOLIDE_Player::setup(unsigned long baud, uint8_t servo_cnt, ProgramMemoryPr
     speed_ = new int[servo_cnt];
 
     // initialize
-    for (uint8_t i = 0; i < poseSize; i++)
+    for (uint8_t i = 0; i < _poseSize; i++)
     {
         id_[i] = i + 1;
         pose_[i] = SERVO_TO_POSE(512);
         nextpose_[i] = SERVO_TO_POSE(512);
     }
-    interpolating = 0;
-    playing = 0;
+    _interpolating = 0;
+    _playing = 0;
     lastframe_ = millis();
 }
 
@@ -77,10 +78,10 @@ uint8_t BOLIDE_Player::getId(uint8_t index)
 /* load a named pose from FLASH into nextpose. */
 void BOLIDE_Player::loadPose(const unsigned int *poseAddress)
 {
-    poseSize = _programMemory->readWordNear(poseAddress); // number of servos in this pose
+    _poseSize = _programMemory->readWordNear(poseAddress); // number of servos in this pose
 
     enum { kPoseDataOffset = 1 };
-    for (uint8_t servoIndex = 0; servoIndex < poseSize; servoIndex++)
+    for (uint8_t servoIndex = 0; servoIndex < _poseSize; servoIndex++)
     {
         uint16_t servoPos = _programMemory->readWordNear(poseAddress + servoIndex + kPoseDataOffset);
         nextpose_[servoIndex] = SERVO_TO_POSE(servoPos);
@@ -105,7 +106,7 @@ void BOLIDE_Player::readPosGoalTo(uint16_t* saveToPose)
 
 void BOLIDE_Player::readPoseTo(uint16_t *saveToPose, unsigned char addr)
 {
-    for (int i = 0; i < poseSize; i++)
+    for (int i = 0; i < _poseSize; i++)
     {
         uint16_t servoPos = (uint16_t)ReadDataRAM2(id_[i], addr);
         saveToPose[i] = SERVO_TO_POSE(servoPos);
@@ -119,7 +120,7 @@ void BOLIDE_Player::writePose()
     {
         printPose(pose_, "trace");
 
-//        uint16_t positionGoal[poseSize];
+//        uint16_t positionGoal[_poseSize];
 //        readPosGoalTo(positionGoal);
 //        printPose(positionGoal, "goal");
     }
@@ -129,14 +130,14 @@ void BOLIDE_Player::writePose()
 
     packet_send[0] = (char)0xff;
     packet_send[1] = (char)0xff;
-    packet_send[2] = (char)(7 + 5 * poseSize);
+    packet_send[2] = (char)(7 + 5 * _poseSize);
     packet_send[3] = (char)0xfe;
     packet_send[4] = CMD_I_JOG;
     // 5-6 - checksum
     checksum_1 = (unsigned int)(packet_send[2] ^ packet_send[3] ^ packet_send[4]);
 
     const int commandOffset = 7;
-    for (int i = 0; i < poseSize; i++)
+    for (int i = 0; i < _poseSize; i++)
     {
         int servoPosition = POSE_TO_SERVO(pose_[i]);
         const int servoOffset = 5 * i;
@@ -176,7 +177,7 @@ void BOLIDE_Player::interpolateSetup(unsigned int time)
     total_frame = frames;                //Wei-Shun You edits: record the frames between poses
     lastframe_ = millis();
     // set speed each servo...
-    for (uint8_t i = 0; i < poseSize; i++)
+    for (uint8_t i = 0; i < _poseSize; i++)
     {
         if (nextpose_[i] > pose_[i])
         {
@@ -187,25 +188,25 @@ void BOLIDE_Player::interpolateSetup(unsigned int time)
             speed_[i] = (pose_[i] - nextpose_[i]) / frames + 1;
         }
     }
-    interpolating = 1;
+    _interpolating = 1;
 }
 
 /* interpolate our pose, this should be called at about 30Hz. */
 void BOLIDE_Player::interpolateStep()
 {
-    if (interpolating == 0)
+    if (_interpolating == 0)
     {
         return;
     }
 
-    int complete = poseSize;
+    int complete = _poseSize;
     while (millis() - lastframe_ < A1_16_FRAME_LENGTH)
     {
     }
     frame_counter++;
     lastframe_ = millis();
     // update each servo
-    for (uint8_t i = 0; i < poseSize; i++)
+    for (uint8_t i = 0; i < _poseSize; i++)
     {
         int diff = nextpose_[i] - pose_[i];
         if (diff == 0)
@@ -242,7 +243,7 @@ void BOLIDE_Player::interpolateStep()
     }
     if ((complete <= 0) && (frame_counter >= total_frame))
     {
-        interpolating = 0;
+        _interpolating = 0;
         frame_counter = 0;
     }
     writePose();
@@ -251,7 +252,7 @@ void BOLIDE_Player::interpolateStep()
 /* get a servo value in the current pose */
 int BOLIDE_Player::getCurPose(int id)
 {
-    for (int i = 0; i < poseSize; i++)
+    for (int i = 0; i < _poseSize; i++)
     {
         if (id_[i] == id)
         {
@@ -264,7 +265,7 @@ int BOLIDE_Player::getCurPose(int id)
 /* get a servo value in the next pose */
 int BOLIDE_Player::getNextPose(int id)
 {
-    for (int i = 0; i < poseSize; i++)
+    for (int i = 0; i < _poseSize; i++)
     {
         if (id_[i] == id)
         {
@@ -277,7 +278,7 @@ int BOLIDE_Player::getNextPose(int id)
 /* set a servo value in the next pose */
 void BOLIDE_Player::setNextPose(int id, int pos)
 {
-    for (int i = 0; i < poseSize; i++)
+    for (int i = 0; i < _poseSize; i++)
     {
         if (id_[i] == id)
         {
@@ -290,7 +291,7 @@ void BOLIDE_Player::setNextPose(int id, int pos)
 void BOLIDE_Player::printPose(uint16_t *poseToPrint, const char* label)
 {
 //    std::cout << std::endl;
-    for (int i = 0; i < poseSize; i++)
+    for (int i = 0; i < _poseSize; i++)
     {
         if (i > 0)
         {
@@ -327,17 +328,17 @@ void BOLIDE_Player::playSeq(const transition_t *addr)
     loadPose((const unsigned int *)_programMemory->readWordNear(&firstFrame->pose));
     interpolateSetup(time);
     transitions--;
-    playing = 1;
+    _playing = 1;
 }
 
-/* keep playing our sequence */
+/* keep _playing our sequence */
 void BOLIDE_Player::play()
 {
-    if (playing == 0)
+    if (_playing == 0)
     {
         return;
     }
-    if (interpolating > 0)
+    if (_interpolating > 0)
     {
         interpolateStep();
     }
@@ -352,7 +353,7 @@ void BOLIDE_Player::play()
         }
         else
         {
-            playing = 0;
+            _playing = 0;
             traceSeqPlay_ = false;
         }
     }
@@ -367,7 +368,7 @@ void BOLIDE_Player::torqueOff()
 
 void BOLIDE_Player::printPose()
 {
-    uint16_t currentPose[poseSize];
+    uint16_t currentPose[_poseSize];
 
     readPoseTo(currentPose);
     printPose(currentPose, "current pose");
@@ -375,6 +376,35 @@ void BOLIDE_Player::printPose()
     readPosGoalTo(currentPose);
     printPose(currentPose, "current goal");
 }
+
+uint8_t BOLIDE_Player::poseSize()
+{
+    return _poseSize;
+}
+
+bool BOLIDE_Player::interpolating()
+{
+    return _interpolating;
+}
+
+bool BOLIDE_Player::playing()
+{
+    return _playing;
+}
+
+void BOLIDE_Player::poseSize(uint8_t newSize)
+{
+    assert(newSize < _poseSize);
+    _poseSize = newSize;
+}
+
+
+
+
+
+
+
+
 
 
 
