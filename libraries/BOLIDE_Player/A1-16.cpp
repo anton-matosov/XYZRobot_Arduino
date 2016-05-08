@@ -2,9 +2,10 @@
   A1-16.h - Modified for XYZrobot ATmega 1280 control board.
   Copyright (c) 2015 Wei-Shun You. XYZprinting Inc.  All right reserved.
 */
-#include <Arduino.h>
+
 #include "A1-16.h"
-#include "../HAL/SerialProtocol.h"
+#include <HAL.h>
+
 
 static SerialProtocol* gSerialChannel;
 
@@ -17,8 +18,6 @@ void A1_16_Ini(unsigned long baud, SerialProtocol& serialChannel)
 {
     configureServoChannel(serialChannel);
 
-    DDRD &= ~_BV(DDD2);            //set the RXD input
-    PORTD |= _BV(PORTD2);        //pull-high the RXD pinout
     gSerialChannel->begin(baud, SERIAL_8N1);
 }
 

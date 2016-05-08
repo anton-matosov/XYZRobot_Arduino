@@ -35,6 +35,11 @@
 class ProgramMemoryProtocol;
 class SerialProtocol;
 
+namespace HAL
+{
+class TimeServices;
+}
+
 /* pose engine runs at 30Hz (33ms between frames) 
    recommended values for interpolateSetup are of the form X*BIOLOID_FRAME_LENGTH - 1 */
 #define A1_16_FRAME_LENGTH      33
@@ -59,7 +64,10 @@ class BOLIDE_Player
 {
 public:
     /* New-style constructor/setup */
-    void setup(unsigned long baud, uint8_t servo_cnt, ProgramMemoryProtocol& programMemory, SerialProtocol& serialChannel);        // baud usually 115200
+    void setup(unsigned long baud, uint8_t servo_cnt,
+               ProgramMemoryProtocol& programMemory,
+               SerialProtocol& serialChannel,
+               HAL::TimeServices& timeServices);        // baud usually 115200
 
     void torqueOff();
 
@@ -128,6 +136,7 @@ private:
 
     SerialProtocol* _serialChannel;
     ProgramMemoryProtocol* _programMemory;
+    HAL::TimeServices* _timeServices;
 
     void printPose(uint16_t *poseToPrint, const char* label);
     void readPoseTo(uint16_t* saveToPose);

@@ -25,24 +25,35 @@
 #include "BOLIDE_Player.h"
 #include <HAL.h>
 
-#include <serstream>
+// TODO: Move ohserialstream cout to HAL Config
+#ifdef ARDUINO
+#   include <serstream>
+namespace std
+{
+    ohserialstream cout(Serial);
+}
+#else
+#   include <iostream>
+#endif
+
 #include <new>
 #include <assert.h>
 
 #define SERVO_TO_POSE(x) (uint16_t)((x) << A1_16_SHIFT)
 #define POSE_TO_SERVO(x) (uint16_t)((x) >> A1_16_SHIFT)
 
-namespace std
-{
-    ohserialstream cout(Serial);
-}
 
 /* new-style setup */
-void BOLIDE_Player::setup(unsigned long baud, uint8_t servo_cnt, ProgramMemoryProtocol& programMemory, SerialProtocol& serialChannel)
+void BOLIDE_Player::setup(unsigned long baud,
+                          uint8_t servo_cnt,
+                          ProgramMemoryProtocol& programMemory,
+                          SerialProtocol& serialChannel,
+                          HAL::TimeServices& timeServices)
 {
     A1_16_Ini(baud, serialChannel);
     _serialChannel = &serialChannel;
     _programMemory = &programMemory;
+    _timeServices = &timeServices;
 
     _poseSize = servo_cnt;
 
@@ -61,7 +72,7 @@ void BOLIDE_Player::setup(unsigned long baud, uint8_t servo_cnt, ProgramMemoryPr
     }
     _interpolating = 0;
     _playing = 0;
-    lastframe_ = millis();
+    lastframe_ = _timeServices->milliseconds();
 }
 
 void BOLIDE_Player::setId(uint8_t index, uint8_t id)
@@ -174,7 +185,7 @@ void BOLIDE_Player::interpolateSetup(unsigned int time)
 {
     unsigned int frames = (time / A1_16_FRAME_LENGTH) + 1;
     total_frame = frames;                //Wei-Shun You edits: record the frames between poses
-    lastframe_ = millis();
+    lastframe_ = _timeServices->milliseconds();
     // set speed each servo...
     for (uint8_t i = 0; i < _poseSize; i++)
     {
@@ -199,11 +210,11 @@ void BOLIDE_Player::interpolateStep()
     }
 
     int complete = _poseSize;
-    while (millis() - lastframe_ < A1_16_FRAME_LENGTH)
+    while (_timeServices->milliseconds() - lastframe_ < A1_16_FRAME_LENGTH)
     {
     }
     frame_counter++;
-    lastframe_ = millis();
+    lastframe_ = _timeServices->milliseconds();
     // update each servo
     for (uint8_t i = 0; i < _poseSize; i++)
     {

@@ -2,6 +2,8 @@
 #include <BOLIDE_Player.h>
 #include <Wire.h>
 #include <HALArduino.h>
+#include <Arduino.h>
+#include <ArduinoTimeServices.h>
 #include "Y-01_Board.h"
 #include "Y-01_Mask_Definition.h"
 #include "Y-01_USER_MOTION.h"
@@ -330,9 +332,10 @@ void playCanNotGoTone()
 //Configure A1-16 servo motor
 void ConfigureAllServos(void)
 {
-    static ArduinoHardwareSerial servoSerial(Serial1);
+    static ArduinoHardwareSerial servoSerial(Serial1, DDD2);
     static ArduinoProgramMemory programMemory;
-    XYZrobot.setup(115200, 18, programMemory, servoSerial);
+    static HALArduino::ArduinoTimeServices timeServices;
+    XYZrobot.setup(115200, 18, programMemory, servoSerial, timeServices);
 }
 
 //Configure BT board

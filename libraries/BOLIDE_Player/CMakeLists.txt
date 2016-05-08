@@ -1,0 +1,11 @@
+cmake_minimum_required(VERSION 3.5)
+
+set(PROJECT_NAME BOLIDE_Player)
+project(${PROJECT_NAME})
+
+
+file(GLOB_RECURSE ALL_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
+file(GLOB_RECURSE ALL_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
+
+add_library(${PROJECT_NAME} STATIC ${ALL_HDRS} ${ALL_SRCS})
+

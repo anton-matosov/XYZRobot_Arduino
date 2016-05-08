@@ -5,14 +5,14 @@
 #pragma once 
 
 #include <stdint.h>
-#import "../HAL/SerialProtocol.h"
+#include <HAL.h>
 
 class HardwareSerial;
 
 class ArduinoHardwareSerial : public SerialProtocol
 {
 public:
-    ArduinoHardwareSerial(HardwareSerial& arduinoSerial);
+    ArduinoHardwareSerial(HardwareSerial& arduinoSerial, uint8_t rxdPin);
 
     void begin(const unsigned long baudRate, const uint8_t transferConfig) override;
     unsigned int write(uint8_t byte) override;
@@ -22,6 +22,7 @@ public:
 
 private:
     HardwareSerial& _arduinoSerial;
+    int8_t _rxdPin;
 };
 
 

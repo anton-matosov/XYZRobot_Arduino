@@ -5,13 +5,17 @@
 #include <HardwareSerial.h>
 #include "ArduinoHardwareSerial.h"
 
-ArduinoHardwareSerial::ArduinoHardwareSerial(HardwareSerial& arduinoSerial)
+ArduinoHardwareSerial::ArduinoHardwareSerial(HardwareSerial& arduinoSerial, uint8_t rxdPin)
     : _arduinoSerial(arduinoSerial)
+      , _rxdPin(rxdPin)
 {
 }
 
 void ArduinoHardwareSerial::begin(const unsigned long baudRate, const uint8_t transferConfig)
 {
+    DDRD &= ~_BV(_rxdPin);            //set the RXD input
+    PORTD |= _BV(_rxdPin);        //pull-high the RXD pinout
+
     _arduinoSerial.begin(baudRate, transferConfig);
 }
 

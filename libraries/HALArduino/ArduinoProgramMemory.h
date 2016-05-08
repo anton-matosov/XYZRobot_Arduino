@@ -4,8 +4,8 @@
 
 #pragma once 
 
-#include <stdint-gcc.h>
-#include "../HAL/ProgramMemoryProtocol.h"
+#include <stdint.h>
+#include <HAL.h>
 
 class ArduinoProgramMemory : public ProgramMemoryProtocol
 {
