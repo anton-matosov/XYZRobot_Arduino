@@ -4,7 +4,6 @@
 
 #pragma once 
 
-#include <stdint.h>
 #include <HAL.h>
 
 class HardwareSerial;

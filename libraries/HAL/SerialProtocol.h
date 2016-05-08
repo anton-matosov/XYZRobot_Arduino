@@ -1,6 +1,7 @@
 #pragma once 
 
 #include <memory>
+#include <stdint.h>
 
 // Define config for Serial.begin(baud, config);
 #define SERIAL_5N1 0x00
