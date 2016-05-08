@@ -335,7 +335,7 @@ void BOLIDE_Player::playSeq(const transition_t *addr)
     }
 
 
-    loadPose((const unsigned int *)_programMemory->readWordNear(&firstFrame->pose));
+    loadPose((const unsigned int *)_programMemory->readPtrNear(&firstFrame->pose));
     interpolateSetup(time);
     transitions--;
     _playing = 1;
@@ -357,7 +357,7 @@ void BOLIDE_Player::play()
         sequence++;
         if (transitions > 0)
         {
-            loadPose((const unsigned int *)_programMemory->readWordNear(&sequence->pose));
+            loadPose((const unsigned int *)_programMemory->readPtrNear(&sequence->pose));
             interpolateSetup(_programMemory->readWordNear(&sequence->time));
             transitions--;
         }
