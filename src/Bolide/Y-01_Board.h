@@ -79,7 +79,7 @@ typedef struct
 //=== Music Frequency ===
 const PROGMEM uint16_t start_music_frq[] = {262, 262, 392, 392, 440, 440, 392};
 const PROGMEM uint8_t gStartupMusicLength = sizeof(start_music_frq) / sizeof(start_music_frq[0]);
-const PROGMEM uint8_t gStartupMusicShortLength = 3;
+const PROGMEM uint8_t gStartupMusicShortLength = 1;
 
 const PROGMEM uint16_t obstacle_alarm_frq[3] = {262, 550, 392};
 
