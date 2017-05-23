@@ -445,6 +445,9 @@ int getData(int reg)
 //Falling Detection Task
 int CalculatePostureIndex(void)
 {
+#ifdef DISABLE_ORIENTATION_DETECTION
+    return 1; //Frontside
+#else
     int posture_index = 0;
     ax = ((getData(0x33) << 8) + getData(0x32)) / 256.0;
     ay = ((getData(0x35) << 8) + getData(0x34)) / 256.0;
@@ -472,6 +475,7 @@ int CalculatePostureIndex(void)
     }// Stand Status
 
     return posture_index;
+#endif
 }
 
 //Getup Detection Task
