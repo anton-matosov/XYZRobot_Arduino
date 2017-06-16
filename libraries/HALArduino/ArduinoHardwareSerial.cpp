@@ -24,18 +24,18 @@ unsigned int ArduinoHardwareSerial::write(uint8_t byte)
     return _arduinoSerial.write(byte);
 }
 
-int ArduinoHardwareSerial::available()
+bool ArduinoHardwareSerial::available()
 {
-    return _arduinoSerial.available();
+    return _arduinoSerial.available() != 0;
 }
 
-int ArduinoHardwareSerial::peek()
+uint8_t ArduinoHardwareSerial::peek()
 {
-    return _arduinoSerial.peek();
+    return static_cast<uint8_t>(_arduinoSerial.peek());
 }
 
-int ArduinoHardwareSerial::read()
+uint8_t ArduinoHardwareSerial::read()
 {
-    return _arduinoSerial.read();
+    return static_cast<uint8_t>(_arduinoSerial.read());
 }
 

@@ -136,8 +136,7 @@ int A1_16_ReadData(unsigned char _pID, unsigned char _CMD, unsigned char _addr_s
     unsigned int checksum_1 = 0;
     unsigned int checksum_2 = 0;
 
-    while (gSerialChannel->read() != -1)
-    {
+    while (gSerialChannel->read() != SerialProtocol::kNoData) {
     }
     checksum_1 = (9 ^ _pID ^ _CMD ^ _addr_start ^ _data_length) & 0xfe;
     checksum_2 = (~checksum_1) & 0xfe;

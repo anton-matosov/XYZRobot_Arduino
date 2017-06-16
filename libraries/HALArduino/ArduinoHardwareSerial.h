@@ -15,9 +15,9 @@ public:
 
     void begin(const unsigned long baudRate, const uint8_t transferConfig = SERIAL_8N1) override;
     unsigned int write(uint8_t byte) override;
-    int available() override;
-    int peek() override;
-    int read() override;
+    bool available() override;
+    uint8_t peek() override;
+    uint8_t read() override;
 
 private:
     HardwareSerial& _arduinoSerial;
