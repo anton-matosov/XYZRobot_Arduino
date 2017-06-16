@@ -7,14 +7,14 @@
 #include <HAL.h>
 
 
-static SerialProtocol* gSerialChannel;
+static SerialProtocol *gSerialChannel;
 
-void configureServoChannel(SerialProtocol& serialChannel)
+void configureServoChannel(SerialProtocol &serialChannel)
 {
     gSerialChannel = &serialChannel;
 }
 
-void A1_16_Ini(unsigned long baud, SerialProtocol& serialChannel)
+void A1_16_Ini(unsigned long baud, SerialProtocol &serialChannel)
 {
     configureServoChannel(serialChannel);
 
@@ -29,16 +29,13 @@ void A1_16_SetPosition(unsigned char _pID, unsigned char _CMD, unsigned char _pl
     unsigned int _data[5] = {};
     int _i = 0;
 
-    if (_CMD == CMD_S_JOG)
-    {
+    if (_CMD == CMD_S_JOG) {
         _data[0] = _playtime;
         _data[1] = _position & 0xff;
         _data[2] = (_position & 0xff00) >> 8;
         _data[3] = 0;                    //set:0(position control), 1(speed control), 2(torque off), 3(position servo on)
         _data[4] = _pID;
-    }
-    else if (_CMD == CMD_I_JOG)
-    {
+    } else if (_CMD == CMD_I_JOG) {
         _data[0] = _position & 0xff;
         _data[1] = (_position & 0xff00) >> 8;
         _data[2] = 0;                    //set:0(position control), 1(speed control), 2(torque off), 3(position servo on)
@@ -46,8 +43,7 @@ void A1_16_SetPosition(unsigned char _pID, unsigned char _CMD, unsigned char _pl
         _data[4] = _playtime;
     }
     checksum_1 = (0x0c) ^ _pID ^ _CMD;        //package_size^pID^CMD
-    for (_i = 0; _i < 5; _i++)
-    {
+    for (_i = 0; _i < 5; _i++) {
         checksum_1 ^= _data[_i];
     }
     checksum_1 &= 0xfe;
@@ -59,14 +55,20 @@ void A1_16_SetPosition(unsigned char _pID, unsigned char _CMD, unsigned char _pl
     gSerialChannel->write(_CMD);
     gSerialChannel->write(checksum_1);
     gSerialChannel->write(checksum_2);
-    for (_i = 0; _i < 5; _i++)
-    {
+    for (_i = 0; _i < 5; _i++) {
         gSerialChannel->write(_data[_i]);
     }
 }
 
 void A1_16_SetSpeed(unsigned char _pID, unsigned char _playtime, int _speed)
 {
+    enum class SpeedControlType
+    {
+        kPositionControl = 0,
+        kSpeedControl = 1,
+        kTorqueOff = 2,
+        kPositionServoOn = 3
+    };
     unsigned int checksum_1 = 0;
     unsigned int checksum_2 = 0;
 
@@ -78,22 +80,21 @@ void A1_16_SetSpeed(unsigned char _pID, unsigned char _playtime, int _speed)
     _data[2] = 1;                    //set:0(position control), 1(speed control), 2(torque off), 3(position servo on)
     _data[3] = _pID;
     _data[4] = _playtime;
-    checksum_1 = (0x0c) ^ _pID ^ CMD_I_JOG;        //package_size^pID^CMD
-    for (_i = 0; _i < 5; _i++)
-    {
+    const auto kPackageSize = 0x0c;
+    checksum_1 = kPackageSize ^ _pID ^ CMD_I_JOG;        //package_size^pID^CMD
+    for (_i = 0; _i < 5; _i++) {
         checksum_1 ^= _data[_i];
     }
     checksum_1 &= 0xfe;
     checksum_2 = (~checksum_1) & 0xfe;
     gSerialChannel->write(0xff);
     gSerialChannel->write(0xff);
-    gSerialChannel->write(0x0c);                //package size
+    gSerialChannel->write(kPackageSize);                //package size
     gSerialChannel->write(_pID);
     gSerialChannel->write(CMD_I_JOG);
     gSerialChannel->write(checksum_1);
     gSerialChannel->write(checksum_2);
-    for (_i = 0; _i < 5; _i++)
-    {
+    for (_i = 0; _i < 5; _i++) {
         gSerialChannel->write(_data[_i]);
     }
 }
@@ -112,8 +113,7 @@ void A1_16_TorqueOff(unsigned char _pID)
     _data[3] = 2;                    //set:0(position control), 1(speed control), 2(torque off), 3(position servo on)
     _data[4] = _pID;
     checksum_1 = (0x0c) ^ _pID ^ CMD_S_JOG;        //package_size^pID^CMD
-    for (_i = 0; _i < 5; _i++)
-    {
+    for (_i = 0; _i < 5; _i++) {
         checksum_1 ^= _data[_i];
     }
     checksum_1 &= 0xfe;
@@ -125,8 +125,7 @@ void A1_16_TorqueOff(unsigned char _pID)
     gSerialChannel->write(CMD_S_JOG);
     gSerialChannel->write(checksum_1);
     gSerialChannel->write(checksum_2);
-    for (_i = 0; _i < 5; _i++)
-    {
+    for (_i = 0; _i < 5; _i++) {
         gSerialChannel->write(_data[_i]);
     }
 }
@@ -166,55 +165,41 @@ int A1_16_ReadPacket(unsigned char _data_length)
     unsigned int timeout_counter;
     unsigned char header_check = 0;
 
-    while (packet_pointer < packet_length)
-    {
+    while (packet_pointer < packet_length) {
         timeout_counter = 0;
-        while (gSerialChannel->available() <= 0)
-        {
+        while (gSerialChannel->available() <= 0) {
             timeout_counter++;
-            if (timeout_counter > 1000L)
-            {
+            if (timeout_counter > 1000L) {
                 return -1;
             }
         }
         packet_received[packet_pointer] = gSerialChannel->read();
-        if ((packet_received[packet_pointer] == 0xff) && (header_check == 0))
-        {
+        if ((packet_received[packet_pointer] == 0xff) && (header_check == 0)) {
             packet_pointer++;
             header_check = 1;
-        }
-        else if ((packet_received[packet_pointer] == 0xff) && (header_check == 1))
-        {
+        } else if ((packet_received[packet_pointer] == 0xff) && (header_check == 1)) {
             packet_pointer++;
             header_check = 2;
-        }
-        else if (header_check == 2)
-        {
+        } else if (header_check == 2) {
             packet_pointer++;
         }
     }
 
     checksum_1 = packet_received[2] ^ packet_received[3] ^ packet_received[4];
-    for (_i = 7; _i < packet_length; _i++)
-    {
+    for (_i = 7; _i < packet_length; _i++) {
         checksum_1 ^= packet_received[_i];
     }
     checksum_1 &= 0xfe;
     checksum_2 = (~checksum_1) & 0xfe;
-    if (checksum_1 != packet_received[5])
-    {
+    if (checksum_1 != packet_received[5]) {
         return -2;
     }
-    if (checksum_2 != packet_received[6])
-    {
+    if (checksum_2 != packet_received[6]) {
         return -3;
     }
-    if (_data_length != 1)
-    {
+    if (_data_length != 1) {
         return (packet_received[11] + (packet_received[12] << 8));
-    }
-    else
-    {
+    } else {
         return packet_received[11];
     }
 }
