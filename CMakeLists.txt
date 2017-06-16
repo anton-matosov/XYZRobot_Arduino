@@ -3,6 +3,8 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_SOURCE_DIR}/cmake/ArduinoToolchain.cmake)
 set(PROJECT_NAME XYZRobor_Arduino)
 project(${PROJECT_NAME})
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
 # Register board and libraries
 link_directories(${CMAKE_SOURCE_DIR}/libraries)
 register_hardware_platform("${CMAKE_SOURCE_DIR}/hardware/XYZrobot")
