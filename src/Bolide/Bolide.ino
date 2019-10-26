@@ -517,9 +517,9 @@ void transitionToInitialPoseDirectly()
 {
     const int postureIndex = CalculatePostureIndex();
     const int actionIndex = postureIndex < kPostureSpecificActionsCount ? postureIndex : kDefaultPostureActionIndex;
-    const transition_t* transition = InitialPostureAnimation[actionIndex] ?: DefaultInitial;
+    const transition_t* initialPose = InitialPostureAnimation[actionIndex] ?: DefaultInitial;
 
-    XYZrobot.playSeq(transition);
+    XYZrobot.playSeq(initialPose);
     while (XYZrobot.playing())
     {
         XYZrobot.play();
