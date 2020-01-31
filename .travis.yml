@@ -1,0 +1,9 @@
+os: osx
+language: generic
+
+install:
+  curl https://downloads.arduino.cc/arduino-1.8.11-macosx.zip --output arduino.zip
+  unzip arduino.zip
+
+script:
+  ./.github/workflows/build.sh
