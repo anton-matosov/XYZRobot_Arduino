@@ -21,4 +21,4 @@ jobs:
           unzip arduino.zip
 
       - name: build
-        run: ./build.sh
+        run: ./.github/workflows/build.sh
