@@ -25,6 +25,6 @@ jobs:
           ARDUINO_SDK_PATH=$PWD/Arduino.app
           mkdir build
           cd build
-          cmake -G Ninja -DARDUINO_SDK_PATH=$ARDUINO_SDK_PATH ..
-          ninja Bolide
+          cmake -DARDUINO_SDK_PATH=$ARDUINO_SDK_PATH ..
+          cmake --build . --target Bolide
 
