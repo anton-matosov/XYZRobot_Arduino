@@ -12,17 +12,14 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
       - name: Download Arduino
-        uses: enflo/curl-action@v1.2
-        with:
-          curl: https://downloads.arduino.cc/arduino-1.8.8-linux64.tar.xz --output arduino.tar.gz
-      - name: Extract Arduino
-        uses: brunoborges/justextract@v1
-        with:
-          file: arduino.tar.gz
+        run: |
+          curl https://downloads.arduino.cc/arduino-1.8.8-macosx.zip --output arduino.zip
+          unzip arduino.zip
+
       - name: build
         uses: lukka/run-cmake@v0.7
         with:
