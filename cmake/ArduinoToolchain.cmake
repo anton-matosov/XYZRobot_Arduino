@@ -62,14 +62,10 @@ if(NOT ARDUINO_SDK_PATH)
         set(SDK_PATH_HINTS "C:\\Program Files\\Arduino"
             "C:\\Program Files (x86)\\Arduino"
         )
-    elseif(APPLE)
-        set(SDK_PATH_HINTS /Applications/
-            $ENV{USER}/Applications
-        )
     endif()
-    list(INSERT SDK_PATH_HINTS 0 ${CMAKE_SOURCE_DIR})
     list(SORT SDK_PATH_HINTS)
     list(REVERSE SDK_PATH_HINTS)
+    list(INSERT SDK_PATH_HINTS 0 ${CMAKE_SOURCE_DIR})
 endif()
 
 find_path(ARDUINO_SDK_PATH
