@@ -18,7 +18,7 @@ jobs:
       - name: Download Arduino
         uses: enflo/curl-action@v1.2
         with:
-          curl: https://downloads.arduino.cc/arduino-1.8.8-linux64.tar.xz -O arduino.tar.gz
+          curl: https://downloads.arduino.cc/arduino-1.8.8-linux64.tar.xz --output arduino.tar.gz
       - name: Extract Arduino
         uses: brunoborges/justextract@v1
         with:
