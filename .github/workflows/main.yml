@@ -21,7 +21,10 @@ jobs:
           unzip arduino.zip
 
       - name: build
-        uses: lukka/run-cmake@v0.7
-        with:
-#           cmakeAppendedArgs: '-D'
-          buildWithCMakeArgs: '--target Bolide'
+        run: |
+          ARDUINO_SDK_PATH=$PWD/Arduino.app
+          mkdir build
+          cd build
+          cmake -G Ninja -DARDUINO_SDK_PATH=$ARDUINO_SDK_PATH ..
+          ninja Bolide
+
