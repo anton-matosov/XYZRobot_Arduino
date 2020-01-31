@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Download Arduino
         run: |
-          curl https://downloads.arduino.cc/arduino-1.8.8-macosx.zip --output arduino.zip
+          curl https://downloads.arduino.cc/arduino-1.8.11-macosx.zip --output arduino.zip
           unzip arduino.zip
 
       - name: build

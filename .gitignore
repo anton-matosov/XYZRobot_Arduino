@@ -2,3 +2,4 @@ MainProjects/Bolide/build
 build/
 .idea/*
 cmake-build-*/
+Arduino*.app/

@@ -67,7 +67,7 @@ if(NOT ARDUINO_SDK_PATH)
             $ENV{USER}/Applications
         )
     endif()
-    list(APPEND SDK_PATH_HINTS ${CMAKE_SOURCE_DIR})
+    list(INSERT SDK_PATH_HINTS 0 ${CMAKE_SOURCE_DIR})
     list(SORT SDK_PATH_HINTS)
     list(REVERSE SDK_PATH_HINTS)
 endif()
