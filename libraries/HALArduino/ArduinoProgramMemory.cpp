@@ -3,8 +3,7 @@
 //
 
 #include <cstddef>
-#include <stdint-gcc.h>
-#include <USBAPI.h>
+#include <Arduino.h>
 #include "ArduinoProgramMemory.h"
 
 uint8_t ArduinoProgramMemory::readByteNear(const void* addr)

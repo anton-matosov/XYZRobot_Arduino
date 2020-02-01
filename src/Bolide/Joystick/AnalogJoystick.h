@@ -9,7 +9,7 @@ class AnalogJoystick
 {
 public:
     AnalogJoystick();
-    AnalogJoystick(int *joystick);
+    explicit AnalogJoystick(int *joystick);
 
     void update(int *joystick);
 

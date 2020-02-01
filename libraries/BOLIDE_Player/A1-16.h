@@ -3,7 +3,7 @@
   Copyright (c) 2015 Wei-Shun You. XYZprinting Inc.  All right reserved.
 */
 
-#include <Arduino.h>
+#include <stdint.h>
 
 class SerialProtocol;
 

@@ -6,6 +6,8 @@
 
 #include <EEPROM.h>
 #include <Wire.h>
+#include <Arduino.h>
+#include <HALArduino.h>
 #include "Y-01_Board.h"
 #include "Y-01_Mask_Definition.h"
 #include "Y-01_USER_MOTION.h"
@@ -199,9 +201,11 @@ void MotionEditor::packetTask()
         {//initial motion editor setting
             seq_trigger = false;
             SeqPos = 0;
-            XYZrobot.poseSize = pBuffer[motor_num_address];
+            int poseSize = pBuffer[motor_num_address];
+
+            XYZrobot.poseSize(poseSize);
             XYZrobot.readPose();
-            Packet_Init(pBuffer[motor_num_address]);
+            Packet_Init(poseSize);
         }
         else if (pCMD == CMD_set_motor)
         {//set motor position
@@ -273,7 +277,7 @@ void MotionEditor::packetTask()
             if (SeqProcessCnt == SEQ_Process_load_PoseCnt)
             {
                 PoseID = pBuffer[seq_pose_ID_address];
-                for (_i = 0; _i < XYZrobot.poseSize; _i++)
+                for (_i = 0; _i < XYZrobot.poseSize(); _i++)
                 {
                     poses[PoseCnt][_i] = (pBuffer[seq_pose_start_address + 2 * _i] << 8) +
                                          pBuffer[seq_pose_start_address + 1 + 2 * _i];
@@ -385,12 +389,12 @@ void MotionEditor::seqPlay()
     static int _i = 0;
     static int pose_index = 0;
     pose_index = sequence[SeqPos].pose;
-    for (_i = 0; _i < XYZrobot.poseSize; _i++)
+    for (_i = 0; _i < XYZrobot.poseSize(); _i++)
     {
         XYZrobot.setNextPose(_i + 1, poses[pose_index][_i]);
     }
     XYZrobot.interpolateSetup(sequence[SeqPos].time);
-    while (XYZrobot.interpolating)
+    while (XYZrobot.interpolating())
     {
         XYZrobot.interpolateStep();
     }

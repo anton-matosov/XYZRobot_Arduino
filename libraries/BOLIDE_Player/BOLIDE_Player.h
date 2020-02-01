@@ -33,6 +33,12 @@
 #include "A1-16.h"
 
 class ProgramMemoryProtocol;
+class SerialProtocol;
+
+namespace HAL
+{
+class TimeServices;
+}
 
 /* pose engine runs at 30Hz (33ms between frames) 
    recommended values for interpolateSetup are of the form X*BIOLOID_FRAME_LENGTH - 1 */
@@ -58,12 +64,15 @@ class BOLIDE_Player
 {
 public:
     /* New-style constructor/setup */
-    void setup(unsigned long baud, uint8_t servo_cnt, ProgramMemoryProtocol& programMemory, SerialProtocol& serialChannel);        // baud usually 115200
+    void setup(unsigned long baud, uint8_t servo_cnt,
+               ProgramMemoryProtocol& programMemory,
+               SerialProtocol& serialChannel,
+               HAL::TimeServices& timeServices);        // baud usually 115200
 
     void torqueOff();
 
     /* Pose Manipulation */
-    void loadPose(const unsigned int *addr); // load a named pose from FLASH
+    void loadPose(const unsigned int *poseAddress); // load a named pose from FLASH
     void readPose();                            // read a pose in from the servos  
     void writePose();                           // write a pose out to the servos
     int getCurPose(int id);                     // get a servo value in the current pose
@@ -74,15 +83,12 @@ public:
 
     /* Pose Engine */
     void interpolateSetup(unsigned int time);            // calculate speeds for smooth transition
-    void interpolateStep();                     // move forward one step in current interpolation  
-    unsigned char interpolating;                // are we in an interpolation? 0=No, 1=Yes
-    unsigned char runningSeq;                   // are we running a sequence? 0=No, 1=Yes 
-    uint8_t poseSize;                               // how many servos are in this pose, used by Sync()
+    void interpolateStep();                     // move forward one step in current interpolation
 
     /* to interpolate:
      *  bioloid.loadPose(myPose);
      *  bioloid.interpolateSetup(67);
-     *  while(bioloid.interpolating > 0){
+     *  while(bioloid._interpolating > 0){
      *      bioloid.interpolateStep();
      *      delay(1);
      *  }
@@ -91,19 +97,27 @@ public:
     /* Sequence Engine */
     void playSeq(const transition_t *addr);  // load a sequence and play it from FLASH
     void play();                                // keep moving forward in time
-    unsigned char playing;                      // are we playing a sequence? 0=No, 1=Yes
 
     /* to run the sequence engine:
      *  bioloid.playSeq(walk);
-     *  while(bioloid.playing){
+     *  while(bioloid._playing){
      *      bioloid.play();
      *  }
      */
 
     void printPose();
-    void resetPose();
 
+    // Exposing internals for no good reason
+    uint8_t poseSize();
+    void poseSize(uint8_t newSize);
+    bool interpolating();
+    bool playing();
 private:
+    bool _playing;                      // are we _playing a sequence? 0=No, 1=Yes
+    unsigned char _interpolating;                // are we in an interpolation? 0=No, 1=Yes
+    uint8_t _poseSize;                               // how many servos are in this pose, used by Sync()
+
+
     uint16_t *pose_;                       // the current pose, updated by Step(), set out by Sync()
     uint16_t *nextpose_;                   // the destination pose, where we put on load
     int *speed_;                               // speeds for interpolation
@@ -122,6 +136,7 @@ private:
 
     SerialProtocol* _serialChannel;
     ProgramMemoryProtocol* _programMemory;
+    HAL::TimeServices* _timeServices;
 
     void printPose(uint16_t *poseToPrint, const char* label);
     void readPoseTo(uint16_t* saveToPose);

@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    paths-ignore:
+      - '**.md'
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download Arduino
+        run: |
+          curl https://downloads.arduino.cc/arduino-1.8.11-macosx.zip --output arduino.zip
+          unzip arduino.zip
+
+      - name: build
+        run: ./.github/workflows/build.sh || true # ignore errors for now, rely on travis

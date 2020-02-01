@@ -1,11 +1,13 @@
 //Include Library
 #include <BOLIDE_Player.h>
 #include <Wire.h>
-#include <ArduinoHardwareSerial.h>
-#include <ArduinoProgramMemory.h>
+#include <HALArduino.h>
+#include <Arduino.h>
+#include <ArduinoTimeServices.h>
 #include "Y-01_Board.h"
 #include "Y-01_Mask_Definition.h"
-#include "Y-01_USER_MOTION.h"
+//#include "Y-01_USER_MOTION.h"
+#include "CRAWLER_USER_MOTION.h"
 
 #include "Config.h"
 #include "MotionEditor.h"
@@ -33,7 +35,8 @@ static boolean torque_release = false, BT_update = false;
 #define WALK_FORWARD_ACTION_ID 1
 
 void playCanNotGoTone();
-void performMoveAction(int actionId);
+void performMoveAction(const int actionId);
+void performMoveAction(const int poseSpecificActions[]);
 void ConfigureAllServos(void);
 void BT_Task_Setup(void);
 void Speaker_Task_Setup(void);
@@ -44,7 +47,7 @@ void Timer_Task_Setup(void);
 void G_SENSOR_Task_Setup(void);
 void setReg(int reg, int data);
 int getData(int reg);
-int Falling_Task(void);
+int CalculatePostureIndex(void);
 void Getup_Task(int posture_index);
 int IR_SENSOR_Task(void);
 void cb_USB(void);
@@ -284,30 +287,46 @@ void checkRightJoystickActions()
     }
 }
 
-void performMoveAction(int actionId)
+void performMoveAction(const int actionId)
+{
+    int poseSpecificActions[kPostureSpecificActionsCount];
+    for (int i = 0; i < kPostureSpecificActionsCount; ++i)
+    {
+        poseSpecificActions[i] = actionId;
+    }
+    performMoveAction(poseSpecificActions);
+}
+
+void performMoveAction(const int poseSpecificActions[])
 {
     if (Adjustment_index)
     {
-        if (Falling_Task() == 5)
-        {
-            if (actionId == WALK_FORWARD_ACTION_ID &&
-                irSensorDetectedObstacle())
-            {
-                playCanNotGoTone();
-            }
-            else
-            {
-                Action(actionId);
-            }
-        }
-        else
-        {
-            Getup_Task(Falling_Task());
-        }
+        const int posture_index = CalculatePostureIndex();
+        const int actionIndex = posture_index < kPostureSpecificActionsCount ? posture_index : kDefaultPostureActionIndex;
+        const int actionId = poseSpecificActions[actionIndex];
+
+        Action(actionId);
+        // TODO: Unify getup task handling for bolide and crawler
+//        if (posture_index == 5)
+//        {
+//            if (actionId == WALK_FORWARD_ACTION_ID &&
+//                irSensorDetectedObstacle())
+//            {
+//                playCanNotGoTone();
+//            }
+//            else
+//            {
+//                Action(actionId);
+//            }
+//        }
+//        else
+//        {
+//            Getup_Task(posture_index);
+//        }
     }
     else
     {
-        Action(actionId);
+        Action(poseSpecificActions[kDefaultPostureActionIndex]);
     }
 }
 
@@ -331,9 +350,10 @@ void playCanNotGoTone()
 //Configure A1-16 servo motor
 void ConfigureAllServos(void)
 {
-    static ArduinoHardwareSerial servoSerial(Serial1);
+    static ArduinoHardwareSerial servoSerial(Serial1, DDD2);
     static ArduinoProgramMemory programMemory;
-    XYZrobot.setup(115200, 18, programMemory, servoSerial);
+    static HALArduino::ArduinoTimeServices timeServices;
+    XYZrobot.setup(115200, 18, programMemory, servoSerial, timeServices);
 }
 
 //Configure BT board
@@ -423,35 +443,39 @@ int getData(int reg)
 }
 
 //Falling Detection Task
-int Falling_Task(void)
+int CalculatePostureIndex(void)
 {
-    int posture_index;
+#ifdef DISABLE_ORIENTATION_DETECTION
+    return 1; //Frontside
+#else
+    int posture_index = 0;
     ax = ((getData(0x33) << 8) + getData(0x32)) / 256.0;
     ay = ((getData(0x35) << 8) + getData(0x34)) / 256.0;
     az = ((getData(0x37) << 8) + getData(0x36)) / 256.0;
 
     if ((az) < -0.75)
     {
-        posture_index = 1; //Frontside Getup
+        posture_index = 1; //Frontside
     }
     else if ((az) > 0.75)
     {
-        posture_index = 2; // Backside Getup
+        posture_index = 2; // Backside
     }
     else if ((ax) < -0.75)
     {
-        posture_index = 3; // Rightside Getup
+        posture_index = 3; // Rightside
     }
     else if ((ax) > 0.75)
     {
-        posture_index = 4; // Leftside Getup
+        posture_index = 4; // Leftside
     }
-    else if ((az) <= 0.75 && (az) >= -0.75)
+    else if ((az) <= 0.75 && (az) >= -0.75) // Stand
     {
         posture_index = 5;
     }// Stand Status
 
     return posture_index;
+#endif
 }
 
 //Getup Detection Task
@@ -491,8 +515,12 @@ void transitionToInitialPose()
 
 void transitionToInitialPoseDirectly()
 {
-    XYZrobot.playSeq(DefaultInitial);
-    while (XYZrobot.playing)
+    const int postureIndex = CalculatePostureIndex();
+    const int actionIndex = postureIndex < kPostureSpecificActionsCount ? postureIndex : kDefaultPostureActionIndex;
+    const transition_t* initialPose = InitialPostureAnimation[actionIndex] ?: DefaultInitial;
+
+    XYZrobot.playSeq(initialPose);
+    while (XYZrobot.playing())
     {
         XYZrobot.play();
     }
@@ -938,7 +966,7 @@ void Action(int N)
         }
     }
 
-    while ((XYZrobot.playing) && !(BT_Packet_Task()))
+    while ((XYZrobot.playing()) && !(BT_Packet_Task()))
     {
         XYZrobot.play();
         if (Serial2.available() > 0)
@@ -1223,7 +1251,7 @@ void playWelcomeSong(void)
     tonesToSkip = gStartupMusicLength - gStartupMusicShortLength;
 #endif
 
-    const int toneDuration = 200;
+    const int toneDuration = 350;
     for (int currentTone = 0; currentTone < gStartupMusicLength; currentTone++)
     {
 #ifndef DISABLE_STARTUP_MUSIC

@@ -1,4 +1,5 @@
 MainProjects/Bolide/build
-build
-*.iml
-.idea/dictionaries
+build/
+.idea/*
+cmake-build-*/
+Arduino*.app/

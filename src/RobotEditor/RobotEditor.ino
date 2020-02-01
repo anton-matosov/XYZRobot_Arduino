@@ -1,5 +1,5 @@
 #include <BOLIDE_Player.h>
-#include <ArduinoHardwareSerial.h>
+#include <HALArduino.h>
 #include "mask_definition.h"
 
 #include "StandardCplusplus.h"
@@ -13,6 +13,7 @@ typedef struct
 //definition of global variable
 BOLIDE_Player BOLIDE_Robot;
 static ArduinoHardwareSerial servoSerial(Serial1);
+static ArduinoProgramMemory programMemory;
 
 static boolean packet_timeout_status = false;
 // pose and sequence storage
@@ -23,7 +24,7 @@ sp_trans_t sequence[max_seq_index];               // sequence
 void setup()
 {
     Serial.begin(115200);
-    BOLIDE_Robot.setup(115200, 18, servoSerial);
+    BOLIDE_Robot.setup(115200, 18, programMemory, servoSerial);
     TIMER4_task_setup();
     delay(1000);
 }
@@ -49,12 +50,12 @@ void loop()
             static int _i = 0;
             static int pose_index = 0;
             pose_index = sequence[SeqPos].pose;
-            for (_i = 0; _i < BOLIDE_Robot.poseSize; _i++)
+            for (_i = 0; _i < BOLIDE_Robot.poseSize(); _i++)
             {
                 BOLIDE_Robot.setNextPose(_i + 1, poses[pose_index][_i]);
             }
             BOLIDE_Robot.interpolateSetup(sequence[SeqPos].time);
-            while (BOLIDE_Robot.interpolating)
+            while (BOLIDE_Robot.interpolating())
             {
                 BOLIDE_Robot.interpolateStep();
             }
@@ -139,7 +140,7 @@ void loop()
         {
             seq_trigger = false;
             SeqPos = 0;
-            BOLIDE_Robot.poseSize = pBuffer[motor_num_address];
+            BOLIDE_Robot.poseSize(pBuffer[motor_num_address]);
             BOLIDE_Robot.readPose();
             packet_init(pBuffer[motor_num_address]);
         }
@@ -207,7 +208,7 @@ void loop()
             if (SeqProcessCnt == SEQ_Process_load_PoseCnt)
             {
                 PoseID = pBuffer[seq_pose_ID_address];
-                for (_i = 0; _i < BOLIDE_Robot.poseSize; _i++)
+                for (_i = 0; _i < BOLIDE_Robot.poseSize(); _i++)
                 {
                     poses[PoseCnt][_i] = (pBuffer[seq_pose_start_address + 2 * _i] << 8) + pBuffer[seq_pose_start_address + 1 + 2 * _i];
                     pose_index[PoseCnt] = PoseID;
