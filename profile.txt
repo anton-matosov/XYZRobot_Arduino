@@ -1,0 +1,16 @@
+[settings]
+arch=avr
+build_type=Release
+compiler=gcc
+compiler.libcxx=libstdc++11
+compiler.version=7.3
+os=Arduino
+os.board=XYZrobot1280
+
+[options]
+# If you have a Arduino SDK already installed
+# conan-arduino-toolchain:arduino_path=~/arduino/
+
+[build_requires]
+arduino-board-xyzrobot/1.0.0@conan/testing
+

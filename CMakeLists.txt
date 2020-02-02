@@ -1,9 +1,21 @@
 cmake_minimum_required(VERSION 3.5)
-set(CMAKE_TOOLCHAIN_FILE ${CMAKE_SOURCE_DIR}/cmake/ArduinoToolchain.cmake)
+
 set(PROJECT_NAME XYZRobor_Arduino)
 project(${PROJECT_NAME})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+add_definitions("-std=c++11")
+
+if(NOT EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+  message(
+    WARNING
+      "The file conanbuildinfo.cmake doesn't exist.\nRunning 'conan install' first..."
+    )
+  execute_process(COMMAND "${CMAKE_SOURCE_DIR}/configure.sh"
+                  WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+endif()
+
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
 
 # Register board and libraries
 link_directories(${CMAKE_SOURCE_DIR}/libraries)
