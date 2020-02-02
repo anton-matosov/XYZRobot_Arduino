@@ -3,7 +3,7 @@ import os
 
 class App(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
-    generators = "cmake"
+    generators = ["cmake", "virtualenv", "virtualbuildenv", "virtualrunenv"]
 
     build_requires = "arduino-toolchain/1.8.11@conan/testing"
 

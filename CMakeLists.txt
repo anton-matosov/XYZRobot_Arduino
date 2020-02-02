@@ -15,6 +15,7 @@ if(NOT EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 endif()
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+# set(CMAKE_TOOLCHAIN_FILE ${CONAN_CMAKE_TOOLCHAIN_FILE})
 conan_basic_setup()
 
 # Register board and libraries
