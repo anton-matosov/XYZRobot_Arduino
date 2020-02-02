@@ -21,8 +21,11 @@ jobs:
           python-version: '>=3.7'
           architecture: 'x64'
 
-      - name: Install Conan
-        run: ./.github/workflows/install.sh
+      - name: Install tools
+        run: ./scripts/bootstrap.sh
 
-      - name: build
-        run: ./.github/workflows/build.sh
+      - name: Configure
+        run: ./scripts/configure.sh
+
+      - name: Build
+        run: ./scripts/build.sh Bolide
