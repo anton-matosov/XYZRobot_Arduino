@@ -15,10 +15,25 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Download Arduino
+      - name: Checkout submodules
+        shell: bash
         run: |
-          curl https://downloads.arduino.cc/arduino-1.8.11-macosx.zip --output arduino.zip
-          unzip arduino.zip
+          auth_header="$(git config --local --get http.https://github.com/.extraheader)"	
+          sed -i -e 's/git@github.com:/https:\/\/github.com\//' .gitmodules	
+          git submodule sync --recursive
+          git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
 
-      - name: build
-        run: ./.github/workflows/build.sh || true # ignore errors for now, rely on travis
+      - uses: seanmiddleditch/gha-setup-ninja@master
+      - uses: actions/setup-python@v1
+        with:
+          python-version: '>=3.7'
+          architecture: 'x64'
+
+      - name: Install tools
+        run: ./scripts/bootstrap.sh
+
+      - name: Configure
+        run: ./scripts/configure.sh
+
+      - name: Build
+        run: ./scripts/build.sh Bolide
