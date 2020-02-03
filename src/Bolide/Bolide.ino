@@ -90,68 +90,82 @@ void setup()
 {
     //Configure all basic setting
     Serial.begin(115200);
-    ConfigureAllServos();
-    BT_Task_Setup();
-    Speaker_Task_Setup();
-    Eye_LED_Setup();
-    Buzzer_Setup();
-    OnBoardButtons::setup();
-    Analog_Input_Setup();
-    Timer_Task_Setup();
-    _enable_timer4();
+    static ArduinoHardwareSerial servoSerial(Serial1, DDD2);
 
-    //Start motion
-    ScopedLEDTask ledTask(2, Robot::sharedInstance().LED());
+    servoSerial.begin(115200);
 
-    playWelcomeSong();
-    G_SENSOR_Task_Setup();
-    transitionToInitialPose();
-    delay(1000);
+//    ConfigureAllServos();
+//    BT_Task_Setup();
+//    Speaker_Task_Setup();
+//    Eye_LED_Setup();
+//    Buzzer_Setup();
+//    OnBoardButtons::setup();
+//    Analog_Input_Setup();
+//    Timer_Task_Setup();
+//    _enable_timer4();
+//
+//    //Start motion
+//    ScopedLEDTask ledTask(2, Robot::sharedInstance().LED());
+//
+//    playWelcomeSong();
+//    G_SENSOR_Task_Setup();
+//    transitionToInitialPose();
+//    delay(1000);
 }
 
 //========================= Main =======================================
 void loop()
 {
-    //USB Communcation motion
-    if (Serial.available() > 0)
+    while (Serial.available())
     {
-        MotionEditor::packetTask();
+        Serial1.print((char)Serial.read());
     }
-    else if (MotionEditor::seq_trigger) //play sequence edited by motion editor
-    {
-        MotionEditor::seqPlay();
-    }
-    else
-    {
-        //BT Communcation motion
-        if (Serial2.available() > 0)
-        {
-            BT_Packet_Task();
 
-            if (BT_update)
-            {
-                if (packet[1] != 255 & packet[2] != 1) //==== RCU Command ====
-                {
-                    handleJoystickActions();
-                }
-                else if (packet[1] == 255 & packet[2] == 1) //==== App Command ====
-                {
-                    handleMobileAppActions();
-                }
-            }
-        }
-        else
-        {
-            if (leftJoystick.isRested() && rightJoystick.isRested())
-            {
-                OnBoardButtons::checkButtonStates();
-            }
-            else if (packet[1] != 255 & packet[2] != 1) //==== RCU Command ====
-            {
-                handleJoystickActions();
-            }
-        }
+    while (Serial1.available())
+    {
+        Serial.print((char)Serial1.read());
     }
+
+//    //USB Communcation motion
+//    if (Serial.available() > 0)
+//    {
+//        MotionEditor::packetTask();
+//    }
+//    else if (MotionEditor::seq_trigger) //play sequence edited by motion editor
+//    {
+//        MotionEditor::seqPlay();
+//    }
+//    else
+//    {
+//        //BT Communcation motion
+//        if (Serial2.available() > 0)
+//        {
+//            BT_Packet_Task();
+//
+//            if (BT_update)
+//            {
+//                if (packet[1] != 255 & packet[2] != 1) //==== RCU Command ====
+//                {
+//                    handleJoystickActions();
+//                }
+//                else if (packet[1] == 255 & packet[2] == 1) //==== App Command ====
+//                {
+//                    handleMobileAppActions();
+//                }
+//            }
+//        }
+//        else
+//        {
+//            if (leftJoystick.isRested() && rightJoystick.isRested())
+//            {
+//                OnBoardButtons::checkButtonStates();
+//            }
+//            else if (packet[1] != 255 & packet[2] != 1) //==== RCU Command ====
+//            {
+//                handleJoystickActions();
+//            }
+//        }
+//    }
 }
 
 void handleJoystickActions()
