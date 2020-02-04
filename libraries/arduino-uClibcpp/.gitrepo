@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:Dr-QP/arduino-uClibcpp.git
+	branch = master
+	commit = aacf798a9dc55ba44e4dc5d30fa0cafbe3ee31c6
+	parent = 7b13be15e9f6fc69e99d21d3903ab8e5fbe1c839
+	method = merge
+	cmdver = 0.4.1

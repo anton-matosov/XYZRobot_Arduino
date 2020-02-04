@@ -1,0 +1,7 @@
+16000000/
+.*.swp
+*.orig
+*.bak
+version.h
+*.pyc
+**/build
