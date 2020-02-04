@@ -1,3 +1,0 @@
-[submodule "libraries/StandardCplusplus"]
-	path = libraries/StandardCplusplus
-	url = git@github.com:Dr-QP/arduino-uClibcpp.git
