@@ -2,7 +2,7 @@
 #include <HALArduino.h>
 #include "mask_definition.h"
 
-#include "StandardCplusplus.h"
+#include "arduino-uClibcpp.h"
 
 //definition of struct
 typedef struct
