@@ -5,8 +5,8 @@
 ;
 [subrepo]
 	remote = git@github.com:Dr-QP/arduino-uClibcpp.git
-	branch = master
-	commit = 6b6d9d68809abd5704d29f4a38eafddf013e803b
-	parent = 55bacef53998a5f3b422dc86a7292c2509d53c3f
+	branch = properRename
+	commit = 7f2718aaf97f7326f64dd0ecae672a277ef50f20
+	parent = e454035eb29582f6b53e3667478f3879b83ddefe
 	method = merge
 	cmdver = 0.4.1
