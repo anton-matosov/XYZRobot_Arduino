@@ -19,7 +19,6 @@ conan_basic_setup()
 
 # Register board and libraries
 link_directories(${CMAKE_SOURCE_DIR}/libraries)
-register_hardware_platform("${CMAKE_SOURCE_DIR}/hardware/XYZrobot")
 
 # Setup global config for board, port and serial
 set(ARDUINO_DEFAULT_BOARD XYZrobot1280)

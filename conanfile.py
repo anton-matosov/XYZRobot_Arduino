@@ -5,8 +5,6 @@ class App(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     generators = ["cmake", "virtualenv", "virtualbuildenv", "virtualrunenv"]
 
-    build_requires = "arduino-toolchain/1.8.11@conan/testing"
-
     def build(self):
         cmake = CMake(self)
         cmake.configure()
