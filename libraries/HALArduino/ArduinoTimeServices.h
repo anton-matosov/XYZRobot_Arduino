@@ -4,7 +4,7 @@
 
 #pragma once 
 
-#import <HAL.h>
+#include <HAL.h>
 
 namespace HALArduino
 {

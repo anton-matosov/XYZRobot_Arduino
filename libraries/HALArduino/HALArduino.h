@@ -4,5 +4,5 @@
 
 #pragma once 
 
-#import <ArduinoHardwareSerial.h>
-#import <ArduinoProgramMemory.h>
+#include <ArduinoHardwareSerial.h>
+#include <ArduinoProgramMemory.h>

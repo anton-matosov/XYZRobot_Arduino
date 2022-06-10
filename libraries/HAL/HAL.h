@@ -4,6 +4,6 @@
 
 #pragma once 
 
-#import <SerialProtocol.h>
-#import <ProgramMemoryProtocol.h>
-#import <TimeServices.h>
+#include <SerialProtocol.h>
+#include <ProgramMemoryProtocol.h>
+#include <TimeServices.h>
